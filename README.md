@@ -23,4 +23,5 @@ Este repositorio solo tiene el sitio generado. El curso está en preparación: l
 | 13 | El costo por conversación |
 | 14 | Contención, desvío y satisfacción: medir y mejorar |
 | 15 | Pruebas, versiones de flujos y gobierno de cambios |
-| 16 | El proyecto: del descubrimiento al bot estable en producción |
+| 16 | Prompts para generar un chatbot de producción |
+| 17 | El proyecto: del descubrimiento al bot estable en producción |
