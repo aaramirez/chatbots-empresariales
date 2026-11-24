@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qué es un chatbot empresarial · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="que-es-un-chatbot-empresarial">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 01 DE 17</span><h1>Qué es un chatbot empresarial</h1><p class="lede">Un bot que repite preguntas frecuentes se arma en una tarde. Uno que sabe quién le escribe, deja un pago registrado en el sistema y sabe cuándo pasarle la conversación a una persona es otra cosa: es un sistema de la empresa.</p></header>
+<section><h2>Del bot de preguntas frecuentes al asistente que actúa</h2><div class="prose"><p>Escribes por WhatsApp a la empresa que te vende internet: «Hola, ¿cuánto debo?». Hay dos respuestas posibles. La primera: «Puedes consultar tu saldo en nuestro portal de clientes o en cualquier agencia». La segunda: «Hola, Laura. Tienes una factura de US$ 25,00 que vence el 5 de diciembre. ¿Te envío el enlace para pagarla?».</p><p>Las dos las escribió un <b>chatbot</b> (<i>chatbot</i>, programa que conversa por mensajes escritos). Pero detrás de cada una hay un sistema muy distinto. La primera sale de una lista de <b>preguntas frecuentes</b> (<i>FAQ, Frequently Asked Questions</i>): el bot reconoce el tema y devuelve el texto que alguien escribió para ese tema. La segunda supone que el bot sabe quién eres, que consultó la facturación con tu número de cuenta y que puede crear un pago de verdad.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en la recepción de un edificio de oficinas. Un recepcionista con un folleto en la mano te dice el horario y en qué piso queda cada oficina. Un empleado de la ventanilla, con acceso al sistema, te pide la cédula, mira tu expediente, cobra y te da un comprobante. Y si tu caso se complica, te lleva con el supervisor y le explica lo que ya hablaron, para que no repitas todo. El bot de preguntas frecuentes es el folleto. El chatbot empresarial es la ventanilla completa, supervisor incluido.</p></div><div class="prose"><p>Un <b>chatbot empresarial</b> es un sistema de software que conversa con clientes, prospectos o empleados por uno o varios canales (WhatsApp, la web, una aplicación, Telegram) para resolver una necesidad concreta del negocio: informar, vender, cobrar, atender una falla o enrutar un caso. Lo que lo separa del folleto son tres ingredientes, y los vas a ver en todo el curso:</p><ol class="steps"><li><span><b>Contexto real.</b> El bot sabe quién escribe (la identidad está verificada) y conoce su cuenta, sus productos y el estado de sus casos, porque lee el <b>CRM</b> (<i>Customer Relationship Management</i>, el sistema donde la empresa guarda a sus clientes y su historia) y la facturación.</span></li><li><span><b>Acción verificable.</b> Lo que el bot hace deja un rastro en un sistema real: un pago registrado, un <b>ticket</b> (<i>ticket</i>, caso numerado en el sistema de soporte) abierto, una visita técnica agendada. Se puede comprobar después, sin creerle al bot.</span></li><li><span><b>Salida humana.</b> Cuando el bot no puede o no debe seguir, pasa la conversación a una persona con todo el contexto. A esto se le llama <b>traspaso</b> (<i>handoff</i>) y se diseña desde el primer día, no como parche.</span></li></ol></div><figure class="fig fig-arquitectura" id="01-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" style="min-width:680px" role="img" aria-label="Comparación: el bot de preguntas frecuentes solo conecta al cliente con un documento de respuestas; el asistente que actúa conecta al cliente, por un canal, con un cerebro que consulta identidad, CRM y facturación, ejecuta pagos y tickets, y pasa a un agente humano con contexto">
+  <defs>
+    <marker id="d01a-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  
+  <rect x="8" y="8" width="262" height="404" rx="14" class="d-inet"/>
+  <text x="139" y="36" class="t t-b k-inet" text-anchor="middle">Bot de preguntas frecuentes</text>
+  <text x="139" y="54" class="t t-s t-m" text-anchor="middle">el folleto</text>
+  <rect x="44" y="72" width="190" height="48" rx="10" class="caja"/>
+  <text x="139" y="92" class="t t-b" text-anchor="middle">Cliente</text>
+  <text x="139" y="110" class="t t-s t-m" text-anchor="middle">«Hola, ¿cuánto debo?»</text>
+  <line x1="139" y1="120" x2="139" y2="160" class="ln" marker-end="url(#d01a-fl)" marker-start="url(#d01a-fl)"/>
+  <rect x="44" y="162" width="190" height="48" rx="10" class="caja"/>
+  <text x="139" y="182" class="t t-b" text-anchor="middle">Bot</text>
+  <text x="139" y="200" class="t t-s t-m" text-anchor="middle">reconoce el tema</text>
+  <line x1="139" y1="210" x2="139" y2="250" class="ln" marker-end="url(#d01a-fl)"/>
+  <rect x="44" y="252" width="190" height="48" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="139" y="272" class="t t-b" text-anchor="middle">Lista de respuestas</text>
+  <text x="139" y="290" class="t t-s t-m" text-anchor="middle">texto fijo, igual para todos</text>
+  <text x="139" y="330" class="t t-s k-warm" text-anchor="middle">«Consulta tu saldo en el portal</text>
+  <text x="139" y="346" class="t t-s k-warm" text-anchor="middle">o en una agencia»</text>
+  <text x="139" y="378" class="t t-xs t-m" text-anchor="middle">NO SABE QUIÉN ERES · NO ACTÚA</text>
+  <text x="139" y="394" class="t t-xs t-m" text-anchor="middle">NO TIENE SALIDA</text>
+
+  
+  <rect x="284" y="8" width="588" height="404" rx="14" class="d-oper"/>
+  <text x="578" y="36" class="t t-b k-oper" text-anchor="middle">Asistente que actúa</text>
+  <text x="578" y="54" class="t t-s t-m" text-anchor="middle">la ventanilla completa</text>
+  <rect x="300" y="72" width="150" height="48" rx="10" class="caja"/>
+  <text x="375" y="92" class="t t-b" text-anchor="middle">Cliente</text>
+  <text x="375" y="110" class="t t-s t-m" text-anchor="middle">«¿Cuánto debo?»</text>
+  <line x1="375" y1="120" x2="375" y2="160" class="ln" marker-end="url(#d01a-fl)" marker-start="url(#d01a-fl)"/>
+  <rect x="300" y="162" width="150" height="48" rx="10" class="c-fis"/>
+  <text x="375" y="182" class="t t-b k-fis" text-anchor="middle">Canal</text>
+  <text x="375" y="200" class="t t-s" text-anchor="middle">WhatsApp · web</text>
+  <line x1="375" y1="210" x2="375" y2="250" class="ln" marker-end="url(#d01a-fl)" marker-start="url(#d01a-fl)"/>
+  <rect x="300" y="252" width="150" height="62" rx="10" class="c-red"/>
+  <text x="375" y="274" class="t t-b k-red" text-anchor="middle">Cerebro</text>
+  <text x="375" y="291" class="t t-s" text-anchor="middle">comprende y decide</text>
+  <text x="375" y="306" class="t t-s" text-anchor="middle">el siguiente paso</text>
+
+  
+  <path d="M450 270 C 480 270, 470 112, 500 112" class="ln" marker-end="url(#d01a-fl)"/>
+  <path d="M450 283 L 500 222" class="ln" marker-end="url(#d01a-fl)"/>
+  <path d="M450 298 C 480 298, 470 332, 500 332" class="ln" marker-end="url(#d01a-fl)"/>
+
+  <text x="504" y="80" class="t t-b k-enl">① Contexto real</text>
+  <rect x="504" y="90" width="170" height="44" rx="9" class="c-enl"/>
+  <text x="589" y="109" class="t t-b" text-anchor="middle">Identidad</text>
+  <text x="589" y="125" class="t t-s t-m" text-anchor="middle">es Laura, la titular</text>
+  <rect x="686" y="90" width="174" height="44" rx="9" class="c-enl"/>
+  <text x="773" y="109" class="t t-b" text-anchor="middle">CRM y facturación</text>
+  <text x="773" y="125" class="t t-s t-m" text-anchor="middle">debe US$ 25,00</text>
+
+  <text x="504" y="190" class="t t-b k-apl">② Acción verificable</text>
+  <rect x="504" y="200" width="170" height="44" rx="9" class="c-apl"/>
+  <text x="589" y="219" class="t t-b" text-anchor="middle">Pagos</text>
+  <text x="589" y="235" class="t t-s t-m" text-anchor="middle">pago registrado</text>
+  <rect x="686" y="200" width="174" height="44" rx="9" class="c-apl"/>
+  <text x="773" y="219" class="t t-b" text-anchor="middle">Tickets</text>
+  <text x="773" y="235" class="t t-s t-m" text-anchor="middle">caso n.º 5512 abierto</text>
+
+  <text x="504" y="300" class="t t-b k-warm">③ Salida humana</text>
+  <rect x="504" y="310" width="356" height="44" rx="9" class="caja s-warm" style="stroke-width:1.6"/>
+  <text x="682" y="329" class="t t-b" text-anchor="middle">Agente de atención</text>
+  <text x="682" y="345" class="t t-s t-m" text-anchor="middle">recibe el caso con el resumen de lo hablado</text>
+
+  <text x="578" y="384" class="t t-s k-enl" text-anchor="middle">«Laura, debes US$ 25,00 y vence el 5 de diciembre. ¿Te envío el enlace?»</text>
+</svg></div><figcaption><b>Del folleto a la ventanilla.</b> A la izquierda, el bot de preguntas frecuentes: un cliente, un bot y un documento de respuestas, sin más conexiones. A la derecha, el asistente que actúa: el mismo cliente llega por un canal a un cerebro conversacional que se conecta con tres cosas, cada una con su color: los sistemas que dan <b>contexto</b> (identidad, CRM y facturación), los que reciben una <b>acción verificable</b> (pagos y tickets) y la <b>persona</b> que toma el caso con el resumen de lo hablado.</figcaption></figure><div class="prose"><p>Detrás de la respuesta a «¿cuánto debo?» hay una cadena de piezas que trabajan en orden. El canal recibe el mensaje. Una capa de <b>comprensión</b> (<i>understanding</i>) decide qué quiere la persona: su <b>intención</b> (<i>intent</i>), en este caso «consultar deuda». Una capa de <b>orquestación</b> (<i>orchestration</i>) decide el siguiente paso: antes de hablar de dinero, verificar la identidad. Luego se consulta la facturación por su <b>API</b> (<i>Application Programming Interface</i>, interfaz de programación: la puerta por la que un programa le pide datos a otro), se aplican las reglas del negocio y se redacta la respuesta. Cuando ninguna de esas piezas puede resolver, la conversación va a una persona.</p><p>El laboratorio siguiente te deja ver esa cadena por dentro. Conversas con el asistente del curso y, a la derecha, se encienden las capas que intervienen en cada respuesta. Prueba el mismo mensaje con el bot de preguntas frecuentes y con el asistente que actúa.</p></div><div class="lab" id="01-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Conversa con el bot y mira qué capa responde</h3></div><p class="hint">Toca uno de los mensajes de ejemplo o escribe el tuyo. Cada respuesta enciende, en orden, las capas que la produjeron. Cambia el modo a «Bot de preguntas frecuentes» y repite el mismo mensaje: compara cuántas capas trabajan, qué sistemas se consultan y si el pedido queda resuelto de verdad.</p><style>
+[id="01-lab-1"] .c1-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:720px){[id="01-lab-1"] .c1-grid{grid-template-columns:minmax(0,1fr)}}
+[id="01-lab-1"] .c1-chat{height:360px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+[id="01-lab-1"] .c1-m{max-width:88%;padding:8px 11px;border-radius:12px;font:400 .92rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="01-lab-1"] .c1-m small{display:block;font:600 .68rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="01-lab-1"] .c1-u{align-self:flex-end;background:var(--accent);color:var(--card);border-bottom-right-radius:3px}
+[id="01-lab-1"] .c1-b{align-self:flex-start;background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:3px}
+[id="01-lab-1"] .c1-h{align-self:flex-start;background:var(--warm-soft);border:1px solid var(--warm);color:var(--ink);border-bottom-left-radius:3px}
+[id="01-lab-1"] .c1-x{align-self:center;font:500 .76rem var(--f-display);color:var(--muted);text-align:center}
+[id="01-lab-1"] .c1-f{display:flex;gap:6px}
+[id="01-lab-1"] .c1-f input{flex:1;min-width:0;font:400 .95rem var(--f-body);padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+[id="01-lab-1"] .c1-chips button{font-weight:500;font-size:.8rem;padding:5px 9px}
+[id="01-lab-1"] .c1-capas{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+[id="01-lab-1"] .c1-capas li{border:1px solid var(--line);border-left:5px solid var(--cc);border-radius:8px;padding:6px 9px;background:var(--card);transition:background .25s,box-shadow .25s}
+[id="01-lab-1"] .c1-capas li b{font:700 .84rem var(--f-display);color:var(--ink)}
+[id="01-lab-1"] .c1-capas li span{font:600 .66rem var(--f-mono);color:var(--muted);float:right}
+[id="01-lab-1"] .c1-capas li small{display:block;font:400 .78rem/1.35 var(--f-body);color:var(--muted);min-height:1em}
+[id="01-lab-1"] .c1-capas li.uso{background:var(--cs)}
+[id="01-lab-1"] .c1-capas li.uso small{color:var(--ink)}
+[id="01-lab-1"] .c1-capas li.on{box-shadow:0 0 0 2px var(--cc)}
+[id="01-lab-1"] .c1-capas li.no{opacity:.45;border-style:dashed;border-left-style:solid}
+[id="01-lab-1"] .c1-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+@media (prefers-reduced-motion: reduce){[id="01-lab-1"] .c1-capas li{transition:none}[id="01-lab-1"] .c1-chat{scroll-behavior:auto}}
+</style>
+<div class="btns" role="group" aria-label="Tipo de bot">
+  <button type="button" id="c1-modo-a" aria-pressed="true">Asistente que actúa</button>
+  <button type="button" id="c1-modo-f" aria-pressed="false">Bot de preguntas frecuentes</button>
+  <button type="button" id="c1-reset">Empezar de nuevo</button>
+</div>
+<div class="c1-grid">
+  <div style="display:grid;gap:8px;min-width:0">
+    <div class="c1-chat" id="c1-chat" aria-live="polite" aria-label="Conversación"></div>
+    <form class="c1-f" id="c1-form" autocomplete="off">
+      <label for="c1-in" class="c1-tit" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Tu mensaje</label>
+      <input id="c1-in" type="text" maxlength="160" placeholder="Escribe como cliente…">
+      <button type="submit" class="primary">Enviar</button>
+    </form>
+    <div class="btns c1-chips" id="c1-chips" role="group" aria-label="Mensajes de ejemplo"></div>
+  </div>
+  <div style="min-width:0">
+    <p class="c1-tit">Qué pasó por dentro</p>
+    <ol class="c1-capas" id="c1-capas"></ol>
+  </div>
+</div>
+<div class="readout texto" id="c1-out" aria-live="polite"></div></div><div class="prose"><p>Fíjate en el pedido de descuento: el asistente no inventa uno, consulta la regla y, si no aplica, lo dice y ofrece otra salida. Y en la falla del servicio: antes de abrir un ticket revisa si hay una avería en tu zona, porque abrir mil tickets por la misma avería no ayuda a nadie.</p><p>Ese cerebro conversacional puede usar distintas técnicas para entender: reglas fijas, un clasificador de intenciones, un <b>modelo de lenguaje grande</b> (<i>LLM, Large Language Model</i>, el tipo de modelo detrás de los asistentes de IA generativa) o un agente que encadena pasos. Cuál conviene en cada tramo es el tema del capítulo 2. Aquí importa otra cosa: ninguna técnica, por buena que sea, reemplaza los tres ingredientes. Un modelo de lenguaje que redacta de maravilla pero no sabe quién escribe sigue siendo un folleto elocuente.</p><p>Para ver que un mensaje de chat, para el sistema, es solo un dato que viaja, envíale uno a un servicio público que devuelve lo que recibe.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Un mensaje de chat es un dato con forma</h3></div><p>Vas a enviar un mensaje simulado, como el que un canal le entrega al servidor del bot, a httpbin.org, un servicio público de pruebas que te devuelve lo que le mandas. No necesitas cuenta ni instalar nada: Windows trae PowerShell, y macOS y Linux traen curl.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>(Invoke-RestMethod -Method Post -Uri https://httpbin.org/post -ContentType "application/json" -Body '{"canal":"web","cuenta":"1001","texto":"Hola, cuanto debo?"}') | ConvertTo-Json</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>curl -s https://httpbin.org/post -H "Content-Type: application/json" -d '{"canal":"web","cuenta":"1001","texto":"Hola, cuanto debo?"}'</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta el comando y busca en la respuesta el campo <code>json</code>: ahí está tu mensaje, separado en campos.</span></li><li><span>Cambia el texto por «No tengo internet desde ayer» y vuelve a enviarlo.</span></li><li><span>Busca también <code>headers</code>: son los datos que acompañan al mensaje (qué formato lleva, desde qué programa salió).</span></li></ol><p><b>Qué observar:</b> el mensaje viaja por <b>HTTPS</b> (<i>Hypertext Transfer Protocol Secure</i>, el protocolo cifrado de la web) como un texto en formato <b>JSON</b> (<i>JavaScript Object Notation</i>, pares de nombre y valor). El bot nunca «lee» la pantalla del cliente: recibe campos como <code>canal</code>, <code>cuenta</code> y <code>texto</code>, y con ellos decide. Si el campo de identidad no viene o no está verificado, no hay contexto real, por más que el texto diga «soy el titular». Cómo llegan estos mensajes desde WhatsApp o la web se ve en el capítulo 8.</p></div></section>
+<section><h2>Expectativas realistas: lo que un bot resuelve bien y lo que nunca debió prometer</h2><div class="prose"><p>Un chatbot no es un empleado incansable que lo sabe todo. Es una máquina muy buena para un tipo de trabajo: pedidos frecuentes, parecidos entre sí, con una respuesta correcta que se puede comprobar y con datos que están en algún sistema. Ahí brilla: responde en segundos, a las tres de la mañana, igual para el cliente mil que para el primero.</p><p>Lo que hace bien:</p><ul><li><b>Consultas con dato exacto</b>: saldo, fecha de vencimiento, estado de un pedido o de un ticket, horario de una agencia.</li><li><b>Trámites cortos y repetidos</b>: enviar un enlace de pago, actualizar un correo, agendar una visita, abrir un caso con los datos completos.</li><li><b>Clasificar y enrutar</b>: entender de qué trata el caso y llevarlo a la cola correcta con la información ya recogida.</li><li><b>Recordar a tiempo</b>: avisar antes de un vencimiento o un corte, con el dato de la persona y el paso concreto que le falta.</li></ul><p>Lo que nunca debió prometer:</p><ul><li><b>«Entiendo todo»</b>. Todo bot tiene un alcance. Prometer lo contrario garantiza frustración el primer día que alguien pregunta algo fuera de él.</li><li><b>Decidir lo que es de la empresa</b>: un reembolso, un descuento, una excepción a la política. Si el bot «decide» con palabras bonitas y sin regla detrás, la empresa queda comprometida con lo que dijo.</li><li><b>Reemplazar a todas las personas</b>. Los casos con matices, enojo o excepciones necesitan juicio humano. La meta es ubicar bien la frontera entre bot y persona, no borrarla.</li><li><b>Funcionar solo después del lanzamiento</b>. Las preguntas cambian, las tarifas cambian, los modelos cambian. Un bot sin alguien que lo mantenga se degrada en semanas.</li></ul></div><div class="ml"><b>En la práctica</b><p><b>Air Canada, 2024.</b> Un pasajero preguntó al chatbot de la aerolínea por la tarifa especial por duelo y el bot le dio una regla de reembolso que no era la vigente. El pasajero pidió el reembolso, la aerolínea se negó y alegó que el chatbot era «responsable de sus propios actos». El tribunal civil de Columbia Británica (Canadá) no aceptó el argumento: la empresa responde por todo lo que publica en sus canales, incluido lo que dice su bot, y debía pagar. La lección para el diseño: las políticas, los precios y las condiciones deben salir de una fuente oficial y vigente, citada en la respuesta, no de lo que el modelo redacte de memoria.</p></div></section>
+<section><h2>Casos de uso por área: atención, ventas, cobranza, soporte técnico y procesos internos</h2><div class="prose"><p>Un chatbot de empresa rara vez sirve a una sola área. En la empresa de servicios del curso, el mismo número de WhatsApp recibe pedidos de cinco frentes, y cada uno tiene su lógica, sus sistemas y sus riesgos:</p><div class="tbl"><table><thead><tr><th>Área</th><th>Pedidos típicos</th><th>Sistemas que toca</th><th>Riesgo de un error</th></tr></thead><tbody><tr><td>Atención al cliente</td><td>horarios, requisitos, cambio de datos, estado de un trámite</td><td>base de conocimiento, CRM</td><td>bajo a medio</td></tr><tr><td>Ventas</td><td>qué plan me conviene, cobertura, contratar, agendar instalación</td><td>catálogo, cobertura, CRM</td><td>medio: precios y promociones</td></tr><tr><td>Cobranza</td><td>cuánto debo, enlace de pago, plan de pagos, aviso de corte</td><td>facturación, pasarela de pagos</td><td>alto: dinero y datos personales</td></tr><tr><td>Soporte técnico</td><td>no tengo servicio, va lento, estado del ticket, visita técnica</td><td>tickets, monitoreo de red, agenda</td><td>medio: un diagnóstico errado cuesta visitas</td></tr><tr><td>Procesos internos</td><td>vacaciones, nómina, inventario, ayuda al agente</td><td>recursos humanos, sistemas internos</td><td>variable: datos de empleados</td></tr></tbody></table></div><p>Dos detalles de la tabla merecen atención. Primero, la columna de sistemas: cada área conecta el bot con sistemas distintos, y cada conexión es un proyecto de integración con sus permisos (capítulo 11). Segundo, la columna de riesgo: cobranza no se puede tratar con los controles de una pregunta de horario. Equivocarse en un horario cuesta una visita en vano; equivocarse en un monto cuesta dinero, un reclamo y quizás una multa.</p><p>El área de <b>procesos internos</b> suele olvidarse. Un bot para empleados (vacaciones, políticas, ayuda al agente de atención mientras conversa con un cliente) tiene usuarios ya identificados, fuentes internas controladas y tolerancia a errores algo mayor, porque una persona revisa antes de actuar. Por eso muchas empresas empiezan ahí: es un buen lugar para aprender sin exponer a los clientes.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que abre un canal de WhatsApp suele descubrir, al contar los mensajes del primer mes, que unos pocos pedidos se llevan la mayor parte del volumen: cuánto debo, cómo pago, no tengo servicio y estado de mi caso. Esa concentración es la que hace rentable al bot. Los pedidos largos y raros, como una disputa por un cobro o un traslado de titular con documentos, siguen yendo a personas.</p></div></section>
+<section><h2>La prueba de idoneidad: ocho preguntas antes de automatizar</h2><div class="prose"><p>Ya sabes qué hace bien un bot. La pregunta práctica es otra: de todos los pedidos que llegan, ¿cuáles conviene automatizar primero? Para responderla se usa una <b>prueba de idoneidad</b> de ocho preguntas. No es una fórmula mágica; es una lista que obliga a mirar lo que las demos esconden.</p></div><div class="analogia"><b>Imagínalo así</b><p>Cuando un banco decidió qué trámites pasar al cajero automático, empezó por el retiro de efectivo y la consulta de saldo, no por el crédito hipotecario. El retiro es frecuente, igual para todos, verificable (el dinero sale o no sale) y, si algo falla, hay un número al que llamar. El crédito tiene excepciones, documentos y riesgo. La prueba de idoneidad hace esa misma pregunta con cada pedido que piensas darle al bot.</p></div><div class="prose"><div class="tbl"><table><thead><tr><th>Pregunta</th><th>Qué mira</th><th>Cuándo vale 3 (bien)</th><th>Cuándo vale 0</th></tr></thead><tbody><tr><td><b>Valor</b></td><td>¿qué resultado cambia y cuánto vale hoy?</td><td>hay línea base: volumen, costo o tiempo medidos</td><td>«sería bueno tenerlo»</td></tr><tr><td><b>Repetibilidad</b></td><td>¿son pocas variantes con resultado correcto observable?</td><td>el 90 % de los casos se parece</td><td>cada caso es distinto</td></tr><tr><td><b>Fuente autorizada</b></td><td>¿hay un sistema o documento oficial, vigente y con permisos?</td><td>API de facturación con dueño</td><td>lo sabe «la gente de siempre»</td></tr><tr><td><b>Riesgo</b></td><td>¿cuánto daño hace la peor respuesta equivocada?</td><td>un horario mal dicho</td><td>dinero, salud o contratos sin control</td></tr><tr><td><b>Nivel de acción</b></td><td>¿están listos los controles que pide su nivel?</td><td>informa y la fuente basta</td><td>ejecuta sin confirmación ni registro</td></tr><tr><td><b>Traspaso</b></td><td>¿puede pasar a una persona rápido y con contexto?</td><td>cola, horario y resumen listos</td><td>no hay a quién pasarlo</td></tr><tr><td><b>Economía</b></td><td>¿cuesta menos por caso bien resuelto que hoy?</td><td>medido en piloto</td><td>nadie lo calculó</td></tr><tr><td><b>Dueño</b></td><td>¿quién responde por el contenido, la operación y el apagado?</td><td>una persona con nombre</td><td>«lo ve TI»</td></tr></tbody></table></div><p>La regla que más importa: <b>los riesgos no se promedian</b>. Un pedido con nota alta en todo pero cero en fuente autorizada, riesgo, traspaso o dueño no está listo, aunque el total se vea bien. Un promedio de 2,5 con un cero en riesgo es una bomba con buen promedio.</p></div><div class="lab" id="01-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>La prueba de idoneidad: ¿qué automatizar primero?</h3></div><p class="hint">Elige uno de los ocho pedidos candidatos de la empresa de servicios. Cada uno trae una puntuación sugerida de 0 a 3 en las ocho preguntas; muévela según lo que creas. Abajo, el ranking se reordena: verde es «primera ola», azul es «más adelante, con controles», gris es «todavía no» y rojo es «bloqueado» por un cero en un criterio crítico.</p><style>
+[id="01-lab-2"] .c2-ctls{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px 16px}
+[id="01-lab-2"] .c2-ctls .ctl output{font-size:.78rem}
+[id="01-lab-2"] .c2-crit{color:var(--warm);font-weight:700}
+[id="01-lab-2"] .c2-rank{display:grid;gap:6px}
+[id="01-lab-2"] .c2-fila{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.1fr) auto;gap:8px;align-items:center;font:500 .84rem var(--f-display);padding:3px 6px;border-radius:7px;cursor:pointer;border:1px solid transparent;background:none;color:var(--ink);text-align:left}
+[id="01-lab-2"] .c2-fila[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+[id="01-lab-2"] .c2-bar{height:14px;background:var(--grid);border-radius:7px;overflow:hidden}
+[id="01-lab-2"] .c2-bar i{display:block;height:100%;border-radius:7px;transition:width .3s}
+[id="01-lab-2"] .c2-et{font:700 .68rem var(--f-display);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+@media (max-width:520px){[id="01-lab-2"] .c2-fila{grid-template-columns:minmax(0,1fr) 70px;}[id="01-lab-2"] .c2-et{grid-column:1/-1}}
+@media (prefers-reduced-motion: reduce){[id="01-lab-2"] .c2-bar i{transition:none}}
+</style>
+<div class="opciones">
+  <label>Pedido candidato
+    <select id="c2-ped"></select></label>
+</div>
+<div class="c2-ctls" id="c2-ctls"></div>
+<div class="btns"><button type="button" id="c2-rest">Volver a la puntuación sugerida</button></div>
+<div class="readout texto" id="c2-out" aria-live="polite"></div>
+<div class="c2-rank" id="c2-rank" aria-label="Ranking de los ocho pedidos"></div>
+<div class="legend"><span><i style="background:var(--good)"></i>Primera ola (18 o más)</span><span><i style="background:var(--accent)"></i>Más adelante, con controles (13 a 17)</span><span><i style="background:var(--muted)"></i>Todavía no (12 o menos)</span><span><i style="background:var(--warm)"></i>Bloqueado por un cero crítico</span></div></div><div class="prose"><p>Si juegas un rato con el laboratorio verás un patrón: los pedidos de informar y los trámites cortos con sistema claro suben solos; la negociación y la disputa bajan, no porque la tecnología no pueda conversar sobre ellas, sino porque no hay fuente autorizada, el riesgo es alto o el resultado correcto depende del juicio de alguien. Elegir qué pedidos llevar a un portafolio de IA de toda la empresa es un tema más amplio, que trata el curso <a href="https://aaramirez.github.io/adopcion-de-ia/temario.html" target="_blank" rel="noopener">IA en la empresa</a>.</p></div></section>
+<section><h2>Informar, recomendar, decidir o ejecutar: cada nivel pide controles distintos</h2><div class="prose"><p>Una de las ocho preguntas merece su propia sección: el <b>nivel de acción</b>. No es lo mismo que el bot te diga tu saldo que te cobre. Hay cuatro niveles, y cada uno suma controles a los del anterior:</p><ul><li><b>Informar</b>: el bot entrega un dato o una explicación. «Tu factura vence el 5 de diciembre». Pide una fuente autorizada y vigente, citarla cuando es una política, abstenerse cuando no sabe y, si el dato es personal, identidad verificada.</li><li><b>Recomendar</b>: el bot sugiere, la persona elige. «Con tu uso, el plan de 300 Mbps te alcanza». Además de lo anterior, pide criterios explícitos, decir que es una recomendación y guardar qué se recomendó y por qué.</li><li><b>Decidir</b>: el bot resuelve algo que compromete a la empresa. «Sí, calificas para el descuento de cliente fiel». La decisión la toma una <b>regla codificada</b> en el sistema, no el texto del modelo; queda un registro auditable y la persona puede apelar ante un humano.</li><li><b>Ejecutar</b>: el bot cambia el estado de un sistema. «Listo, el pago quedó registrado». Pide identidad fuerte, confirmación explícita antes de actuar, que repetir la orden no duplique el efecto, permisos mínimos para el bot, comprobante y una forma de reversar.</li></ul></div><figure class="fig fig-esquema" id="01-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 410" style="min-width:680px" role="img" aria-label="Escalera de cuatro niveles de acción: informar, recomendar, decidir y ejecutar, cada uno más alto que el anterior, con un ejemplo y los controles que agrega; los controles se acumulan hacia la derecha">
+  <defs>
+    <marker id="d01b-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <line x1="20" y1="28" x2="856" y2="28" class="ln s-warm" style="stroke-width:2" marker-end="url(#d01b-fl)"/>
+  <text x="20" y="18" class="t t-xs t-b k-warm">MÁS DAÑO POSIBLE SI SE EQUIVOCA → MÁS CONTROLES</text>
+
+  
+  <rect x="10" y="170" width="206" height="50" rx="8" class="c-enl"/>
+  <text x="24" y="192" class="t t-b k-enl" style="font-size:15px">1 · Informar</text>
+  <text x="24" y="210" class="t t-s">entrega un dato</text>
+
+  <rect x="226" y="130" width="206" height="90" rx="8" class="c-red"/>
+  <text x="240" y="152" class="t t-b k-red" style="font-size:15px">2 · Recomendar</text>
+  <text x="240" y="170" class="t t-s">sugiere; la persona elige</text>
+
+  <rect x="442" y="90" width="206" height="130" rx="8" class="c-tra"/>
+  <text x="456" y="112" class="t t-b k-tra" style="font-size:15px">3 · Decidir</text>
+  <text x="456" y="130" class="t t-s">compromete a la empresa</text>
+
+  <rect x="658" y="50" width="206" height="170" rx="8" class="c-apl"/>
+  <text x="672" y="72" class="t t-b k-apl" style="font-size:15px">4 · Ejecutar</text>
+  <text x="672" y="90" class="t t-s">cambia un sistema</text>
+
+  <line x1="10" y1="220" x2="864" y2="220" class="ln"/>
+
+  
+  <g class="t t-s t-b">
+    <text x="16" y="244">«Tu factura vence el</text><text x="16" y="259">5 de diciembre»</text>
+    <text x="232" y="244">«Con tu uso, el plan</text><text x="232" y="259">de 300 Mbps te alcanza»</text>
+    <text x="448" y="244">«Calificas para el</text><text x="448" y="259">descuento de cliente fiel»</text>
+    <text x="664" y="244">«Listo: pago registrado,</text><text x="664" y="259">comprobante 8841»</text>
+  </g>
+  <g class="t t-xs t-m">
+    <text x="16" y="286">CONTROLES QUE AGREGA</text>
+    <text x="232" y="286">CONTROLES QUE AGREGA</text>
+    <text x="448" y="286">CONTROLES QUE AGREGA</text>
+    <text x="664" y="286">CONTROLES QUE AGREGA</text>
+  </g>
+  <g class="t t-s">
+    <text x="16" y="306">• fuente oficial y vigente</text>
+    <text x="16" y="324">• cita la política</text>
+    <text x="16" y="342">• se abstiene si no sabe</text>
+    <text x="16" y="360">• identidad si el dato</text>
+    <text x="26" y="375">es personal</text>
+
+    <text x="232" y="306" class="t-m">+ todo lo de informar</text>
+    <text x="232" y="324">• criterios explícitos</text>
+    <text x="232" y="342">• dice que es sugerencia</text>
+    <text x="232" y="360">• guarda qué recomendó</text>
+    <text x="242" y="375">y por qué</text>
+
+    <text x="448" y="306" class="t-m">+ todo lo anterior</text>
+    <text x="448" y="324">• regla codificada,</text>
+    <text x="458" y="339">no el texto del modelo</text>
+    <text x="448" y="357">• registro auditable</text>
+    <text x="448" y="375">• apelar ante una persona</text>
+
+    <text x="664" y="306" class="t-m">+ todo lo anterior</text>
+    <text x="664" y="324">• identidad fuerte</text>
+    <text x="664" y="342">• confirmación antes de actuar</text>
+    <text x="664" y="360">• repetir no duplica</text>
+    <text x="664" y="378">• permisos mínimos</text>
+    <text x="664" y="396">• comprobante y reversa</text>
+  </g>
+</svg></div><figcaption><b>La escalera de los niveles de acción.</b> Cada escalón es un nivel, de izquierda a derecha: informar, recomendar, decidir y ejecutar. Debajo de cada uno, un ejemplo de la empresa de servicios y los controles que agrega. Los controles se acumulan: ejecutar pide lo suyo y todo lo de los escalones anteriores. La altura del escalón crece con el daño que puede hacer un error.</figcaption></figure><div class="analogia"><b>Imagínalo así</b><p>Piensa en un practicante recién llegado a un banco. El primer día puede informar (dónde queda cada oficina). A la semana puede recomendar (qué cuenta conviene), pero el cliente decide. Decidir un crédito lo hace el comité con reglas escritas. Y mover dinero exige firma, clave y comprobante. Nadie le daría la chequera el primer día por muy bien que hable.</p></div><div class="prose"><p>Un mismo flujo puede cruzar varios niveles en pocos turnos. «Cuánto debo» es informar; «mándame el enlace» es ejecutar. El siguiente diagrama sigue esa conversación completa: fíjate en qué momento se verifica la identidad, quién pone el monto y por dónde pasa (y por dónde no pasa) la tarjeta.</p></div><figure class="fig fig-flujo" id="01-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680" style="min-width:720px" role="img" aria-label="Diagrama de secuencia: la clienta pregunta cuánto debe; el asistente verifica su identidad con un código de un solo uso, consulta la facturación, ofrece el enlace, pide a la pasarela un enlace por el monto de la factura, la clienta paga en la página de la pasarela y la pasarela avisa a la facturación">
+  <defs>
+    <marker id="d01c-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d01c-id" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-casa"/></marker>
+    <marker id="d01c-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d01c-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d01c-pag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-apl"/></marker>
+  </defs>
+  
+  <rect x="10" y="14" width="120" height="52" rx="10" class="caja"/><text x="70" y="36" class="t t-b" text-anchor="middle">Clienta</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="165" y="14" width="120" height="52" rx="10" class="c-red"/><text x="225" y="36" class="t t-b" text-anchor="middle">Asistente</text><text x="225" y="54" class="t t-s t-m" text-anchor="middle">el cerebro</text>
+  <rect x="320" y="14" width="120" height="52" rx="10" class="d-casa"/><text x="380" y="36" class="t t-b" text-anchor="middle">Identidad</text><text x="380" y="54" class="t t-s t-m" text-anchor="middle">verificación</text>
+  <rect x="475" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="535" y="36" class="t t-b" text-anchor="middle">Facturación</text><text x="535" y="54" class="t t-s t-m" text-anchor="middle">cuentas y facturas</text>
+  <rect x="630" y="14" width="120" height="52" rx="10" class="c-apl"/><text x="690" y="36" class="t t-b" text-anchor="middle">Pasarela</text><text x="690" y="54" class="t t-s t-m" text-anchor="middle">de pagos</text>
+  <line x1="70" y1="66" x2="70" y2="612" class="vida"/>
+  <line x1="225" y1="66" x2="225" y2="612" class="vida"/>
+  <line x1="380" y1="66" x2="380" y2="612" class="vida"/>
+  <line x1="535" y1="66" x2="535" y2="612" class="vida"/>
+  <line x1="690" y1="66" x2="690" y2="612" class="vida"/>
+
+  <g class="t t-s">
+    
+    <line x1="70" y1="104" x2="222" y2="104" class="ln s-fis" style="stroke-width:2" marker-end="url(#d01c-fis)"/>
+    <text x="78" y="97">① «Hola, ¿cuánto debo?»</text>
+    <line x1="225" y1="144" x2="377" y2="144" class="ln" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d01c-id)"/>
+    <text x="233" y="137">② ¿De quién es este número?</text>
+    <line x1="380" y1="184" x2="73" y2="184" class="ln" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d01c-id)"/>
+    <text x="80" y="177">③ código de un solo uso por SMS; ella lo escribe en el chat</text>
+    <line x1="380" y1="224" x2="228" y2="224" class="ln" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d01c-id)"/>
+    <text x="233" y="217">④ verificada: titular de la cuenta 1001</text>
+
+    
+    <line x1="225" y1="274" x2="532" y2="274" class="ln s-red" style="stroke-width:2" marker-end="url(#d01c-red)"/>
+    <text x="233" y="267">⑤ deuda de la cuenta 1001 (solo lectura)</text>
+    <line x1="535" y1="314" x2="228" y2="314" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d01c-sis)"/>
+    <text x="233" y="307">⑥ factura F-2207 · US$ 25,00 · vence 05/12</text>
+    <line x1="225" y1="354" x2="73" y2="354" class="ln s-fis" style="stroke-width:2" marker-end="url(#d01c-fis)"/>
+    <text x="80" y="347">⑦ «Debes US$ 25,00. ¿Te envío el enlace para pagar?»</text>
+
+    
+    <line x1="70" y1="404" x2="222" y2="404" class="ln s-fis" style="stroke-width:2" marker-end="url(#d01c-fis)"/>
+    <text x="78" y="397">⑧ «Sí, por favor»</text>
+    <line x1="225" y1="444" x2="687" y2="444" class="ln s-apl" style="stroke-width:2" marker-end="url(#d01c-pag)"/>
+    <text x="233" y="437">⑨ crea un enlace por el monto de F-2207 (lo pone la factura, no el modelo)</text>
+    <line x1="225" y1="484" x2="73" y2="484" class="ln s-fis" style="stroke-width:2" marker-end="url(#d01c-fis)"/>
+    <text x="80" y="477">⑩ «Aquí está tu enlace seguro»</text>
+    <line x1="70" y1="524" x2="687" y2="524" class="ln s-apl" style="stroke-width:2.6" marker-end="url(#d01c-pag)"/>
+    <text x="78" y="517">⑪ escribe la tarjeta en la página de la pasarela, nunca en el chat</text>
+    <line x1="690" y1="564" x2="538" y2="564" class="ln s-apl" style="stroke-width:2" marker-end="url(#d01c-pag)"/>
+    <text x="548" y="557">⑫ pago aprobado</text>
+    <text x="78" y="600" class="t-b">El asistente ve la factura pagada y envía el comprobante a la clienta.</text>
+  </g>
+
+  
+  <g class="t t-xs t-b">
+    <path d="M790 86v146" class="ln" style="stroke:var(--d-casa);stroke-width:3"/><text x="800" y="150" class="k-casa">VERIFICAR</text><text x="800" y="165" class="t-m">quién escribe</text>
+    <path d="M790 256v106" class="ln s-red" style="stroke-width:3"/><text x="800" y="305" class="k-red">CONSULTAR</text><text x="800" y="320" class="t-m">informar</text>
+    <path d="M790 386v186" class="ln s-apl" style="stroke-width:3"/><text x="800" y="475" class="k-apl">PAGAR</text><text x="800" y="490" class="t-m">ejecutar</text>
+  </g>
+  <rect x="10" y="626" width="880" height="44" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="653" class="t t-s" text-anchor="middle">En cualquier paso, «quiero hablar con una persona» pasa el caso a un agente con la cuenta verificada y el resumen.</text>
+</svg></div><figcaption><b>Flujo de «cuánto debo» hasta el pago.</b> Los participantes están arriba: la clienta, el asistente, el servicio de identidad, la facturación y la pasarela de pagos. El tiempo corre hacia abajo y cada flecha numerada es un mensaje. Las fases de la derecha separan los tres momentos: verificar quién escribe (①–④), consultar la deuda (⑤–⑦) y ejecutar el pago (⑧–⑫). El monto lo pone la facturación, no el asistente, y la tarjeta se escribe en la página de la pasarela, nunca en el chat.</figcaption></figure><div class="prose"><p>Dos decisiones del flujo no son detalles. El monto del enlace sale de la factura, nunca de lo que el modelo «entendió»: si un cliente escribe «págame 2,50 en vez de 25», el sistema no le hace caso. Y los datos de la tarjeta nunca pasan por la conversación: el cliente los escribe en la página de la <b>pasarela de pagos</b> (<i>payment gateway</i>, el servicio que procesa tarjetas y transferencias), que cumple la norma de seguridad de la industria de tarjetas (PCI DSS). Así, aunque alguien lea las conversaciones guardadas, no encuentra tarjetas. El detalle de pagos seguros está en el capítulo 12.</p></div><div class="lab" id="01-lab-3"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Mapa de casos por área y nivel de acción</h3></div><p class="hint">Toca uno de los doce pedidos y luego la celda de la cuadrícula donde crees que va: la fila es el área y la columna, el nivel de acción. Al ubicarlo verás si coincide con la ubicación sugerida y qué controles pide ese nivel. «Ver la ubicación sugerida» los coloca todos; fíjate en cuántos controles se acumulan en la columna de ejecutar.</p><style>
+[id="01-lab-3"] .c3-peds{display:flex;flex-wrap:wrap;gap:6px}
+[id="01-lab-3"] .c3-peds button{font-weight:500;font-size:.8rem;padding:5px 9px;text-align:left}
+[id="01-lab-3"] .c3-peds button.puesto{border-style:dashed}
+[id="01-lab-3"] .c3-peds button b{font-family:var(--f-mono);margin-right:4px}
+[id="01-lab-3"] .c3-mat{display:grid;grid-template-columns:minmax(62px,.9fr) repeat(4,minmax(0,1fr));gap:4px}
+[id="01-lab-3"] .c3-mat .h{font:700 .68rem var(--f-display);letter-spacing:.03em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 2px}
+[id="01-lab-3"] .c3-mat button.h{background:none;border:1px solid transparent;border-bottom:3px solid var(--cc);border-radius:6px;cursor:pointer;color:var(--ink)}
+[id="01-lab-3"] .c3-mat button.h[aria-pressed="true"]{background:var(--cs)}
+[id="01-lab-3"] .c3-mat .a{font:700 .74rem var(--f-display);color:var(--ink);display:flex;align-items:center;padding:4px 2px;overflow-wrap:normal;hyphens:manual}
+[id="01-lab-3"] .c3-mat .h .c{display:none}
+@media (max-width:560px){[id="01-lab-3"] .c3-mat .h .l{display:none}[id="01-lab-3"] .c3-mat .h .c{display:inline}[id="01-lab-3"] .c3-mat .a{font-size:.68rem}}
+[id="01-lab-3"] .c3-cel{min-height:48px;padding:4px;border:1px dashed var(--line);border-radius:7px;background:var(--paper);display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;cursor:pointer;font:inherit}
+[id="01-lab-3"] .c3-cel:hover{border-color:var(--accent)}
+[id="01-lab-3"] .c3-cel i{font:700 .72rem var(--f-mono);font-style:normal;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:var(--card);padding:0 4px}
+[id="01-lab-3"] .c3-cel i.bien{background:var(--good)}
+[id="01-lab-3"] .c3-cel i.mal{background:var(--warm)}
+[id="01-lab-3"] .c3-ctl{border-left:4px solid var(--cc);padding:8px 12px;background:var(--cs);border-radius:0 8px 8px 0;font:400 .88rem/1.45 var(--f-body)}
+[id="01-lab-3"] .c3-ctl ul{margin:4px 0 0;padding-left:18px}
+[id="01-lab-3"] .c3-ctl li.nuevo{font-weight:700}
+</style>
+<p class="hint" style="margin:0">1. Elige un pedido:</p>
+<div class="c3-peds" id="c3-peds" role="group" aria-label="Pedidos de clientes y empleados"></div>
+<p class="hint" style="margin:0">2. Toca la celda donde va (fila: área · columna: nivel de acción). Toca un nivel para ver sus controles.</p>
+<div class="c3-mat" id="c3-mat"></div>
+<div class="btns"><button type="button" id="c3-sug">Ver la ubicación sugerida</button><button type="button" id="c3-vac">Vaciar</button></div>
+<div class="readout texto" id="c3-out" aria-live="polite"></div>
+<div class="c3-ctl" id="c3-ctl" aria-live="polite"></div></div></section>
+<section><h2>Qué cuenta como éxito y como fracaso, y cómo leer la evidencia de un caso público</h2><div class="prose"><p>Todo proveedor de chatbots tiene un caso de éxito con cifras enormes. Para separar la propaganda de la evidencia necesitas dos herramientas: saber qué cuenta como éxito y saber cuánto pesa cada fuente.</p><p><b>Éxito</b> es más que volumen. Que un bot tenga un millón de conversaciones demuestra escala, no que resuelva. Un proyecto exitoso muestra evidencia en al menos dos de estas dimensiones:</p><div class="tbl"><table><thead><tr><th>Dimensión</th><th>Pregunta</th><th>Indicador</th></tr></thead><tbody><tr><td>Adopción</td><td>¿la gente vuelve por su cuenta?</td><td>usuarios que repiten, años de operación</td></tr><tr><td>Resultado</td><td>¿se resolvió la necesidad, bien?</td><td>resolución correcta de extremo a extremo</td></tr><tr><td>Economía</td><td>¿cambia el costo o la capacidad?</td><td>costo total por caso bien resuelto</td></tr><tr><td>Experiencia</td><td>¿le cuesta menos esfuerzo al cliente?</td><td><b>CSAT</b> (<i>Customer Satisfaction</i>, satisfacción tras la conversación), NPS, espera, repetición</td></tr><tr><td>Gobierno</td><td>¿opera con límites y control?</td><td>fuentes, permisos, pruebas, traspaso, monitoreo</td></tr></tbody></table></div><p><b>Fracaso</b> tampoco es una sola cosa. Hay retiros (el servicio se apaga, como Tay de Microsoft en 2016, desconectado en menos de un día después de que usuarios coordinados lo llevaran a publicar mensajes ofensivos), daños con responsabilidad (Air Canada), pilotos que nunca escalan e incidentes controlados (DPD, en 2024: tras una actualización, un cliente logró que el bot dijera groserías y criticara a la propia empresa; la parte afectada se desactivó y se corrigió).</p><p>La métrica más engañosa del oficio es la <b>contención</b> (<i>containment rate</i>): el porcentaje de conversaciones que terminan sin pasar a una persona. Suena a éxito, pero una conversación «contenida» puede ser un cliente que se rindió y llamó por teléfono al día siguiente. Por eso la contención se lee junto al <b>recontacto</b> (el mismo cliente vuelve por el mismo motivo dentro de, por ejemplo, siete días) y al costo por caso bien resuelto.</p></div><div class="lab" id="01-lab-4"><div class="lab-title"><span class="tag">Laboratorio</span><h3>El tablero que engaña: contención contra resolución</h3></div><p class="hint">Simulas un mes de 10.000 conversaciones. Sube la contención y mira el número grande que celebraría un tablero ingenuo. Luego baja el porcentaje de contenidas que de verdad se resolvieron y el de traspasos que llegan con contexto: mira cuántos clientes vuelven, cuánto resuelve de verdad el sistema y cuánto cuesta cada caso bien resuelto frente a atender todo con personas.</p><style>
+[id="01-lab-4"] .c4-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+[id="01-lab-4"] .c4-kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)}
+[id="01-lab-4"] .c4-kpi small{display:block;font:700 .68rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+[id="01-lab-4"] .c4-kpi b{display:block;font:700 1.7rem var(--f-display);line-height:1.15}
+[id="01-lab-4"] .c4-kpi span{font:400 .8rem var(--f-body);color:var(--muted)}
+[id="01-lab-4"] .c4-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+[id="01-lab-4"] .c4-bar i{display:block;height:100%;transition:width .3s;min-width:0}
+@media (prefers-reduced-motion: reduce){[id="01-lab-4"] .c4-bar i{transition:none}}
+</style>
+<div class="ctls">
+  <label class="ctl">Contención: conversaciones que terminan sin una persona <output id="c4-c-o"></output>
+    <input id="c4-c" type="range" min="30" max="95" step="1" value="80"></label>
+  <label class="ctl">De las contenidas, las que de verdad quedaron resueltas <output id="c4-r-o"></output>
+    <input id="c4-r" type="range" min="30" max="100" step="1" value="60"></label>
+  <label class="ctl">Traspasos que llegan a la persona con contexto <output id="c4-x-o"></output>
+    <input id="c4-x" type="range" min="0" max="100" step="5" value="30"></label>
+</div>
+<div class="c4-kpis">
+  <div class="c4-kpi"><small>Lo que dice el tablero</small><b id="c4-k1" style="color:var(--accent)"></b><span>de contención</span></div>
+  <div class="c4-kpi"><small>Lo que pasó de verdad</small><b id="c4-k2" style="color:var(--good)"></b><span>resuelto al primer contacto</span></div>
+  <div class="c4-kpi"><small>Costo por caso resuelto</small><b id="c4-k3"></b><span id="c4-k3s"></span></div>
+</div>
+<div class="c4-bar" id="c4-bar" role="img" aria-label="Destino de 10.000 conversaciones"></div>
+<div class="legend"><span><i style="background:var(--good)"></i>Resueltas por el bot</span><span><i style="background:var(--accent)"></i>Pasadas a una persona</span><span><i style="background:var(--warm)"></i>«Contenidas» que volvieron</span><span><i style="background:var(--muted)"></i>«Contenidas» que se fueron</span></div>
+<div class="readout texto" id="c4-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Supuestos del ejemplo: cada conversación con el bot cuesta US$ 0,40; un caso atendido por una persona, US$ 3,50 con contexto y US$ 5,00 sin contexto (hay que volver a preguntar todo); las personas resuelven el 90 %; de las contenidas sin resolver, 6 de cada 10 vuelven en siete días (sin contexto) y el resto se va.</p></div><div class="ml"><b>En la práctica</b><p><b>Klarna, 2024.</b> La empresa de pagos anunció que su asistente con IA atendió en el primer mes dos tercios de sus chats de servicio, con satisfacción similar a la de los agentes y menos consultas repetidas. Meses después, agencias como Reuters y AP informaron que la empresa volvía a reforzar la atención humana para los casos con matices. Las dos noticias no se contradicen: el bot era eficiente en lo rutinario y la empresa ajustó la frontera al medir. Eso es gobierno funcionando, no necesariamente un fracaso.</p></div><div class="prose"><p>Para leer un caso público, clasifica su evidencia antes de citarlo:</p><ul><li><b>Nivel A, fuerte</b>: una sentencia o resolución oficial, un experimento con grupo de control publicado, el reconocimiento oficial de la propia empresa sobre un retiro. El fallo de Air Canada y el retiro de Tay están aquí. También el asistente Pounce de la Universidad Estatal de Georgia, que en un ensayo aleatorizado controlado con unos 7.500 admitidos redujo en 21 % los que no llegaban a matricularse.</li><li><b>Nivel B, suficiente</b>: cifras de la propia empresa que un medio independiente corrobora. Klarna y Erica, el asistente de Bank of America con decenas de millones de usuarios, están aquí.</li><li><b>Nivel C, indicativa</b>: un caso publicado por un proveedor, un episodio viral, un comunicado sin verificación. Sirve como señal, no como prueba.</li></ul></div><figure class="fig fig-flujo" id="01-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 540" style="min-width:600px" role="img" aria-label="Cadena causal de los fracasos públicos de chatbots, de la presión por automatizar hasta el daño, con el control que rompe cada eslabón a la derecha">
+  <defs>
+    <marker id="d01d-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d01d-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-enl"/></marker>
+  </defs>
+  <text x="180" y="18" class="t t-xs t-b t-m" text-anchor="middle">LA CADENA QUE SE REPITE</text>
+  <text x="590" y="18" class="t t-xs t-b k-enl" text-anchor="middle">EL CONTROL QUE LA ROMPE</text>
+
+  <g class="t">
+    <rect x="20" y="30" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="57"><tspan class="t-b">1</tspan>  Presión por automatizar ya</text>
+    <rect x="20" y="92" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="119"><tspan class="t-b">2</tspan>  Alcance amplio: «que responda todo»</text>
+    <rect x="20" y="154" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="181"><tspan class="t-b">3</tspan>  Demo convincente con preguntas fáciles</text>
+    <rect x="20" y="216" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="243"><tspan class="t-b">4</tspan>  Integración a medias con los sistemas</text>
+    <rect x="20" y="278" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="305"><tspan class="t-b">5</tspan>  Se mide la charla, no el resultado</text>
+    <rect x="20" y="340" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="367"><tspan class="t-b">6</tspan>  Lanzamiento sin umbrales de daño</text>
+    <rect x="20" y="402" width="320" height="44" rx="9" class="caja"/>
+    <text x="36" y="429"><tspan class="t-b">7</tspan>  Llega la primera excepción real</text>
+    <rect x="20" y="464" width="320" height="58" rx="9" class="caja s-warm" style="stroke-width:2"/>
+    <text x="36" y="489" class="k-warm"><tspan class="t-b">8</tspan>  Daño público</text>
+    <text x="54" y="508" class="t-s t-m">sentencia, retiro o crisis de marca</text>
+  </g>
+  <g>
+    <line x1="180" y1="74" x2="180" y2="90" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="136" x2="180" y2="152" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="198" x2="180" y2="214" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="260" x2="180" y2="276" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="322" x2="180" y2="338" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="384" x2="180" y2="400" class="ln" marker-end="url(#d01d-fl)"/>
+    <line x1="180" y1="446" x2="180" y2="462" class="ln" marker-end="url(#d01d-fl)"/>
+  </g>
+
+  <g class="t t-s">
+    <line x1="410" y1="52" x2="344" y2="52" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="34" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="56">Línea base medida y un dueño con nombre</text>
+    <line x1="410" y1="114" x2="344" y2="114" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="96" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="118">Pocos pedidos, con exclusiones escritas</text>
+    <line x1="410" y1="176" x2="344" y2="176" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="158" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="180">Pruebas con casos difíciles y usuarios hostiles</text>
+    <line x1="410" y1="238" x2="344" y2="238" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="220" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="242">Fuente autorizada conectada, con permisos</text>
+    <line x1="410" y1="300" x2="344" y2="300" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="282" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="304">Resolución correcta, recontacto y costo por caso</text>
+    <line x1="410" y1="362" x2="344" y2="362" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="344" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="366">Umbrales de daño, interruptor de apagado y reversa</text>
+    <line x1="410" y1="424" x2="344" y2="424" class="ln s-enl ln-d" marker-end="url(#d01d-ok)"/>
+    <rect x="412" y="406" width="358" height="36" rx="8" class="c-enl"/>
+    <text x="424" y="428">Traspaso rápido a una persona, con contexto</text>
+    <text x="424" y="490" class="t-m">Si se llega aquí: apagar, corregir, probar de nuevo</text>
+    <text x="424" y="507" class="t-m">y publicar qué se cambió.</text>
+  </g>
+</svg></div><figcaption><b>La cadena que termina en un caso famoso.</b> Cada caja es un eslabón de la secuencia que se repite en los fracasos públicos, de arriba abajo: presión por automatizar, alcance amplio, una demo convincente, integración a medias, métricas de interacción en vez de resultado, lanzamiento sin umbrales de daño, la primera excepción real y el daño. A la derecha, en verde, el control que rompe cada eslabón: casi todos son decisiones que se toman antes de escribir una línea de código.</figcaption></figure><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Lee la evidencia de tres casos públicos</h3></div><p>Abre las tres fuentes y clasifica cada caso con los criterios de esta sección. Solo necesitas el navegador; los textos están en inglés y el traductor del navegador sirve.</p><ol class="steps"><li><span>El fallo de Air Canada: <a href="https://en.wikipedia.org/wiki/Moffatt_v._Air_Canada" target="_blank" rel="noopener">el artículo «Moffatt v. Air Canada» en Wikipedia</a>. Busca quién decidió, qué argumentó la aerolínea y qué ordenó el tribunal.</span></li><li><span>El anuncio de Klarna: <a href="https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/" target="_blank" rel="noopener">el comunicado de prensa de Klarna</a>. Anota cada cifra y quién la mide.</span></li><li><span>El incidente de DPD en The Guardian: <a href="https://www.theguardian.com/technology/2024/jan/20/dpd-ai-chatbot-swears-calls-itself-useless-and-criticises-firm" target="_blank" rel="noopener">la nota de The Guardian</a>. Busca qué cambió justo antes del incidente y qué hizo la empresa.</span></li><li><span>Para cada caso, escribe: nivel de evidencia (A, B o C), dimensiones de éxito o tipo de fracaso, y qué control lo habría evitado o lo sostuvo.</span></li></ol><p><b>Qué observar:</b> el anuncio de Klarna es del propio interesado y por sí solo sería nivel C o B; la decisión del tribunal es nivel A aunque el caso sea pequeño. Fíjate en que el de DPD empieza con «tras una actualización»: el bot funcionaba, y un cambio sin pruebas de regresión lo rompió. Nada de esto depende de qué tan inteligente era el modelo.</p></div></section>
+<section><h2>El asistente de la empresa de servicios que se construye en todo el curso</h2><div class="prose"><p>Desde el capítulo siguiente vas a construir, pieza por pieza, el asistente de una empresa de servicios ficticia, <b>Servicios Ejemplo</b>, que vende internet y televisión para el hogar con factura mensual. Su asistente se llama <b>Pía</b> y se presenta siempre como asistente virtual. Atiende por WhatsApp y por la web en <code>www.ejemplo.com</code>.</p><p>Pía no nace completa. Empieza como en este capítulo recomendamos: con pocos pedidos repetibles, con fuente autorizada, acción verificable y salida humana. Su primera ola son los pedidos que pasaron la prueba de idoneidad: consultar la deuda, enviar el enlace de pago, reportar una falla y ver el estado de un ticket. Lo demás llega por olas, cuando sus controles estén listos.</p></div><figure class="fig fig-capas" id="01-diagrama-5"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 490" style="min-width:660px" role="img" aria-label="Las diez capas de Pía, el asistente del curso, del canal a la medición, con lo que hace cada una y los capítulos donde se construye; tres capas llevan la marca IA">
+  <text x="14" y="20" class="t t-xs t-b t-m">CAPA</text>
+  <text x="236" y="20" class="t t-xs t-b t-m">QUÉ HACE EN SERVICIOS EJEMPLO</text>
+  <text x="846" y="20" class="t t-xs t-b t-m" text-anchor="end">CAPÍTULOS</text>
+
+  <g class="t">
+    <rect x="10" y="30" width="210" height="36" rx="8" class="c-fis"/><text x="22" y="53" class="t-b k-fis">Canal</text>
+    <text x="236" y="53">WhatsApp y la web, un solo cerebro detrás</text>
+    <text x="846" y="53" class="t-mono t-b" text-anchor="end">08</text>
+
+    <rect x="10" y="74" width="210" height="36" rx="8" class="caja"/><text x="22" y="97" class="t-b">Voz y flujos</text>
+    <text x="236" y="97">tono, primer mensaje, flujos y respaldo</text>
+    <text x="846" y="97" class="t-mono t-b" text-anchor="end">03 · 04</text>
+
+    <rect x="10" y="118" width="210" height="36" rx="8" class="d-casa"/><text x="22" y="141" class="t-b k-casa">Identidad y seguridad</text>
+    <text x="236" y="141">verifica quién escribe, protege datos y pagos</text>
+    <text x="846" y="141" class="t-mono t-b" text-anchor="end">12</text>
+
+    <rect x="10" y="162" width="210" height="36" rx="8" class="c-tra"/><text x="22" y="185" class="t-b k-tra">Comprensión</text>
+    <text x="236" y="185">intención, datos del mensaje y confianza</text>
+    <text x="846" y="185" class="t-mono t-b" text-anchor="end">02 · 05</text>
+
+    <rect x="10" y="206" width="210" height="36" rx="8" class="c-red"/><text x="22" y="229" class="t-b k-red">Diálogo y orquestación</text>
+    <text x="236" y="229">qué paso sigue, sesión, memoria y enrutamiento</text>
+    <text x="846" y="229" class="t-mono t-b" text-anchor="end">05 · 06 · 10</text>
+
+    <rect x="10" y="250" width="210" height="36" rx="8" class="c-enl"/><text x="22" y="273" class="t-b k-enl">Conocimiento</text>
+    <text x="236" y="273">artículos oficiales, vigentes y citados</text>
+    <text x="846" y="273" class="t-mono t-b" text-anchor="end">07</text>
+
+    <rect x="10" y="294" width="210" height="36" rx="8" class="c-apl"/><text x="22" y="317" class="t-b k-apl">Reglas del negocio</text>
+    <text x="236" y="317">montos, elegibilidad y límites, en código</text>
+    <text x="846" y="317" class="t-mono t-b" text-anchor="end">05 · 11</text>
+
+    <rect x="10" y="338" width="210" height="36" rx="8" class="d-sis"/><text x="22" y="361" class="t-b k-sis">Integración</text>
+    <text x="236" y="361">facturación, pagos, tickets y CRM</text>
+    <text x="846" y="361" class="t-mono t-b" text-anchor="end">11</text>
+
+    <rect x="10" y="382" width="210" height="36" rx="8" class="caja s-warm" style="stroke-width:1.8"/><text x="22" y="405" class="t-b k-warm">Personas</text>
+    <text x="236" y="405">traspaso con contexto y bandeja de agentes</text>
+    <text x="846" y="405" class="t-mono t-b" text-anchor="end">09</text>
+
+    <rect x="10" y="426" width="210" height="36" rx="8" class="d-inet"/><text x="22" y="449" class="t-b k-inet">Medición y gobierno</text>
+    <text x="236" y="449">costo, contención, pruebas y versiones</text>
+    <text x="846" y="449" class="t-mono t-b" text-anchor="end">13 · 14 · 15</text>
+  </g>
+
+  
+  <g class="t t-xs t-b">
+    <rect x="660" y="171" width="34" height="18" rx="9" class="c-tra"/><text x="677" y="184" text-anchor="middle" class="k-tra">IA</text>
+    <rect x="660" y="259" width="34" height="18" rx="9" class="c-tra"/><text x="677" y="272" text-anchor="middle" class="k-tra">IA</text>
+    <rect x="660" y="391" width="34" height="18" rx="9" class="c-tra"/><text x="677" y="404" text-anchor="middle" class="k-tra">IA</text>
+  </g>
+  <text x="430" y="484" class="t t-s t-m" text-anchor="middle">Capítulos 16 y 17: los prompts para generarlo y el proyecto que lo lleva a producción.</text>
+</svg></div><figcaption><b>Pía por capas y dónde se construye cada una.</b> Cada fila es una capa del asistente, del canal (arriba) a la medición (abajo), con el color que mantiene en todo el curso. En el centro, qué hace esa capa en la empresa de servicios; a la derecha, los capítulos donde se construye. Las capas en las que interviene un modelo de lenguaje llevan la marca «IA»: son menos de las que parece.</figcaption></figure><div class="prose"><p>En el camino vas a encontrar temas que tienen su propio curso. Cómo funcionan por dentro la recuperación de información para el modelo, las herramientas y la memoria está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>. Los mensajes entre sistemas y cómo evitar que un pago se registre dos veces, en <a href="https://aaramirez.github.io/backend/temario.html" target="_blank" rel="noopener">Backend y APIs</a>. Y los riesgos éticos y legales del uso de la IA, en <a href="https://aaramirez.github.io/ia-responsable/temario.html" target="_blank" rel="noopener">IA responsable</a>. Aquí se usan en una línea y se enlazan.</p><p>Lo que te llevas de este capítulo cabe en una frase: <b>empezar por pocos pedidos repetibles, con fuente autorizada, acción verificable y salida humana</b>. Todo lo demás del curso es cómo hacerlo bien.</p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Qué tres ingredientes separan a un bot de preguntas frecuentes de un chatbot empresarial?</summary><p>Contexto real (sabe quién escribe y conoce su cuenta), acción verificable (lo que hace deja un rastro comprobable en un sistema) y salida humana (traspasa a una persona con el contexto cuando no puede o no debe seguir).</p></details><details><summary>Un bot llega al 85 % de contención, pero el recontacto a siete días subió. ¿Es un éxito?</summary><p>No se puede afirmar. Muchas conversaciones «contenidas» pueden ser clientes que se rindieron y volvieron por otro canal. Hay que medir la resolución correcta de extremo a extremo y el costo por caso bien resuelto.</p></details><details><summary>¿Por qué el monto del enlace de pago no lo escribe el modelo de lenguaje?</summary><p>Porque es una decisión que compromete a la empresa: sale de la factura en el sistema, con una regla. Si el modelo lo escribiera, un cliente podría convencerlo de otro monto o el modelo podría equivocarse.</p></details><details><summary>En la prueba de idoneidad, ¿qué criterios bloquean un pedido si valen cero, aunque el total sea alto?</summary><p>Fuente autorizada, riesgo, traspaso y dueño. Los riesgos no se promedian.</p></details><details><summary>¿En qué nivel de acción está «¿califico para el descuento de cliente fiel?» y qué control pide?</summary><p>Decidir. La elegibilidad la resuelve una regla codificada en el sistema, no el texto del modelo; queda registro auditable y la persona puede apelar ante un humano.</p></details><details><summary>¿Qué nivel de evidencia tiene el caso de Air Canada y qué enseña?</summary><p>Nivel A, porque es una decisión de un tribunal. Enseña que la empresa responde por lo que dice su bot: las políticas deben salir de una fuente oficial y vigente.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es un webhook y por qué es el canal el que llama al servidor del bot, y no el bot el que pregunta cada segundo si hay mensajes nuevos?<small>Pista: busca «webhook frente a polling».</small></li><li>¿Qué es la norma PCI DSS, quién la publica y qué le exige a una empresa que acepta pagos con tarjeta?<small>Pista: busca «PCI Security Standards Council».</small></li><li>¿Qué es un código de un solo uso (OTP) y por qué deja de servir a los pocos minutos?<small>Pista: busca «TOTP <a href="https://www.rfc-editor.org/rfc/rfc6238" target="_blank" rel="noopener">RFC 6238</a>».</small></li><li>¿Qué es un ensayo aleatorizado controlado y por qué se asigna al azar quién recibe el tratamiento?<small>Pista: busca «grupo de control aleatorización sesgo de selección».</small></li><li>¿Cómo se calcula el NPS (<i>Net Promoter Score</i>) y por qué muchas empresas lo usan junto al CSAT?<small>Pista: busca «promotores, pasivos y detractores».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://en.wikipedia.org/wiki/Moffatt_v._Air_Canada" target="_blank" rel="noopener">Moffatt v. Air Canada <small>el fallo que hizo a la empresa responsable de lo que dijo su chatbot</small></a><a class="vid" href="https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/" target="_blank" rel="noopener">Klarna AI assistant handles two-thirds of customer service chats in its first month <small>el anuncio original, para leerlo con los niveles de evidencia</small></a><a class="vid" href="https://www.theguardian.com/technology/2024/jan/20/dpd-ai-chatbot-swears-calls-itself-useless-and-criticises-firm" target="_blank" rel="noopener">DPD AI chatbot swears, calls itself useless and criticises delivery firm <small>un incidente después de una actualización</small></a><a class="vid" href="https://en.wikipedia.org/wiki/Tay_(chatbot)" target="_blank" rel="noopener">Tay (chatbot) <small>el retiro en menos de un día</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const CAPAS=[
+    ['canal','Canal','--c-fis','--c-fis-s'],['identidad','Identidad','--d-casa','--d-casa-s'],
+    ['comprension','Comprensión','--c-tra','--c-tra-s'],['orquestacion','Orquestación','--c-red','--c-red-s'],
+    ['conocimiento','Conocimiento','--c-enl','--c-enl-s'],['reglas','Reglas del negocio','--c-apl','--c-apl-s'],
+    ['sistemas','Sistemas de la empresa','--d-sis','--d-sis-s'],['persona','Persona (agente)','--warm','--warm-soft']];
+  const SOLO_FAQ=['canal','comprension','conocimiento'];
+  const EJEMPLOS=['Hola','¿Cuánto debo?','Quiero pagar','No tengo internet','¿Y mi ticket?','¿Qué plan me conviene?','¿Me hacen un descuento?','Me cobraron de más','¿A qué hora abren?','¿Venden pizza?','Quiero hablar con una persona'];
+  const INT=[
+    ['humano',/(persona|humano|agente|asesor|operador|alguien real)/],
+    ['reclamo',/(reclamo|queja|cobraron|cobro indebido|de mas|molest|pesimo|estafa)/],
+    ['descuento',/(descuento|rebaja|promo|oferta|mas barato)/],
+    ['pagar',/(pagar|pago|enlace|link|transferir)/],
+    ['falla',/(no tengo (internet|servicio|senal)|sin (internet|servicio|senal)|falla|lento|no funciona|no navega|se cae|caido|no hay internet)/],
+    ['ticket',/(ticket|mi caso|tecnico|visita|reporte)/],
+    ['deuda',/(debo|deuda|saldo|factura|vence|cuanto)/],
+    ['planes',/(plan|mbps|contratar|velocidad)/],
+    ['horario',/(horario|hora|abren|agencia|oficina|direccion|donde quedan)/],
+    ['saludo',/^(hola|buenas|buenos|hey|que tal)/]];
+  const NOMBRE={humano:'hablar_con_persona',reclamo:'reclamo_cobro',descuento:'pedir_descuento',pagar:'pagar_factura',falla:'reportar_falla',ticket:'estado_ticket',deuda:'consultar_deuda',planes:'recomendar_plan',horario:'horario_agencias',saludo:'saludo'};
+  let modo='a', ocupado=false, ya=false, st;
+  function nuevo(){st={verif:false,ticket:false,fallos:0,res:0,tras:0,nores:0,riesgo:0};}
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  function clasificar(t){
+    const n=norm(t);
+    for(const [k,re] of INT){if(re.test(n))return {k,conf:(0.86+Math.min(n.length,40)/400).toFixed(2).replace('.',',')};}
+    return {k:'nada',conf:'0,31'};
+  }
+  function ident(p){
+    if(st.verif)return ['identidad','sesión ya verificada: titular de la cuenta 1001'];
+    st.verif=true;return ['identidad','envía un código de un solo uso por SMS; la clienta lo escribe: verificada, cuenta 1001'];
+  }
+  function traspaso(motivo){
+    st.tras++;
+    return {pasos:[['orquestacion',motivo],ident(),['persona','toma el caso en la bandeja con: cuenta 1001 verificada, motivo y la conversación completa']],
+      r:'Te paso con una persona del equipo. Ya tiene tu cuenta verificada y el motivo, así que no tendrás que repetir nada. Tiempo estimado: 4 minutos.',
+      h:'Hola, Laura, soy Marta, del equipo de atención. Ya leí tu conversación con Pía; revisemos juntas tu caso.',
+      res:'Pasó a una persona con el contexto completo.',clase:'ok'};
+  }
+  function actuar(k,c,texto){
+    const comp=['comprension','intención: '+(NOMBRE[k]||'desconocida')+' (confianza '+c+')'];
+    switch(k){
+      case 'saludo': return {pasos:[comp,['orquestacion','primer mensaje: presentarse como bot y ofrecer opciones']],
+        r:'¡Hola! Soy Pía, la asistente virtual de Servicios Ejemplo. Puedo ayudarte con tu deuda y tus pagos, una falla del servicio, el estado de un ticket o los planes. Si prefieres una persona, escribe «persona».',res:'Se presentó como bot y fijó expectativas.',clase:'ok'};
+      case 'horario': st.res++; return {pasos:[comp,['orquestacion','pregunta general: no hace falta identidad'],['conocimiento','artículo «Agencias y horarios», vigente desde el 1 de noviembre']],
+        r:'Las agencias abren de lunes a viernes de 8:00 a 17:00 y los sábados de 8:00 a 12:00. Fuente: «Agencias y horarios», actualizado el 1 de noviembre.',res:'Resuelto: informó con fuente vigente.',clase:'ok'};
+      case 'deuda': st.res++; return {pasos:[comp,['orquestacion','dato personal: primero verificar quién escribe'],ident(),['sistemas','Facturación: factura F-2207, US$ 25,00, vence el 05/12']],
+        r:'Laura, tienes una factura (F-2207) de US$ 25,00 que vence el 5 de diciembre. ¿Quieres que te envíe el enlace para pagarla?',res:'Resuelto con contexto real: el dato sale de la facturación.',clase:'ok',sis:'Facturación'};
+      case 'pagar': { st.res++; const num=/\d/.test(texto);
+        return {pasos:[comp,['orquestacion','acción: pide identidad y confirmación'],ident(),['reglas',(num?'ignora el monto escrito en el mensaje: ':'')+'el monto sale de la factura F-2207 (US$ 25,00), no del modelo'],['sistemas','Pasarela de pagos: crea un enlace por US$ 25,00, válido 30 minutos']],
+        r:'Este es tu enlace seguro para pagar US$ 25,00: pagos.ejemplo.com/f/F-2207. Los datos de la tarjeta se escriben en esa página, nunca en este chat. Cuando el pago se apruebe, te envío el comprobante.',res:'Acción verificable: el enlace queda registrado en la pasarela.',clase:'ok',sis:'Facturación, pasarela'}; }
+      case 'falla': st.res++; st.ticket=true; return {pasos:[comp,['orquestacion','flujo de falla: identidad, avería en la zona, ticket'],ident(),['sistemas','Monitoreo de red: no hay avería masiva en la zona de la cuenta'],['reglas','sin avería masiva: ticket individual, prioridad normal, plazo 24 h'],['sistemas','Tickets: abre el n.º 5512 con la dirección registrada']],
+        r:'Revisé tu zona y no hay averías reportadas. Abrí el ticket n.º 5512 con tu dirección registrada; un técnico te contactará en menos de 24 horas. Mientras tanto, ¿probaste apagar el equipo 30 segundos y encenderlo?',res:'Acción verificable: ticket 5512 abierto en el sistema de soporte.',clase:'ok',sis:'Monitoreo, tickets'};
+      case 'ticket': st.res++; return {pasos:[comp,['orquestacion','consulta de estado: pide identidad'],ident(),['sistemas',st.ticket?'Tickets: n.º 5512, técnico asignado, visita el jueves de 9:00 a 12:00':'Tickets: la cuenta 1001 no tiene casos abiertos']],
+        r:st.ticket?'Tu ticket n.º 5512 ya tiene técnico asignado. La visita es el jueves entre las 9:00 y las 12:00.':'No tienes tickets abiertos. ¿Quieres reportar una falla?',res:'Resuelto con dato del sistema de tickets.',clase:'ok',sis:'Tickets'};
+      case 'planes': st.res++; return {pasos:[comp,['orquestacion','recomendación: el bot sugiere, la persona decide'],['conocimiento','catálogo vigente: planes de 100, 300 y 600 Mbps'],['sistemas',st.verif?'CRM: la cuenta 1001 usa en promedio 180 GB al mes':'CRM: sin identidad, no usa datos de consumo']],
+        r:(st.verif?'Con tu consumo de unos 180 GB al mes, ':'Para trabajar desde casa y ver video, ')+'el plan de 300 Mbps suele alcanzar. Es una recomendación: si quieres contratarlo, te paso con ventas.',res:'Recomendó con criterio explícito; la decisión es de la clienta.',clase:'ok'};
+      case 'descuento': st.res++; return {pasos:[comp,['orquestacion','decisión: la toma una regla, no el modelo'],ident(),['reglas','«cliente fiel» pide 24 meses sin atrasos; la cuenta 1001 lleva 14: no califica'],['sistemas','Facturación: historial de pagos de la cuenta 1001']],
+        r:'Revisé la promoción de cliente fiel: pide 24 meses sin atrasos y tu cuenta lleva 14. Por ahora no aplica. Si quieres, te paso con un asesor de ventas para ver otras opciones.',res:'Decidió una regla, no el texto del modelo; ofreció salida humana.',clase:'ok',sis:'Facturación'};
+      case 'reclamo': {const t=traspaso('disputa de un cobro: fuera del alcance del bot, va a una persona');t.pasos.unshift(['comprension','intención: reclamo_cobro (confianza '+c+'), tono molesto']);return t;}
+      case 'humano': {const t=traspaso('pedido explícito de una persona: se respeta de inmediato');t.pasos.unshift(comp);return t;}
+      default:
+        st.fallos++;
+        if(st.fallos>=2){st.fallos=0;const t=traspaso('segundo mensaje sin entender: pasa a una persona');t.pasos.unshift(['comprension','no reconoce la intención (confianza 0,31)']);return t;}
+        return {pasos:[['comprension','no reconoce la intención (confianza 0,31)'],['orquestacion','respaldo: reformular y ofrecer opciones (1.er intento)']],
+          r:'No estoy segura de haber entendido. ¿Es sobre tu factura, una falla del servicio, un ticket o un plan? También puedes escribir «persona».',res:'No entendió, pero ofreció opciones y una salida.',clase:'warn',nores:true};
+    }
+  }
+  function faq(k,c){
+    const comp=['comprension','tema: '+(NOMBRE[k]||'desconocido')+' ('+c+')'];
+    const tel='0800-000-0000';
+    const R={
+      saludo:['Hola, ¿en qué puedo ayudarte?',null,'Saludó, sin decir qué puede hacer.'],
+      horario:['Las agencias abren de lunes a viernes de 8:00 a 17:00 y los sábados de 8:00 a 12:00.','artículo «Agencias y horarios»','Resuelto: para preguntas generales, el folleto basta.','ok'],
+      deuda:['Puedes consultar tu saldo en el portal de clientes o en cualquier agencia.','artículo «¿Cómo consulto mi saldo?»','No resuelto: no sabe quién eres; te manda a otro canal.'],
+      pagar:['Puedes pagar en el portal, en agencias o por transferencia a la cuenta que aparece en tu factura.','artículo «Formas de pago»','No resuelto: no puede crear un pago.'],
+      falla:['Si no tienes servicio, apaga el equipo 30 segundos y vuelve a encenderlo. Si sigue igual, llama al '+tel+'.','artículo «Sin servicio»','No resuelto: no revisa averías ni abre un ticket.'],
+      ticket:['Para conocer el estado de tu caso, llama al '+tel+'.','artículo «Estado de un caso»','No resuelto: no tiene acceso a los tickets.'],
+      planes:['Tenemos planes de 100, 300 y 600 Mbps. Más información en www.ejemplo.com/planes.','artículo «Planes»','A medias: informa, pero no puede recomendar con tus datos.'],
+      descuento:['¡Claro! Con la promoción de bienvenida tienes 50 % de descuento los primeros tres meses.','artículo «Promociones» (de marzo: ya vencido)','Riesgo: prometió una promoción vencida. La empresa responde por lo que dijo su bot.','warn',true],
+      reclamo:['Puedes comunicarte con atención al cliente al '+tel+', de lunes a viernes.','artículo «Contacto»','No resuelto: te manda a llamar y tendrás que contar todo de nuevo.'],
+      humano:['Puedes comunicarte con atención al cliente al '+tel+', de lunes a viernes.','artículo «Contacto»','No hay traspaso: la salida es otro canal, sin contexto.']
+    };
+    if(!R[k]){st.fallos++;st.nores++;return {pasos:[['comprension','no reconoce el tema (0,31)']],r:'No entendí tu pregunta. ¿Puedes reformularla?',res:'No entendió. Intentos fallidos seguidos: '+st.fallos+'; este bot no tiene salida.',clase:'warn',nores:true};}
+    const [r,art,res,clase,riesgo]=R[k];
+    if(riesgo)st.riesgo++;
+    const pasos=[comp];if(art)pasos.push(['conocimiento',art]);
+    if(clase==='ok')st.res++;else if(k!=='saludo')st.nores++;
+    return {pasos,r,res,clase:clase||'warn'};
+  }
+  function pintarCapas(){
+    q('#c1-capas').innerHTML=CAPAS.map(([k,n,c,s],i)=>'<li data-k="'+k+'" style="--cc:var('+c+');--cs:var('+s+')"'+(modo==='f'&&!SOLO_FAQ.includes(k)?' class="no"':'')+'><span>'+(i+1)+'</span><b>'+n+'</b><small>'+(modo==='f'&&!SOLO_FAQ.includes(k)?'no existe en este bot':'')+'</small></li>').join('');
+  }
+  function burbuja(clase,quien,txt){
+    const d=document.createElement('div');d.className='c1-m '+clase;
+    const s=document.createElement('small');s.textContent=quien;d.appendChild(s);d.appendChild(document.createTextNode(txt));
+    q('#c1-chat').appendChild(d);q('#c1-chat').scrollTop=q('#c1-chat').scrollHeight;
+  }
+  const quieto=()=>ya||window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function enviar(texto){
+    texto=texto.trim();if(!texto||ocupado)return;
+    ocupado=true;q('#c1-in').value='';
+    burbuja('c1-u','Clienta',texto);
+    const {k,conf}=clasificar(texto);
+    const out=(modo==='a'?actuar:faq)(k,conf,texto);
+    const pasos=[['canal','recibe el mensaje de WhatsApp y lo entrega al bot']].concat(out.pasos).concat([['canal','envía la respuesta a WhatsApp']]);
+    pintarCapas();
+    const notas={};let i=0;const rapido=quieto();
+    const paso=()=>{
+      if(i<pasos.length){
+        const [c,nota]=pasos[i];notas[c]=(notas[c]?notas[c]+' · ':'')+nota;
+        document.querySelectorAll('#c1-capas li').forEach(li=>{li.classList.toggle('on',li.dataset.k===c);if(notas[li.dataset.k]){li.classList.add('uso');li.querySelector('small').textContent=notas[li.dataset.k];}});
+        i++;if(rapido)paso();else setTimeout(paso,420);return;
+      }
+      document.querySelectorAll('#c1-capas li').forEach(li=>li.classList.remove('on'));
+      burbuja('c1-b',modo==='a'?'Pía · asistente virtual':'Bot',out.r);
+      if(out.h)burbuja('c1-h','Marta · agente',out.h);
+      const usadas=Object.keys(notas).length;
+      const sis=out.sis||(notas.sistemas?'sí':'ninguno');
+      q('#c1-out').innerHTML='<span>Capas que trabajaron: <b>'+usadas+' de '+(modo==='a'?8:3)+'</b> · sistemas consultados: <b>'+sis+'</b></span>'+
+        '<span class="'+out.clase+'">'+out.res+'</span>'+
+        '<span>En esta conversación: '+st.res+' resueltos en el chat · '+st.tras+' pasados a una persona con contexto · '+st.nores+' sin resolver'+(st.riesgo?' · <b class="warn">'+st.riesgo+' promesa riesgosa</b>':'')+'.</span>';
+      ocupado=false;
+    };
+    paso();
+  }
+  function reiniciar(){
+    nuevo();q('#c1-chat').innerHTML='';pintarCapas();
+    const d=document.createElement('div');d.className='c1-x';d.textContent=modo==='a'?'Modo: asistente que actúa (Pía, de Servicios Ejemplo)':'Modo: bot de preguntas frecuentes';q('#c1-chat').appendChild(d);
+    q('#c1-out').innerHTML='<span>Envía un mensaje para ver qué capas trabajan.</span>';
+  }
+  function setModo(m){if(ocupado)return;modo=m;q('#c1-modo-a').setAttribute('aria-pressed',m==='a');q('#c1-modo-f').setAttribute('aria-pressed',m==='f');reiniciar();}
+  q('#c1-chips').innerHTML=EJEMPLOS.map(t=>'<button type="button">'+t+'</button>').join('');
+  q('#c1-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)enviar(b.textContent);});
+  q('#c1-form').addEventListener('submit',e=>{e.preventDefault();enviar(q('#c1-in').value);});
+  q('#c1-modo-a').addEventListener('click',()=>setModo('a'));
+  q('#c1-modo-f').addEventListener('click',()=>setModo('f'));
+  q('#c1-reset').addEventListener('click',()=>{if(!ocupado)reiniciar();});
+  reiniciar();
+  ya=true;enviar('¿Cuánto debo?');ya=false;
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const CRIT=[
+    ['Valor',['nadie lo midió','«sería bueno»','ahorro estimado','volumen y costo medidos'],false],
+    ['Repetibilidad',['cada caso es distinto','muchas variantes','pocas variantes','casi siempre igual'],false],
+    ['Fuente autorizada',['no hay fuente','documentos sueltos','sistema sin dueño claro','sistema oficial con dueño'],true],
+    ['Riesgo',['daño grave sin control','daño serio','daño moderado','daño menor'],true],
+    ['Nivel de acción',['controles ausentes','controles a medias','casi listos','listos para su nivel'],false],
+    ['Traspaso',['no hay a quién pasarlo','sin contexto','con contexto, lento','rápido y con contexto'],true],
+    ['Economía',['más caro que hoy','sin calcular','parecido a hoy','más barato por caso'],false],
+    ['Dueño',['nadie','un área difusa','un área','una persona con nombre'],true]];
+  const PED=[
+    ['Consultar la deuda y el vencimiento',[3,3,3,2,3,2,3,3],'Mucho volumen, dato exacto en la facturación y nivel informar. El candidato ideal para abrir.'],
+    ['Enviar el enlace de pago',[3,3,3,2,2,2,3,3],'Ejecuta, pero el monto lo pone la factura y la tarjeta va a la pasarela. Con confirmación, entra en la primera ola.'],
+    ['Reportar una falla y abrir un ticket',[3,2,2,2,2,3,2,3],'Frecuente y verificable (el ticket existe o no). Necesita saber si hay una avería en la zona antes de abrir casos.'],
+    ['Horario y dirección de agencias',[1,3,3,3,3,2,2,2],'Facilísimo y sin riesgo, pero vale poco: súmalo a la primera ola, no la lideres con él.'],
+    ['Recomendar un plan según el uso',[2,2,2,2,2,2,2,1],'Útil, pero el criterio de recomendación no está escrito y el dueño es difuso. Mejor en una segunda ola.'],
+    ['Negociar un plan de pagos de una deuda vieja',[2,1,1,1,1,2,1,1],'Cada caso es distinto y la política vive en la cabeza de algunas personas. Hoy no conviene: el bot solo debería enrutarlo.'],
+    ['Dar de baja el servicio',[2,2,2,1,1,2,2,0],'Nadie es dueño de la política de retención: con un cero en «dueño», el pedido queda bloqueado aunque el total parezca aceptable.'],
+    ['Reclamo por un cobro indebido',[2,1,1,0,1,3,1,2],'Una respuesta equivocada compromete dinero y reputación sin control. El bot recoge los datos y pasa a una persona.']];
+  let pun=PED.map(p=>p[1].slice()), sel=0;
+  const ESTADOS={ola:['Primera ola','--good'],luego:['Más adelante','--accent'],no:['Todavía no','--muted'],bloq:['Bloqueado','--warm']};
+  function estado(v){
+    const ceros=CRIT.map((c,i)=>c[2]&&v[i]===0?c[0]:null).filter(Boolean);
+    const total=v.reduce((a,b)=>a+b,0);
+    return {total,ceros,e:ceros.length?'bloq':total>=18?'ola':total>=13?'luego':'no'};
+  }
+  q('#c2-ped').innerHTML=PED.map((p,i)=>'<option value="'+i+'">'+(i+1)+'. '+p[0]+'</option>').join('');
+  q('#c2-ctls').innerHTML=CRIT.map((c,i)=>'<label class="ctl">'+c[0]+(c[2]?' <span class="c2-crit" title="Criterio crítico: un cero bloquea">*</span>':'')+' <output id="c2-o'+i+'"></output><input id="c2-r'+i+'" type="range" min="0" max="3" step="1"></label>').join('');
+  function pintar(){
+    const v=pun[sel];
+    CRIT.forEach((c,i)=>{q('#c2-r'+i).value=v[i];q('#c2-o'+i).textContent=v[i]+' · '+c[1][v[i]];});
+    const s=estado(v),[et]=ESTADOS[s.e];
+    const msg={ola:'<span class="ok">Primera ola: automatízalo pronto, con los controles de su nivel.</span>',
+      luego:'<span>Más adelante: sube primero los puntos bajos (dueño, criterios, controles).</span>',
+      no:'<span>Todavía no conviene: muchas variantes o poca base. Que el bot lo enrute a una persona.</span>',
+      bloq:'<span class="warn">Bloqueado: '+s.ceros.join(', ')+' en cero. Los riesgos no se promedian.</span>'}[s.e];
+    q('#c2-out').innerHTML='<span><b>'+PED[sel][0]+'</b>: '+s.total+' de 24 puntos → '+et+'</span>'+msg+'<span>'+PED[sel][2]+'</span>';
+    const orden=PED.map((p,i)=>({i,s:estado(pun[i])})).sort((a,b)=>{const pa=a.s.e==='bloq'?-1:a.s.total,pb=b.s.e==='bloq'?-1:b.s.total;return pb-pa;});
+    q('#c2-rank').innerHTML=orden.map(({i,s})=>{const [n,col]=ESTADOS[s.e];
+      return '<button type="button" class="c2-fila" data-i="'+i+'" aria-current="'+(i===sel)+'"><span>'+(i+1)+'. '+PED[i][0]+'</span><span class="c2-bar"><i style="width:'+(s.total/24*100)+'%;background:var('+col+')"></i></span><span class="c2-et" style="color:var('+col+')">'+s.total+' · '+n+'</span></button>';}).join('');
+  }
+  CRIT.forEach((c,i)=>q('#c2-r'+i).addEventListener('input',e=>{pun[sel][i]=+e.target.value;pintar();}));
+  q('#c2-ped').addEventListener('change',e=>{sel=+e.target.value;pintar();});
+  q('#c2-rank').addEventListener('click',e=>{const b=e.target.closest('.c2-fila');if(!b)return;sel=+b.dataset.i;q('#c2-ped').value=sel;pintar();});
+  q('#c2-rest').addEventListener('click',()=>{pun[sel]=PED[sel][1].slice();pintar();});
+  pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const AREAS=['Atención','Ventas','Cobranza','Soporte técnico','Internos'];
+  const NIV=[['Informar','--c-enl','--c-enl-s','Inf.'],['Recomendar','--c-red','--c-red-s','Rec.'],['Decidir','--c-tra','--c-tra-s','Dec.'],['Ejecutar','--c-apl','--c-apl-s','Ejec.']];
+  const CTL=[
+    ['fuente oficial y vigente','citar la política cuando la hay','abstenerse si no sabe','identidad verificada si el dato es personal'],
+    ['criterios de recomendación escritos','decir que es una sugerencia','registrar qué se recomendó y por qué'],
+    ['regla codificada en el sistema, no el texto del modelo','registro auditable de la decisión','apelación ante una persona','límites explícitos (montos, plazos)'],
+    ['identidad fuerte','confirmación explícita antes de actuar','repetir la orden no duplica el efecto','permisos mínimos para el bot','comprobante y forma de reversar']];
+  const PED=[
+    ['¿A qué hora abre la agencia?',0,0,'Dato general de una fuente oficial: informar, sin identidad.'],
+    ['Actualiza mi correo de contacto',0,3,'Cambia un dato en el CRM: ejecutar, con identidad y confirmación.'],
+    ['¿Cuánto debo y cuándo vence?',2,0,'Informar, pero el dato es personal: pide identidad verificada.'],
+    ['Mándame el enlace para pagar',2,3,'Ejecutar: crea un cobro real. El monto sale de la factura.'],
+    ['¿Me dan un plan de pagos en tres cuotas?',2,2,'Decidir: compromete a la empresa. Lo resuelve una regla o una persona.'],
+    ['¿Qué plan me conviene?',1,1,'Recomendar: el bot sugiere con criterios; el cliente elige.'],
+    ['¿Califico para el descuento de cliente fiel?',1,2,'Decidir: la elegibilidad la calcula una regla, no el modelo.'],
+    ['Quiero contratar el plan de 300 Mbps',1,3,'Ejecutar: registra la venta y agenda la instalación.'],
+    ['Mi router se reinicia solo, ¿qué hago?',3,1,'Recomendar: pasos de diagnóstico; el cliente los aplica.'],
+    ['No tengo internet desde ayer',3,3,'Ejecutar: abre un ticket en el sistema de soporte.'],
+    ['¿Cuántos días de vacaciones me quedan?',4,0,'Informar a un empleado ya identificado, desde el sistema de personal.'],
+    ['Sugiéreme qué responderle a este cliente',4,1,'Recomendar: ayuda al agente; la persona decide qué enviar.']];
+  let pos=PED.map(()=>null), act=0, nivVer=0;
+  q('#c3-peds').innerHTML=PED.map((p,i)=>'<button type="button" data-i="'+i+'"><b>'+(i+1)+'</b>'+p[0]+'</button>').join('');
+  let h='<span class="h"></span>'+NIV.map((n,j)=>'<button type="button" class="h" data-n="'+j+'" style="--cc:var('+n[1]+');--cs:var('+n[2]+')" aria-label="'+n[0]+'"><span class="l">'+n[0]+'</span><span class="c" aria-hidden="true">'+n[3]+'</span></button>').join('');
+  AREAS.forEach((a,r)=>{h+='<span class="a">'+a+'</span>'+NIV.map((n,j)=>'<button type="button" class="c3-cel" data-r="'+r+'" data-n="'+j+'" aria-label="'+a+', '+n[0]+'"></button>').join('');});
+  q('#c3-mat').innerHTML=h;
+  function controles(j,nuevo){
+    const [n,c,s]=NIV[j];const box=q('#c3-ctl');box.style.setProperty('--cc','var('+c+')');box.style.setProperty('--cs','var('+s+')');
+    let items=[];for(let k=0;k<=j;k++)CTL[k].forEach(t=>items.push([t,k===j]));
+    box.innerHTML='<b>'+n+'</b> pide '+items.length+' controles'+(j?' (los suyos, en negrita, más los de los niveles anteriores)':'')+':<ul>'+items.map(([t,b])=>'<li'+(b&&j?' class="nuevo"':'')+'>'+t+'</li>').join('')+'</ul>';
+    document.querySelectorAll('#c3-mat button.h').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.n===j));
+  }
+  function pintar(msg){
+    document.querySelectorAll('#c3-peds button').forEach(b=>{const i=+b.dataset.i;b.setAttribute('aria-pressed',i===act);b.classList.toggle('puesto',!!pos[i]);});
+    document.querySelectorAll('.c3-cel').forEach(c=>{const r=+c.dataset.r,n=+c.dataset.n;
+      c.innerHTML=pos.map((p,i)=>p&&p[0]===r&&p[1]===n?'<i class="'+(PED[i][1]===r&&PED[i][2]===n?'bien':'mal')+'" title="'+PED[i][0]+'">'+(i+1)+'</i>':'').join('');});
+    const n=pos.filter(Boolean).length, ok=pos.filter((p,i)=>p&&p[0]===PED[i][1]&&p[1]===PED[i][2]).length;
+    q('#c3-out').innerHTML=(msg||'<span>Pedido activo: <b>'+(act+1)+'. '+PED[act][0]+'</b>. Toca su celda.</span>')+
+      '<span>Ubicados: '+n+' de 12 · coinciden con la sugerida: <b>'+ok+'</b>. Verde coincide, rojo no.</span>';
+  }
+  q('#c3-peds').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;act=+b.dataset.i;pintar();});
+  q('#c3-mat').addEventListener('click',e=>{
+    const hb=e.target.closest('button.h');if(hb){nivVer=+hb.dataset.n;controles(nivVer);return;}
+    const c=e.target.closest('.c3-cel');if(!c)return;
+    const r=+c.dataset.r,n=+c.dataset.n,p=PED[act];pos[act]=[r,n];
+    const bien=p[1]===r&&p[2]===n;
+    const msg='<span>'+(act+1)+'. '+p[0]+' → '+AREAS[r]+' · '+NIV[n][0]+': '+(bien?'<b class="ok">coincide con la sugerida.</b>':'<b class="warn">la sugerida es '+AREAS[p[1]]+' · '+NIV[p[2]][0]+'.</b>')+'</span><span>'+p[3]+'</span>';
+    controles(n);
+    const sig=pos.findIndex(x=>!x);if(sig>=0)act=sig;
+    pintar(msg);
+  });
+  q('#c3-sug').addEventListener('click',()=>{pos=PED.map(p=>[p[1],p[2]]);controles(3);pintar('<span>Ubicación sugerida para los doce. Mira la columna de ejecutar: cada pedido ahí arrastra todos los controles de la lista.</span>');});
+  q('#c3-vac').addEventListener('click',()=>{pos=PED.map(()=>null);act=0;pintar();});
+  controles(0);pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const N=10000,BOT=0.40,HCTX=3.50,HSIN=5.00,HRES=0.9,VUELVE=0.6;
+  const n0=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const pct=v=>Math.round(v*100)+' %';
+  const usd=v=>'US$ '+v.toFixed(2).replace('.',',');
+  function calc(){
+    const c=+q('#c4-c').value/100,r=+q('#c4-r').value/100,x=+q('#c4-x').value/100;
+    q('#c4-c-o').textContent=pct(c);q('#c4-r-o').textContent=pct(r);q('#c4-x-o').textContent=pct(x);
+    const cont=N*c,resBot=cont*r,noRes=cont-resBot,vuelven=noRes*VUELVE,seVan=noRes-vuelven,esc=N-cont;
+    const costoEsc=x*HCTX+(1-x)*HSIN;
+    const costo=N*BOT+esc*costoEsc+vuelven*HSIN;
+    const primer=(resBot+esc*HRES)/N;
+    const resueltos=resBot+esc*HRES+vuelven*HRES;
+    const porCaso=costo/resueltos, base=HCTX/HRES;
+    q('#c4-k1').textContent=pct(c);
+    q('#c4-k2').textContent=pct(primer);
+    q('#c4-k3').textContent=usd(porCaso);
+    q('#c4-k3').style.color=porCaso>base?'var(--warm)':'var(--good)';
+    q('#c4-k3s').textContent='solo con personas: '+usd(base);
+    q('#c4-bar').innerHTML=[[resBot,'--good','resueltas por el bot'],[esc,'--accent','pasadas a una persona'],[vuelven,'--warm','volvieron'],[seVan,'--muted','se fueron']]
+      .map(([v,col,t])=>'<i style="width:'+(v/N*100)+'%;background:var('+col+')" title="'+n0(v)+' '+t+'"></i>').join('');
+    const brecha=Math.round((c-primer)*100);
+    const juicio=porCaso>base?'<span class="warn">El bot sale más caro por caso resuelto que atender todo con personas, aunque el tablero muestre '+pct(c)+' de contención.</span>'
+      :brecha>=8?'<span class="warn">El tablero exagera: hay '+brecha+' puntos entre la contención y lo resuelto al primer contacto.</span>'
+      :'<span class="ok">La contención y la resolución cuentan casi la misma historia: aquí el número del tablero es confiable.</span>';
+    q('#c4-out').innerHTML='<span>De '+n0(N)+' conversaciones: '+n0(resBot)+' resueltas por el bot, '+n0(esc)+' pasadas a una persona, '+n0(vuelven)+' clientes que volvieron por lo mismo en siete días y '+n0(seVan)+' que se fueron sin solución.</span>'+
+      '<span>Recontacto a siete días: <b>'+pct(vuelven/N)+'</b> · clientes perdidos sin respuesta: <b>'+pct(seVan/N)+'</b> · costo total del mes: <b>'+'US$ '+n0(costo)+'</b>.</span>'+juicio;
+  }
+  ['#c4-c','#c4-r','#c4-x'].forEach(s=>q(s).addEventListener('input',calc));
+  calc();
+})();
+</script>
+</body>
+</html>

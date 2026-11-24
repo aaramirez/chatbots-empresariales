@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Principios, tono y primer mensaje · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="principios-tono-y-primer-mensaje">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 03 DE 17</span><h1>Principios de diseño conversacional, tono y primer mensaje</h1><p class="lede">Una conversación se diseña igual que una pantalla, solo que sin pantalla: cada mensaje tiene que decir, por sí solo, qué se espera del cliente. Este capítulo da los principios, la voz de Pía por escrito y el mensaje que abre todas sus conversaciones.</p></header>
+<section><div class="prose"><p>En el capítulo 2 viste cómo entiende un bot. Este capítulo trata de lo que dice. Parece lo fácil: cualquiera sabe escribir un mensaje. Pero mira este, que un bot real le podría mandar a Laura: «Estimado usuario, para continuar con su solicitud indique nombre completo, número de documento, correo electrónico y motivo de la consulta». Laura responde «Laura, quiero pagar» y el bot ya no sabe qué hacer con los tres datos que faltan.</p><p>El problema no es de inteligencia artificial: es de <b>diseño</b>. El mismo bot, con el mismo motor, funciona o fracasa según cómo estén escritos sus mensajes. Por eso existe una disciplina para eso.</p></div></section>
+<section><h2>Qué es el diseño conversacional y quién lo hace en el equipo</h2><div class="prose"><p>El <b>diseño conversacional</b> (<i>conversation design</i>) es la disciplina que diseña las interacciones escritas o habladas entre una persona y un sistema, tomando como modelo cómo conversan las personas: turnos cortos, un propósito claro en cada turno y confirmación de lo entendido antes de seguir.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en el guion que usa un buen agente de un centro de llamadas. No es un libreto que se recita: es una guía de qué preguntar primero, qué confirmar antes de cobrar, qué nunca decir y cómo cerrar. Pero el agente tiene algo que el bot no tiene: oye el tono de voz y ve cuándo el cliente se confunde. El bot solo tiene sus mensajes. Por eso su guion tiene que estar mucho mejor escrito.</p></div><div class="prose"><p>En una pantalla, el menú siempre está a la vista y el usuario puede mirar alrededor para orientarse. En un chat no hay alrededor: solo está el último mensaje. Si ese mensaje no dice qué puede responder el cliente, el cliente adivina.</p><p>En un equipo que construye un chatbot, el diseño conversacional lo hacen varios roles:</p><ul><li><b>Diseñador conversacional</b> (<i>conversation designer</i>): diseña los flujos, escribe los mensajes y mantiene la guía de voz. Es el dueño de cómo suena el bot.</li><li><b>Redactor de experiencia</b> (<i>UX writer</i>): en equipos grandes, pule los textos y cuida la consistencia con el resto de la marca.</li><li><b>Dueños de contenido de cada área</b>: cobranza, soporte, ventas. Aportan las reglas y aprueban lo que se dice de su tema.</li><li><b>Desarrolladores</b>: convierten los flujos en configuración o código y conectan los sistemas.</li><li><b>Analista de conversaciones</b>: lee las conversaciones reales y trae de vuelta lo que falla.</li></ul><p>Los principios generales de diseño de interfaces están en el curso <a href="https://aaramirez.github.io/interaccion-humano-computador/temario.html" target="_blank" rel="noopener">Interacción humano-computador</a>; aquí se aplican a la conversación.</p></div></section>
+<section><h2>Los principios: claridad, brevedad, un objetivo por turno y confirmación progresiva</h2><div class="prose"><p>Cuatro principios hacen la mayor parte del trabajo. Son simples de decir y difíciles de cumplir en cada mensaje.</p><ol class="steps"><li><span><b>Claridad.</b> Cada mensaje dice qué se espera del cliente. «¿Me confirmas tu número de cuenta? Son 4 dígitos y está arriba a la derecha de tu factura» es claro; «Ingrese el identificador» no lo es. Nada de jerga del sistema: «error 500», «intención no reconocida» o «transacción fallida» no le dicen al cliente qué hacer distinto.</span></li><li><span><b>Brevedad.</b> En un celular, tres líneas ya son mucho. Un buen mensaje de bot rara vez pasa de 40 palabras. Lo que no cabe se parte en varios turnos o se manda como enlace.</span></li><li><span><b>Un objetivo por turno.</b> Se pide un dato o una decisión a la vez. Si pides cuatro datos juntos, recibes dos, en desorden y con un error de tipeo en el tercero.</span></li><li><span><b>Confirmación progresiva</b> (<i>progressive confirmation</i>). Antes de un paso que no tiene vuelta atrás, el bot resume lo que entendió y pide un «sí» explícito: «Vas a pagar US$ 25,00 de la factura F-2207. ¿Te envío el enlace?». Los datos menores se confirman de pasada («Listo, a nombre de Laura»), sin preguntar cada vez.</span></li></ol></div><figure class="fig fig-comparacion" id="03-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" style="min-width:720px" role="img" aria-label="Comparación del mismo trámite de pago: a la izquierda, un bot pide cuatro datos con lenguaje de sistema y la clienta se pierde; a la derecha, Pía pide un dato por turno, con botones, y confirma el monto antes del enlace">
+  <text x="14" y="22" class="t t-xs t-b k-warm">ASÍ NO: TODO EN UN TURNO</text>
+  <text x="474" y="22" class="t t-xs t-b k-enl">ASÍ SÍ: UN OBJETIVO POR TURNO</text>
+  <line x1="450" y1="10" x2="450" y2="460" class="ln" style="stroke:var(--line)"/>
+
+  
+  <g class="t t-s">
+    <rect x="10" y="36" width="330" height="62" rx="10" class="caja"/>
+    <text x="20" y="54" class="t-b t-m">BOT</text>
+    <text x="20" y="70">Estimado usuario, para continuar indique nombre</text>
+    <text x="20" y="86">completo, documento, correo y motivo de la consulta.</text>
+    <text x="20" y="114" class="k-warm t-b">✗ cuatro datos a la vez · ✗ «usted» y tono de oficio</text>
+
+    <rect x="230" y="128" width="200" height="34" rx="10" class="c-fis"/>
+    <text x="242" y="150">Laura, quiero pagar</text>
+
+    <rect x="10" y="176" width="330" height="62" rx="10" class="caja"/>
+    <text x="20" y="194" class="t-b t-m">BOT</text>
+    <text x="20" y="210">Error: datos incompletos. Ingrese la</text>
+    <text x="20" y="226">información solicitada.</text>
+    <text x="20" y="254" class="k-warm t-b">✗ jerga de sistema · ✗ no dice qué falta ni para qué</text>
+
+    <rect x="290" y="268" width="140" height="34" rx="10" class="c-fis"/>
+    <text x="302" y="290">¿Qué información?</text>
+
+    <rect x="10" y="316" width="330" height="46" rx="10" class="caja"/>
+    <text x="20" y="334" class="t-b t-m">BOT</text>
+    <text x="20" y="352">Error: datos incompletos. Ingrese la información…</text>
+    <text x="20" y="380" class="k-warm t-b">✗ el mismo error otra vez: no hay salida</text>
+    <rect x="10" y="400" width="420" height="52" rx="10" class="caja s-warm" style="stroke-width:2;stroke-dasharray:5 4"/>
+    <text x="220" y="422" text-anchor="middle" class="t-b k-warm">Laura abandona y llama por teléfono.</text>
+    <text x="220" y="440" text-anchor="middle" class="t-m">4 mensajes y nada resuelto</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <rect x="470" y="36" width="330" height="58" rx="10" class="caja"/>
+    <text x="480" y="54" class="t-b t-m">PÍA</text>
+    <text x="480" y="70">¿Qué quieres hacer?</text>
+    <text x="480" y="86" class="k-red t-b">[Pagar]  [Mi factura]  [Otra cosa]</text>
+    <text x="808" y="70" class="k-enl t-b">✓ un</text><text x="808" y="84" class="k-enl t-b">objetivo</text>
+
+    <rect x="780" y="104" width="110" height="30" rx="10" class="c-fis"/>
+    <text x="835" y="124" text-anchor="middle">[Pagar]</text>
+
+    <rect x="470" y="144" width="330" height="58" rx="10" class="caja"/>
+    <text x="480" y="162" class="t-b t-m">PÍA</text>
+    <text x="480" y="178">Te envié un código por SMS para confirmar</text>
+    <text x="480" y="194">que eres tú. Escríbelo aquí.</text>
+    <text x="808" y="178" class="k-enl t-b">✓ claro:</text><text x="808" y="192" class="k-enl t-b">qué y por qué</text>
+
+    <rect x="780" y="212" width="110" height="30" rx="10" class="c-fis"/>
+    <text x="835" y="232" text-anchor="middle">482913</text>
+
+    <rect x="470" y="252" width="330" height="74" rx="10" class="caja"/>
+    <text x="480" y="270" class="t-b t-m">PÍA</text>
+    <text x="480" y="286">Vas a pagar US$ 25,00 de la factura F-2207.</text>
+    <text x="480" y="302">¿Te envío el enlace?</text>
+    <text x="480" y="318" class="k-red t-b">[Sí]  [No]</text>
+    <text x="808" y="286" class="k-enl t-b">✓ confirma</text><text x="808" y="300" class="k-enl t-b">antes de</text><text x="808" y="314" class="k-enl t-b">actuar</text>
+
+    <rect x="780" y="336" width="110" height="30" rx="10" class="c-fis"/>
+    <text x="835" y="356" text-anchor="middle">[Sí]</text>
+
+    <rect x="470" y="400" width="420" height="52" rx="10" class="caja" style="stroke:var(--good);stroke-width:2"/>
+    <text x="680" y="422" text-anchor="middle" class="t-b k-enl">Enlace enviado: pagos.ejemplo.com/f/F-2207</text>
+    <text x="680" y="440" text-anchor="middle" class="t-m">6 mensajes, cada uno se responde sin pensar</text>
+  </g>
+</svg></div><figcaption><b>El mismo trámite, mal y bien escrito.</b> A la izquierda, un bot que pide cuatro datos en un mensaje con lenguaje de sistema: la clienta responde a medias y el bot se traba. A la derecha, Pía hace el mismo trámite en turnos cortos, un dato por turno, y confirma antes del paso irreversible. Las etiquetas junto a cada mensaje del bot marcan qué principio rompe, en naranja, o cumple, en verde. La versión de la derecha tiene más turnos, pero cada uno se responde sin pensar.</figcaption></figure><div class="prose"><p>Fíjate en una consecuencia que sorprende: la conversación bien diseñada suele tener <b>más</b> turnos, no menos. No importa: lo que cansa no es la cantidad de turnos, sino tener que pensar qué responder. Un turno que se contesta con un toque de botón cuesta un segundo.</p></div></section>
+<section><h2>Botones o texto libre: cuándo guiar y cuándo dejar escribir</h2><div class="prose"><p>Los canales de mensajería permiten dos formas de responder. Los <b>botones de respuesta</b> (<i>quick replies</i> o <i>reply buttons</i>) y las <b>listas</b> (<i>list messages</i>) convierten la respuesta en un toque. El <b>texto libre</b> deja escribir lo que sea. Ninguno es mejor siempre:</p><ul><li><b>Botones</b> cuando las opciones son pocas y cerradas: «¿Te envío el enlace? [Sí] [No]», «¿Qué servicio falla? [Internet] [TV]». También para las confirmaciones de pasos irreversibles: un botón «Sí, pagar» no se malinterpreta.</li><li><b>Listas</b> cuando las opciones son más, pero cerradas: las agencias de una ciudad, los últimos tres meses de facturas.</li><li><b>Texto libre</b> cuando el dato es abierto (una dirección, la descripción de una falla) o cuando el cliente ya sabe lo que quiere y escribirlo es más rápido que buscar en un menú.</li></ul><p>Cada canal pone sus propios límites, y el diseño tiene que respetarlos. En <b>WhatsApp Business Platform</b>, un mensaje admite hasta <b>3 botones de respuesta</b>, de <b>20 caracteres</b> como máximo cada uno, y una lista admite hasta <b>10 filas</b>. Telegram permite teclados con más botones, y el widget web, casi cualquier cosa. El capítulo 8 compara los canales a fondo; aquí basta una regla: si tu menú necesita cinco botones, en WhatsApp vas a tener que partirlo o convertirlo en lista.</p></div><figure class="fig fig-esquema" id="03-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 410" style="min-width:720px" role="img" aria-label="Tabla de decisión entre botones, lista y texto libre según la situación de la conversación, con ejemplos de Pía, y los límites de botones y listas de WhatsApp">
+  <g class="t t-xs t-b t-m">
+    <text x="14" y="22">SITUACIÓN</text>
+    <text x="286" y="22">CONTROL</text>
+    <text x="456" y="22">EJEMPLO DE PÍA</text>
+    <text x="700" y="22">POR QUÉ</text>
+  </g>
+  <g class="t">
+    <rect x="10" y="32" width="880" height="48" rx="8" class="caja"/>
+    <text x="22" y="61">Confirmar un paso irreversible</text>
+    <rect x="280" y="42" width="150" height="28" rx="14" class="c-apl"/><text x="355" y="61" class="t-s t-b k-apl" text-anchor="middle">2 botones</text>
+    <text x="456" y="61" class="t-s t-mono">[Sí, pagar] [No]</text>
+    <text x="700" y="61" class="t-s">no se malinterpreta</text>
+
+    <rect x="10" y="88" width="880" height="48" rx="8" class="caja"/>
+    <text x="22" y="117">Pocas opciones cerradas</text>
+    <rect x="280" y="98" width="150" height="28" rx="14" class="c-apl"/><text x="355" y="117" class="t-s t-b k-apl" text-anchor="middle">hasta 3 botones</text>
+    <text x="456" y="117" class="t-s t-mono">[Internet] [TV] [Los dos]</text>
+    <text x="700" y="117" class="t-s">un toque, sin errores</text>
+
+    <rect x="10" y="144" width="880" height="48" rx="8" class="caja"/>
+    <text x="22" y="173">Más opciones, pero cerradas</text>
+    <rect x="280" y="154" width="150" height="28" rx="14" class="c-tra"/><text x="355" y="173" class="t-s t-b k-tra" text-anchor="middle">lista</text>
+    <text x="456" y="173" class="t-s">las agencias de la ciudad</text>
+    <text x="700" y="173" class="t-s">no caben en 3 botones</text>
+
+    <rect x="10" y="200" width="880" height="48" rx="8" class="caja"/>
+    <text x="22" y="229">Un dato abierto</text>
+    <rect x="280" y="210" width="150" height="28" rx="14" class="c-enl"/><text x="355" y="229" class="t-s t-b k-enl" text-anchor="middle">texto libre</text>
+    <text x="456" y="229" class="t-s">«describe qué ves en el módem»</text>
+    <text x="700" y="229" class="t-s">ningún menú lo cubre</text>
+
+    <rect x="10" y="256" width="880" height="48" rx="8" class="caja"/>
+    <text x="22" y="285">El cliente ya sabe qué quiere</text>
+    <rect x="280" y="266" width="150" height="28" rx="14" class="c-enl"/><text x="355" y="285" class="t-s t-b k-enl" text-anchor="middle">texto, siempre</text>
+    <text x="456" y="285" class="t-s">«quiero pagar» sin tocar nada</text>
+    <text x="700" y="285" class="t-s">los botones no son jaula</text>
+  </g>
+
+  <rect x="10" y="322" width="880" height="78" rx="10" class="c-fis"/>
+  <text x="24" y="344" class="t t-xs t-b k-fis">LÍMITES DE WHATSAPP BUSINESS PLATFORM (EL CANAL MÁS RESTRICTIVO MARCA EL DISEÑO)</text>
+  <g class="t t-s">
+    <text x="24" y="366"><tspan class="t-b">Botones de respuesta:</tspan> hasta 3 por mensaje, de 20 caracteres como máximo cada uno.</text>
+    <text x="24" y="386"><tspan class="t-b">Lista:</tspan> hasta 10 filas en total, de 24 caracteres por título. Telegram y el widget web admiten más.</text>
+  </g>
+</svg></div><figcaption><b>¿Botones, lista o texto libre?</b> Cada fila es una situación típica de la conversación de Pía; las columnas dicen qué control conviene, un ejemplo y por qué. Abajo, los límites de los botones y las listas de WhatsApp, que suelen ser el canal más restrictivo y por eso marcan el diseño de todos los demás.</figcaption></figure><div class="prose"><p>Una regla de oro cierra esta sección: <b>los botones no deben ser una jaula</b>. Aunque ofrezcas botones, el bot tiene que entender si el cliente escribe libremente; y siempre debe haber una salida («Otra cosa» o «Hablar con una persona»). Un bot que solo acepta botones repite la frustración del IVR telefónico.</p></div></section>
+<section><h2>Personalidad y tono de marca: la guía de voz</h2><div class="prose"><p>La <b>personalidad</b> (<i>persona</i> o <i>personality</i>) de un bot es el conjunto de rasgos estables con que habla: formal o cercano, directo o cálido, con humor o sin él. El <b>tono</b> (<i>tone</i>) es cómo esa personalidad se ajusta a cada momento: la misma persona no habla igual cuando te saluda que cuando te informa que tienes una deuda vencida.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en una buena maestra. Su personalidad no cambia en todo el año: es clara, paciente y exigente. Pero su tono sí cambia: es alegre en la presentación del primer día, firme cuando hay que cumplir una regla y suave cuando un alumno está pasando por algo difícil. Si un día hablara como otra persona, los alumnos lo notarían de inmediato. Con un bot pasa lo mismo.</p></div><div class="prose"><p>La herramienta para fijarlas es la <b>guía de voz</b> (<i>voice guide</i>): un documento corto, escrito antes de redactar los flujos, que todos los que escriben mensajes deben seguir. La de Pía tiene cuatro partes:</p><ul><li><b>Cuatro adjetivos</b>: Pía es <b>cercana, clara, resolutiva y nunca condescendiente</b>.</li><li><b>Reglas de estilo</b>: tutea; mensajes de 40 palabras o menos; una pregunta por mensaje; sin jerga de sistema; sin emojis ni signos de exclamación cuando el tema es dinero, una falla o un reclamo; nunca culpa al cliente; nunca promete lo que no controla («garantizado», «seguro que»).</li><li><b>Lo que siempre dice</b>: que es una asistente virtual al presentarse, el siguiente paso concreto y cómo llegar a una persona.</li><li><b>Lo que nunca dice</b>: diagnósticos que no tiene («seguro es tu router»), plazos que no salen de un sistema, opiniones sobre la competencia, chistes sobre la deuda.</li></ul><p>Además, la guía dice cómo cambia el tono según la situación: más cálido en el saludo; directo y sin adornos en una deuda vencida; empático y concreto en una falla; reconocer el problema y pasar a una persona en un reclamo.</p></div><div class="lab" id="03-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Guía de voz: el mismo mensaje en tres personalidades</h3></div><p class="hint">Elige una situación: verás el mismo mensaje escrito con tres personalidades, una formal, la de Pía y una jovial. Debajo de cada uno, el revisor de la guía de voz marca qué reglas cumple y cuáles rompe. Al final, escribe tu propia versión: el revisor la evalúa con las mismas reglas.</p><style>
+[id="03-lab-1"] .c31-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="03-lab-1"] .c31-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:820px){[id="03-lab-1"] .c31-cols{grid-template-columns:minmax(0,1fr)}}
+[id="03-lab-1"] .c31-card{border:1px solid var(--line);border-top:5px solid var(--cc);border-radius:10px;background:var(--card);padding:10px;display:grid;gap:8px;align-content:start}
+[id="03-lab-1"] .c31-card h4{margin:0;font:700 .9rem var(--f-display);color:var(--ink)}
+[id="03-lab-1"] .c31-card h4 small{display:block;font:500 .74rem var(--f-body);color:var(--muted)}
+[id="03-lab-1"] .c31-bub{background:var(--paper);border:1px solid var(--line);border-radius:12px;border-bottom-left-radius:3px;padding:8px 10px;font:400 .9rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="03-lab-1"] .c31-nota{font:700 .8rem var(--f-display)}
+[id="03-lab-1"] ul.c31-reglas{list-style:none;margin:0;padding:0;display:grid;gap:3px;font:400 .8rem/1.35 var(--f-body)}
+[id="03-lab-1"] ul.c31-reglas li{padding-left:1.4em;position:relative}
+[id="03-lab-1"] ul.c31-reglas li::before{position:absolute;left:0;font-weight:700}
+[id="03-lab-1"] ul.c31-reglas li.si{color:var(--muted)}
+[id="03-lab-1"] ul.c31-reglas li.si::before{content:"✓";color:var(--good)}
+[id="03-lab-1"] ul.c31-reglas li.no{color:var(--ink)}
+[id="03-lab-1"] ul.c31-reglas li.no::before{content:"✗";color:var(--warm)}
+[id="03-lab-1"] ul.c31-reglas li.no em{color:var(--warm);font-style:normal}
+[id="03-lab-1"] textarea{width:100%;box-sizing:border-box;min-height:70px;font:400 .92rem/1.4 var(--f-body);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);resize:vertical}
+</style>
+<p class="c31-tit">Situación</p>
+<div class="btns" id="c31-sit" role="group" aria-label="Situación"></div>
+<p class="hint" id="c31-tono" style="margin:0"></p>
+<div class="c31-cols" id="c31-cols"></div>
+<p class="c31-tit" style="margin-top:6px">Escribe tu versión para esta situación</p>
+<label for="c31-tu" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Tu versión del mensaje</label>
+<textarea id="c31-tu" maxlength="600" placeholder="Escribe aquí el mensaje de Pía…"></textarea>
+<div class="readout texto" id="c31-out" aria-live="polite"></div></div><div class="prose"><p>El revisor del laboratorio no es un juguete: es una versión pequeña de algo que los equipos maduros usan. Las reglas mecánicas de la guía (longitud, número de preguntas, palabras prohibidas, emojis en temas sensibles) se pueden revisar con un programa, igual que un corrector ortográfico, y se corren cada vez que alguien cambia un mensaje. Lo que no es mecánico (si el mensaje es empático o condescendiente) lo revisa una persona.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Reescribe tres mensajes con la guía de voz de Pía</h3></div><p>Abre cualquier asistente de IA gratuito (cualquiera sirve) y pídele que reescriba tres mensajes siguiendo la guía de voz. Después pasa cada resultado por el revisor del laboratorio 1.</p><div class="code-copia"><pre><code>Reescribe estos tres mensajes del chatbot
+de una empresa de internet y TV.
+Guía de voz:
+- La asistente se llama Pía: cercana, clara,
+  resolutiva y nunca condescendiente. Tutea.
+- Máximo 40 palabras y una sola pregunta por mensaje.
+- Sin jerga de sistema.
+- Sin emojis ni exclamaciones si el tema es dinero,
+  una falla o un reclamo.
+- Nunca culpa al cliente ni promete lo que no controla.
+- Termina con el siguiente paso.
+Mensajes:
+1. "Estimado usuario, su pago no pudo ser procesado
+   debido a un error en la transacción. Intente nuevamente."
+2. "¡Ups! 😅 Parece que olvidaste pagar tu factura.
+   ¡Págala ya para evitar el corte!"
+3. "Su reclamo ha sido registrado en el sistema
+   y será atendido en orden de llegada."</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Copia cada mensaje reescrito en el cuadro «Escribe tu versión» del laboratorio, con la situación que corresponde (el 1 y el 2 son de deuda; el 3, de reclamo).</span></li><li><span>Anota qué reglas rompió el asistente, si rompió alguna.</span></li><li><span>Pídele una segunda versión del mensaje que peor salió, diciéndole qué regla rompió.</span></li></ol><p><b>Qué observar:</b> el modelo suele cumplir el tono general, pero a menudo se pasa de largo, mete dos preguntas o agrega una promesa («lo resolveremos de inmediato») que la empresa no puede garantizar. Por eso una guía de voz no basta con dársela al modelo: se revisa lo que produce, con reglas mecánicas y con una persona.</p></div></section>
+<section><h2>El mismo tono en todos los canales y en todos los flujos</h2><div class="prose"><p>Un cliente no sabe que el flujo de pagos lo escribió cobranza y el de fallas lo escribió soporte. Para él, es una sola Pía. Si en un flujo lo tutea y en otro le dice «estimado usuario», el bot parece tener dos personalidades, y eso le quita confianza justo en los momentos sensibles.</p><p>Mantener la voz cuando muchas áreas escriben es un problema de proceso, y se resuelve con tecnología:</p><ul><li><b>Los mensajes viven en un solo lugar.</b> En vez de escribir textos sueltos dentro de cada flujo, los mensajes se guardan como <b>plantillas</b> (<i>templates</i>) con un identificador, en un archivo o en el gestor de contenido de la plataforma. El flujo dice «mostrar <code>pago.confirmar</code>» y el texto se mantiene aparte, con su historial de versiones.</li><li><b>Revisión automática.</b> Cada cambio de un mensaje pasa por un revisor como el del laboratorio antes de publicarse, igual que el código pasa por pruebas.</li><li><b>Revisión humana por muestreo.</b> El diseñador conversacional lee cada semana una muestra de conversaciones reales buscando quiebres de tono.</li><li><b>La guía entra al modelo.</b> Cuando un LLM redacta respuestas, la guía de voz es parte de sus instrucciones; aun así, su salida se revisa con las mismas reglas.</li></ul><p>El formato sí cambia de canal a canal, aunque la voz no: en WhatsApp, mensajes cortos y botones; en el widget web, un poco más de texto y enlaces a la página donde está el cliente; en una notificación, una sola línea. Personalidad fija, formato adaptado.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que construye su bot por áreas suele descubrir el problema el día que junta todos los flujos: cobranza escribió con «usted» y en tono de aviso legal, soporte con emojis y ventas con signos de exclamación en cada línea. La corrección típica no es reescribir todo de una vez, sino crear la guía de voz, pasar todos los mensajes por un revisor automático para encontrar los peores y reescribirlos por orden de tráfico: primero los mensajes que más clientes ven.</p></div></section>
+<section><h2>El primer mensaje: presentarse como bot, decir qué puede hacer y ofrecer una salida</h2><div class="prose"><p>El <b>primer mensaje</b> (<i>welcome message</i>) es la primera impresión del bot y fija las expectativas de toda la conversación. Un buen primer mensaje hace cuatro cosas, en pocas palabras:</p><ol class="steps"><li><span><b>Dice quién es y qué es</b>: un nombre y la aclaración de que es un asistente virtual.</span></li><li><span><b>Dice qué puede hacer</b>, con dos o tres ejemplos concretos, no con un «te ayudo con lo que necesites».</span></li><li><span><b>Propone el siguiente paso</b>: botones o una pregunta que se responde fácil.</span></li><li><span><b>Muestra la salida humana</b>: cómo llegar a una persona, sin tener que buscarla.</span></li></ol></div><figure class="fig fig-esquema" id="03-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" style="min-width:720px" role="img" aria-label="Anatomía del primer mensaje de Pía en WhatsApp: presentación como asistente virtual, alcance con ejemplos, tres botones como siguiente paso y la salida a una persona; abajo, lo que el primer mensaje no lleva">
+  <defs>
+    <marker id="d03c-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  
+  <rect x="320" y="14" width="260" height="340" rx="26" class="caja" style="stroke-width:2"/>
+  <rect x="332" y="44" width="236" height="296" rx="10" class="c-fis" style="stroke-width:0"/>
+  <text x="450" y="34" class="t t-xs t-b t-m" text-anchor="middle">SERVICIOS EJEMPLO · WHATSAPP</text>
+
+  <rect x="342" y="58" width="216" height="168" rx="10" class="caja"/>
+  <g class="t t-s">
+    <text x="354" y="78" class="t-b">① Hola, soy Pía, la</text>
+    <text x="354" y="94" class="t-b">asistente virtual de</text>
+    <text x="354" y="110" class="t-b">Servicios Ejemplo.</text>
+    <text x="354" y="134">② Puedo ayudarte con tu</text>
+    <text x="354" y="150">factura, una falla del</text>
+    <text x="354" y="166">servicio o el estado de</text>
+    <text x="354" y="182">un ticket.</text>
+    <text x="354" y="206">③ ¿Qué necesitas?</text>
+  </g>
+  <g class="t t-s t-b" text-anchor="middle">
+    <rect x="342" y="234" width="216" height="28" rx="8" class="caja"/><text x="450" y="253" class="k-red">Mi factura</text>
+    <rect x="342" y="268" width="216" height="28" rx="8" class="caja"/><text x="450" y="287" class="k-red">Una falla</text>
+    <rect x="342" y="302" width="216" height="28" rx="8" class="caja s-warm" style="stroke-width:2"/><text x="450" y="321" class="k-warm">④ Hablar con una persona</text>
+  </g>
+
+  
+  <g class="t">
+    <rect x="10" y="60" width="270" height="62" rx="10" class="d-casa"/>
+    <text x="22" y="82" class="t-b k-casa">① Quién es y qué es</text>
+    <text x="22" y="100" class="t-s">un nombre y «asistente virtual»:</text>
+    <text x="22" y="114" class="t-s">transparencia desde la primera línea</text>
+    <line x1="280" y1="91" x2="350" y2="91" class="ln" marker-end="url(#d03c-m)"/>
+
+    <rect x="10" y="226" width="270" height="62" rx="10" class="c-red"/>
+    <text x="22" y="248" class="t-b k-red">③ El siguiente paso</text>
+    <text x="22" y="266" class="t-s">una pregunta fácil y tres botones</text>
+    <text x="22" y="280" class="t-s">(el máximo de WhatsApp)</text>
+    <line x1="280" y1="257" x2="340" y2="257" class="ln" marker-end="url(#d03c-m)"/>
+  </g>
+  
+  <g class="t">
+    <rect x="620" y="122" width="270" height="62" rx="10" class="c-enl"/>
+    <text x="632" y="144" class="t-b k-enl">② Su alcance real</text>
+    <text x="632" y="162" class="t-s">tres ejemplos concretos, no</text>
+    <text x="632" y="176" class="t-s">«te ayudo con lo que necesites»</text>
+    <line x1="620" y1="153" x2="562" y2="153" class="ln" marker-end="url(#d03c-m)"/>
+
+    <rect x="620" y="282" width="270" height="62" rx="10" class="caja s-warm" style="stroke-width:2"/>
+    <text x="632" y="304" class="t-b k-warm">④ La salida humana</text>
+    <text x="632" y="322" class="t-s">visible desde el principio,</text>
+    <text x="632" y="336" class="t-s">sin tener que buscarla</text>
+    <line x1="620" y1="316" x2="562" y2="316" class="ln" marker-end="url(#d03c-m)"/>
+  </g>
+
+  <rect x="10" y="372" width="880" height="58" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="24" y="394" class="t t-xs t-b t-m">LO QUE NO LLEVA</text>
+  <text x="24" y="416" class="t t-s t-m">Avisos legales largos (basta un enlace a la política de privacidad) · pedir datos antes de saber qué quiere la persona · prometer «todo».</text>
+</svg></div><figcaption><b>Anatomía del primer mensaje de Pía.</b> En el centro, el mensaje como se ve en WhatsApp, con sus tres botones. A los lados, cada parte numerada con su función: presentarse como asistente virtual, el alcance con ejemplos concretos, el siguiente paso con botones y la salida humana. Abajo, en gris, lo que no lleva: ni avisos legales largos, ni pedir datos antes de saber qué quiere la persona.</figcaption></figure><div class="prose"><p>Presentarse como bot no es solo cortesía. Es cada vez más una obligación legal: la ley SB 1001 de California, vigente desde 2019, prohíbe usar un bot para engañar sobre su naturaleza artificial cuando se busca vender algo o influir en un voto; y el artículo 50 del Reglamento de Inteligencia Artificial de la Unión Europea exige, desde agosto de 2026, que las personas sepan que interactúan con un sistema de IA, salvo que sea evidente. Pero aun donde no hay ley, ocultarlo sale caro: el cliente que descubre a mitad de un reclamo que hablaba con una máquina se siente engañado, y con razón.</p><p>Prometer de más tampoco ayuda. «Puedo ayudarte con lo que necesites» invita a pedir cosas que el bot no hace, y cada una termina en un «no entendí». Decir el alcance real («tu factura, una falla o un ticket») hace que los pedidos fuera de alcance se vayan a una persona desde el principio, sin frustración.</p></div><div class="lab" id="03-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Primer mensaje: qué promete, qué opciones muestra y si se presenta como bot</h3></div><p class="hint">Arma el primer mensaje de Pía con las cuatro decisiones de arriba y mira cómo se ve. Luego observa el recorrido de 100 usuarios simulados: cuántos llegan a lo que buscaban con el bot, cuántos pasan a una persona sin frustrarse, cuántos se frustran y cuántos abandonan en el primer turno. Prueba la peor combinación que se te ocurra y luego la mejor.</p><style>
+[id="03-lab-2"] .c32-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){[id="03-lab-2"] .c32-grid{grid-template-columns:minmax(0,1fr)}}
+[id="03-lab-2"] .c32-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 0 4px}
+[id="03-lab-2"] .c32-tel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px}
+[id="03-lab-2"] .c32-bub{background:var(--card);border:1px solid var(--line);border-radius:12px;border-bottom-left-radius:3px;padding:8px 10px;font:400 .9rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="03-lab-2"] .c32-bub small{display:block;font:600 .66rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+[id="03-lab-2"] .c32-bts{display:grid;gap:4px}
+[id="03-lab-2"] .c32-bts span{display:block;text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:5px;font:600 .82rem var(--f-display);color:var(--accent)}
+[id="03-lab-2"] .c32-lst{border:1px solid var(--line);border-radius:8px;background:var(--card);font:400 .8rem var(--f-body);padding:4px 8px;color:var(--muted)}
+[id="03-lab-2"] .c32-pts{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:3px}
+[id="03-lab-2"] .c32-pts i{display:block;aspect-ratio:1;border-radius:3px;transition:background .3s}
+[id="03-lab-2"] .c32-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:6px}
+[id="03-lab-2"] .c32-kpi div{border:1px solid var(--line);border-left:5px solid var(--cc);border-radius:8px;padding:5px 8px;background:var(--card)}
+[id="03-lab-2"] .c32-kpi b{font:700 1.3rem var(--f-display);display:block}
+[id="03-lab-2"] .c32-kpi small{font:500 .74rem/1.25 var(--f-body);color:var(--muted)}
+@media (prefers-reduced-motion: reduce){[id="03-lab-2"] .c32-pts i{transition:none}}
+</style>
+<div class="c32-grid">
+  <div style="min-width:0">
+    <p class="c32-tit">1. ¿Se presenta como asistente virtual?</p>
+    <div class="btns" id="c32-bot" role="group" aria-label="Presentación"><button type="button" data-v="si">Sí</button><button type="button" data-v="no">No, solo «Hola, soy Pía»</button></div>
+    <p class="c32-tit">2. ¿Qué promete?</p>
+    <div class="btns" id="c32-pro" role="group" aria-label="Promesa"><button type="button" data-v="concreta">Tres cosas concretas</button><button type="button" data-v="amplia">«Lo que necesites»</button><button type="button" data-v="nada">Nada</button></div>
+    <p class="c32-tit">3. ¿Qué opciones muestra?</p>
+    <div class="btns" id="c32-opc" role="group" aria-label="Opciones"><button type="button" data-v="libre">Ninguna: texto libre</button><button type="button" data-v="tres">3 botones</button><button type="button" data-v="lista">Lista de 9 opciones</button></div>
+    <p class="c32-tit">4. ¿Muestra la salida a una persona?</p>
+    <div class="btns" id="c32-sal" role="group" aria-label="Salida humana"><button type="button" data-v="si">Sí</button><button type="button" data-v="no">No</button></div>
+  </div>
+  <div style="min-width:0">
+    <p class="c32-tit">Así lo ve Laura en WhatsApp</p>
+    <div class="c32-tel" id="c32-tel"></div>
+  </div>
+</div>
+<p class="c32-tit">100 usuarios simulados (70 piden algo que Pía resuelve, 18 algo fuera de su alcance y 12 quieren una persona)</p>
+<div class="c32-pts" id="c32-pts" role="img" aria-label="Destino de 100 usuarios"></div>
+<div class="c32-kpi" id="c32-kpi"></div>
+<div class="readout texto" id="c32-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Modelo de ejemplo con supuestos simples (por ejemplo, con 3 botones el 93 % de quienes piden algo del alcance llega al primer intento; con texto libre, el 78 %). Sirve para comparar decisiones, no para predecir un bot real: eso se mide con usuarios reales, como verás en los capítulos 14 y 15.</p></div></section>
+<section><h2>Cuando el cliente vuelve: saludo para nuevos y para conocidos</h2><div class="prose"><p>Laura escribe por tercera vez este mes. No necesita la presentación completa: ya sabe que Pía es una asistente virtual y qué puede hacer. Repetirle todo la hace sentir que el bot no la recuerda. Pero tampoco se puede saludar a cualquiera como si se le conociera.</p><p>El canal casi siempre trae un identificador: en WhatsApp, el número de teléfono; en el widget web, la sesión si el cliente inició sesión en el portal. Con él, el bot busca en el <b>CRM</b> (<i>Customer Relationship Management</i>, el sistema donde la empresa guarda a sus clientes y su historia) y adapta el saludo:</p><ul><li><b>Cliente nuevo</b> (el número no está registrado): presentación completa, alcance y botones.</li><li><b>Cliente conocido sin casos abiertos</b>: un saludo corto que no repite el alcance: «Hola de nuevo. ¿En qué te ayudo hoy? [Mi factura] [Falla] [Otra cosa]».</li><li><b>Cliente conocido con un caso abierto</b>: el bot se adelanta: «Hola de nuevo. ¿Escribes por el ticket n.º 5512? [Sí] [Es otra cosa]».</li></ul><p>Hay un límite importante: <b>conocer el número no es verificar la identidad</b>. Un teléfono se presta, se pierde o lo comparte una familia. Por eso el saludo personalizado no muestra nada sensible: ni montos, ni direcciones, ni el detalle del ticket. Eso llega después de la verificación, como viste en el capítulo 1. Que el saludo diga el nombre de la persona es una decisión de la política de privacidad de cada empresa; Pía no lo hace hasta verificar.</p></div><figure class="fig fig-flujo" id="03-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" style="min-width:720px" role="img" aria-label="Flujo del saludo: el bot consulta el CRM con el número del canal; si es desconocido, saludo completo; si es un cliente conocido sin casos, saludo corto; si tiene un caso abierto, pregunta si escribe por el ticket 5512; nada de esto muestra datos sensibles porque aún no hay verificación">
+  <defs>
+    <marker id="d03d-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d03d-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+  </defs>
+  <rect x="330" y="12" width="240" height="50" rx="10" class="c-fis"/>
+  <text x="450" y="33" class="t t-b k-fis" text-anchor="middle">Llega un mensaje</text>
+  <text x="450" y="51" class="t t-s" text-anchor="middle">el canal trae el número de teléfono</text>
+  <line x1="450" y1="62" x2="450" y2="84" class="ln" marker-end="url(#d03d-m)"/>
+
+  <rect x="330" y="86" width="240" height="50" rx="10" class="d-sis"/>
+  <text x="450" y="107" class="t t-b k-sis" text-anchor="middle">Consulta al CRM</text>
+  <text x="450" y="125" class="t t-s" text-anchor="middle">¿qué sabemos de este número?</text>
+  <line x1="450" y1="136" x2="450" y2="154" class="ln" marker-end="url(#d03d-m)"/>
+
+  <polygon points="450,156 540,196 450,236 360,196" class="caja" style="stroke:var(--c-red);stroke-width:1.8"/>
+  <text x="450" y="192" class="t t-s t-b" text-anchor="middle">¿es un cliente</text>
+  <text x="450" y="207" class="t t-s t-b" text-anchor="middle">registrado?</text>
+
+  <path d="M360 196 H220 V258" class="ln" marker-end="url(#d03d-m)"/>
+  <text x="290" y="188" class="t t-s t-b">no</text>
+  <path d="M540 196 H602" class="ln" marker-end="url(#d03d-m)"/>
+  <text x="556" y="188" class="t t-s t-b">sí</text>
+
+  <polygon points="690,156 780,196 690,236 600,196" class="caja" style="stroke:var(--c-red);stroke-width:1.8"/>
+  <text x="690" y="192" class="t t-s t-b" text-anchor="middle">¿tiene un caso</text>
+  <text x="690" y="207" class="t t-s t-b" text-anchor="middle">abierto?</text>
+  <path d="M640 214 L585 258" class="ln" marker-end="url(#d03d-m)"/>
+  <text x="590" y="236" class="t t-s t-b">no</text>
+  <path d="M740 214 L795 258" class="ln" marker-end="url(#d03d-m)"/>
+  <text x="776" y="236" class="t t-s t-b">sí</text>
+
+  <g class="t t-s">
+    <rect x="10" y="260" width="420" height="96" rx="10" class="caja"/>
+    <text x="22" y="280" class="t-b">Número desconocido: saludo completo</text>
+    <text x="22" y="300">«Hola, soy Pía, la asistente virtual de Servicios</text>
+    <text x="22" y="316">Ejemplo. Puedo ayudarte con tu factura, una falla…»</text>
+    <text x="22" y="340" class="k-red t-b">[Mi factura] [Una falla] [Hablar con persona]</text>
+
+    <rect x="450" y="260" width="210" height="96" rx="10" class="caja"/>
+    <text x="462" y="280" class="t-b">Conocido, sin casos</text>
+    <text x="462" y="300">«Hola de nuevo. ¿En qué</text>
+    <text x="462" y="316">te ayudo hoy?»</text>
+    <text x="462" y="340" class="k-red t-b">[Factura] [Falla] [Otra]</text>
+
+    <rect x="680" y="260" width="210" height="96" rx="10" class="caja" style="stroke:var(--c-red);stroke-width:2"/>
+    <text x="692" y="280" class="t-b">Conocido, con un caso</text>
+    <text x="692" y="300">«Hola de nuevo. ¿Escribes</text>
+    <text x="692" y="316">por el ticket n.º 5512?»</text>
+    <text x="692" y="340" class="k-red t-b">[Sí] [Es otra cosa]</text>
+  </g>
+
+  <rect x="10" y="372" width="880" height="48" rx="10" class="d-casa"/>
+  <text x="450" y="392" class="t t-s t-b k-casa" text-anchor="middle">Todo esto ocurre ANTES de verificar la identidad</text>
+  <text x="450" y="410" class="t t-s" text-anchor="middle">Conocer el número no es saber quién escribe: ningún saludo muestra montos, direcciones ni el detalle del caso.</text>
+</svg></div><figcaption><b>Qué saludo recibe cada cliente.</b> El mensaje entra por arriba. El bot consulta el CRM con el número del canal y sigue una de tres ramas: número desconocido, cliente conocido sin casos y cliente conocido con un caso abierto. Cada rama termina en el saludo que corresponde. La franja de abajo recuerda la frontera: todo lo de arriba se hace sin verificar identidad, así que ningún saludo muestra datos sensibles.</figcaption></figure><div class="prose"><p>Lo que te llevas de este capítulo: <b>un objetivo por turno, una voz definida por escrito y un primer mensaje que fija expectativas.</b> En el capítulo 4 esos mensajes se ordenan en flujos completos, con lo que pasa cuando el cliente no responde lo esperado.</p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Qué cuatro principios del diseño conversacional se ven en un buen mensaje de bot?</summary><p>Claridad (dice qué se espera del cliente), brevedad, un objetivo por turno (un dato o decisión a la vez) y confirmación progresiva antes de los pasos irreversibles.</p></details><details><summary>¿Por qué la versión bien diseñada de un trámite suele tener más turnos y aun así es mejor?</summary><p>Porque lo que cansa al cliente no es la cantidad de turnos sino tener que pensar qué responder. Turnos cortos con un solo objetivo se responden rápido y con menos errores.</p></details><details><summary>Un menú necesita cinco opciones y el canal es WhatsApp. ¿Qué haces?</summary><p>WhatsApp admite hasta tres botones de respuesta por mensaje. Se convierte en una lista (hasta 10 filas) o se parte en dos pasos, y siempre se deja una salida «Otra cosa».</p></details><details><summary>¿Qué diferencia hay entre personalidad y tono?</summary><p>La personalidad son los rasgos estables con que habla el bot; el tono es cómo esa personalidad se ajusta a cada situación, por ejemplo más cálido en un saludo y más directo en una deuda vencida.</p></details><details><summary>¿Qué cuatro cosas hace un buen primer mensaje?</summary><p>Dice quién es y que es un asistente virtual, dice qué puede hacer con ejemplos concretos, propone el siguiente paso y muestra cómo llegar a una persona.</p></details><details><summary>¿Por qué el saludo a un cliente conocido no muestra su saldo, aunque el número de teléfono esté en el CRM?</summary><p>Porque conocer el número no es verificar la identidad: un teléfono se presta o se comparte. Los datos sensibles se muestran solo después de verificar.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es la «máxima de cantidad» de Grice y qué otras máximas propuso sobre cómo cooperan las personas en una conversación?<small>Pista: busca «principio de cooperación de Grice».</small></li><li>¿Qué es el efecto ELIZA y por qué la gente atribuye comprensión a programas muy simples?<small>Pista: busca «ELIZA Weizenbaum 1966».</small></li><li>¿Qué dice la ley de Hick sobre el número de opciones y el tiempo que tardamos en elegir?<small>Pista: busca «ley de Hick-Hyman».</small></li><li>¿Qué son las pautas de accesibilidad WCAG y qué piden sobre el lenguaje claro y los textos de botones?<small>Pista: busca «WCAG 2.2 legible comprensible».</small></li><li>¿Qué es el «valle inquietante» y se aplica también a los bots que imitan demasiado a una persona?<small>Pista: busca «uncanny valley chatbots».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://styleguide.mailchimp.com/voice-and-tone/" target="_blank" rel="noopener">Voice and Tone, de Mailchimp <small>una guía de voz pública y muy citada, con ejemplos de tono por situación</small></a><a class="vid" href="https://developers.google.com/assistant/conversation-design/welcome" target="_blank" rel="noopener">Conversation design, de Google <small>la guía de diseño conversacional que Google publicó para sus asistentes</small></a><a class="vid" href="https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-reply-buttons-messages" target="_blank" rel="noopener">Interactive reply buttons messages <small>la documentación oficial de los botones de WhatsApp y sus límites</small></a><a class="vid" href="https://artificialintelligenceact.eu/article/50/" target="_blank" rel="noopener">Artículo 50 del Reglamento de IA de la UE <small>las obligaciones de transparencia para sistemas que conversan con personas</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const SIT={
+    saludo:{n:'Saludo',sens:false,primero:true,tono:'Tono de Pía en el saludo: cálido y breve. Es el primer mensaje: debe presentarse como asistente virtual.',
+      v:['Estimado cliente, le damos la bienvenida al canal de atención automatizada de Servicios Ejemplo. Por favor, seleccione una de las opciones del menú para continuar con su solicitud.',
+         'Hola, soy Pía, la asistente virtual de Servicios Ejemplo. Puedo ayudarte con tu factura, una falla o el estado de un ticket. ¿Qué necesitas? Si prefieres una persona, escribe «persona».',
+         '¡Holaaa! 🙌 ¡Qué alegría verte por aquí! Soy Pía y estoy lista para ayudarte con lo que quieras 😄 ¿Qué hacemos hoy?']},
+    deuda:{n:'Deuda vencida',sens:true,tono:'Tono de Pía con una deuda vencida: directo y sin adornos. El dato, la consecuencia y el siguiente paso, sin culpar.',
+      v:['Le informamos que su cuenta registra un saldo vencido de US$ 25,00. Debe regularizar su situación a la brevedad para evitar la suspensión del servicio.',
+         'Laura, tu factura F-2207 de US$ 25,00 venció el 5 de diciembre. Si la pagas antes del 15, evitas la suspensión. ¿Te envío el enlace de pago?',
+         '¡Uy, Laura! 😅 Se te pasó la fecha de la factura, pero tranqui, ¡nada que no se arregle! ¿Te mando el link? ¿O prefieres pagar en agencia? 💸']},
+    falla:{n:'Falla del servicio',sens:true,tono:'Tono de Pía con una falla: empático y concreto. Reconoce el problema, dice qué hizo y qué sigue.',
+      v:['Su solicitud ha sido registrada con el número de transacción TKT-5512. El sistema procesará su requerimiento en un plazo de 24 a 48 horas hábiles.',
+         'Lamento que estés sin internet. Abrí el ticket n.º 5512 y un técnico te contactará en menos de 24 horas. ¿Quieres que te avise por aquí cuando tenga la fecha de visita?',
+         '¡Ay no, qué mala onda! 😩 ¡Pero tranquila, que esto lo resolvemos en un dos por tres, garantizado! 🚀']},
+    reclamo:{n:'Reclamo por un cobro',sens:true,tono:'Tono de Pía en un reclamo: reconoce, no discute y pasa a una persona con el contexto.',
+      v:['Lamentamos los inconvenientes ocasionados. Su reclamo será evaluado por el área correspondiente. Le recordamos que los cargos se aplican según el contrato que usted aceptó.',
+         'Entiendo, un cobro que no reconoces preocupa. Esto lo revisa una persona del equipo de facturación: te paso con ella con lo que ya me contaste, para que no repitas nada. ¿Te parece bien?',
+         '¡Jajaja, tranqui! 😂 Seguro fue un error del sistema, ¡ya te lo devolvemos! 🙌']}
+  };
+  const PERS=[['Formal','corporativa y distante','--muted'],['Pía','cercana, clara, resolutiva','--good'],['Jovial','entusiasta, con humor','--warm']];
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const EMOJI=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
+  function revisar(txt,s){
+    const n=norm(txt),pal=txt.trim().split(/\s+/).filter(Boolean).length,preg=(txt.match(/\?/g)||[]).length;
+    const hall=(re)=>{const m=n.match(re);return m?m[0]:null;};
+    const R=[];
+    R.push(['Máximo 40 palabras',pal<=40,pal+' palabras']);
+    R.push(['Una sola pregunta',preg<=1,preg+' preguntas']);
+    let j=hall(/\b(error|sistema|transaccion|procesar\w*|requerimiento|solicitud ha sido|invalid\w*|codigo de error|intent)\b/);
+    R.push(['Sin jerga de sistema',!j,j?'«'+j+'»':'']);
+    j=hall(/\b(usted|estimad[oa]|le informamos|le recordamos|su cuenta|su solicitud|seleccione|indique)\b/);
+    R.push(['Tutea (nada de «usted»)',!j,j?'«'+j+'»':'']);
+    j=hall(/(se te paso|olvidaste|debe regularizar|usted acepto|por no pagar|no pagaste|tu culpa)/);
+    R.push(['No culpa al cliente',!j,j?'«'+j+'»':'']);
+    j=hall(/(garantizad\w*|seguro (que|fue|es)|ya te lo devolvemos|lo que quieras|lo que necesites|100 ?%|en un dos por tres)/);
+    R.push(['No promete lo que no controla',!j,j?'«'+j+'»':'']);
+    if(s.sens){const e=EMOJI.test(txt)||/!/.test(txt);R.push(['Sin emojis ni «!» en un tema sensible',!e,e?'tiene '+(EMOJI.test(txt)?'emojis':'exclamaciones'):'']);}
+    const sig=preg>0||/persona|enlace|link|\[|te paso|te aviso|escribe|seleccion|opcion/.test(n);
+    R.push(['Termina con un siguiente paso',sig,sig?'':'no dice qué sigue']);
+    if(s.primero){const b=/asistente virtual|asistente automatizad|soy un bot|atencion automatizada/.test(n);R.push(['Se presenta como asistente virtual',b,b?'':'no dice que es un bot']);}
+    return R;
+  }
+  function lista(R){return '<ul class="c31-reglas">'+R.map(([r,ok,d])=>'<li class="'+(ok?'si':'no')+'">'+r+(ok?'':' <em>· '+d+'</em>')+'</li>').join('')+'</ul>';}
+  const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  let sit='saludo';
+  function pintar(){
+    const s=SIT[sit];
+    q('#c31-sit').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===sit));
+    q('#c31-tono').textContent=s.tono;
+    q('#c31-cols').innerHTML=s.v.map((txt,i)=>{const R=revisar(txt,s),malas=R.filter(r=>!r[1]).length;
+      return '<div class="c31-card" style="--cc:var('+PERS[i][2]+')"><h4>'+PERS[i][0]+'<small>'+PERS[i][1]+'</small></h4><div class="c31-bub">'+esc(txt)+'</div><div class="c31-nota" style="color:var('+(malas?'--warm':'--good')+')">'+(malas?malas+' regla'+(malas>1?'s':'')+' rota'+(malas>1?'s':''):'Cumple la guía de voz')+'</div>'+lista(R)+'</div>';}).join('');
+    tuyo();
+  }
+  function tuyo(){
+    const t=q('#c31-tu').value.trim(),s=SIT[sit];
+    if(!t){q('#c31-out').innerHTML='<span>Escribe tu versión del mensaje de «'+s.n+'»: el revisor aplica las mismas reglas de la guía de voz de Pía.</span>';return;}
+    const R=revisar(t,s),malas=R.filter(r=>!r[1]);
+    q('#c31-out').innerHTML='<span>Tu versión: <b>'+(R.length-malas.length)+' de '+R.length+'</b> reglas cumplidas.</span>'+
+      (malas.length?'<span class="warn">Rompe: '+malas.map(r=>r[0].toLowerCase()+(r[2]?' ('+r[2]+')':'')).join('; ')+'.</span>':'<span class="ok">Cumple todas las reglas mecánicas. Falta lo que ningún programa revisa: léela en voz alta y pregúntate si suena empática o condescendiente.</span>');
+  }
+  q('#c31-sit').innerHTML=Object.entries(SIT).map(([k,v])=>'<button type="button" data-k="'+k+'">'+v.n+'</button>').join('');
+  q('#c31-sit').addEventListener('click',e=>{const b=e.target.closest('button');if(b){sit=b.dataset.k;pintar();}});
+  q('#c31-tu').addEventListener('input',tuyo);
+  pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const st={bot:'si',pro:'concreta',opc:'tres',sal:'si'};
+  const COL={ok:'--good',per:'--accent',fru:'--warm',aba:'--muted'};
+  function mensaje(){
+    let t=st.bot==='si'?'Hola, soy Pía, la asistente virtual de Servicios Ejemplo. ':'Hola, soy Pía, de Servicios Ejemplo. ';
+    t+=st.pro==='concreta'?'Puedo ayudarte con tu factura, una falla del servicio o el estado de un ticket. ':st.pro==='amplia'?'Estoy aquí para ayudarte con lo que necesites. ':'';
+    t+=st.opc==='libre'?'¿En qué te ayudo?':'Elige una opción:';
+    if(st.sal==='si')t+=st.opc==='libre'?' Si prefieres una persona, escribe «persona».':'';
+    let extra='';
+    if(st.opc==='tres')extra='<div class="c32-bts"><span>Mi factura</span><span>Una falla</span><span>'+(st.sal==='si'?'Hablar con persona':'Mi ticket')+'</span></div>';
+    if(st.opc==='lista')extra='<div class="c32-lst">☰ Ver opciones: factura · pagar · falla · ticket · planes · agencias · mudanza · contrato'+(st.sal==='si'?' · persona':' · otros')+'</div>';
+    return '<div class="c32-bub"><small>Pía</small>'+t+'</div>'+extra;
+  }
+  function simular(){
+    const r={ok:0,per:0,fru:0,aba:0,eng:0};
+    // 70 con pedido dentro del alcance
+    const exito={libre:.78,tres:.93,lista:.85}[st.opc], aban={libre:.08,tres:.03,lista:.10}[st.opc]*(st.pro==='nada'?1.4:1);
+    let d=70,ok=Math.round(d*exito),ab=Math.round(d*aban);let resto=d-ok-ab;if(resto<0){ab+=resto;resto=0;}
+    r.ok+=ok;r.aba+=ab;
+    if(st.sal==='si'){r.fru+=Math.round(resto*.5);r.per+=resto-Math.round(resto*.5);}else{r.fru+=Math.round(resto*.6);r.aba+=resto-Math.round(resto*.6);}
+    // 18 fuera de alcance
+    const aTiempo={concreta:.7,amplia:.1,nada:.3}[st.pro];
+    const f=18,ft=Math.round(f*aTiempo),fi=f-ft;
+    if(st.sal==='si'){r.per+=ft;r.fru+=fi;}else{r.per+=Math.round(ft*.5);r.aba+=ft-Math.round(ft*.5);r.fru+=Math.round(fi*.5);r.aba+=fi-Math.round(fi*.5);}
+    // 12 quieren una persona
+    if(st.sal==='si'){const lista=st.opc==='lista'?2:0;r.per+=12-lista;r.fru+=lista;}else{r.fru+=6;r.aba+=6;}
+    // los que descubren que era un bot
+    if(st.bot==='no')r.eng=Math.round((r.fru+r.per)*.4);
+    return r;
+  }
+  function pintar(){
+    ['bot','pro','opc','sal'].forEach(k=>q('#c32-'+k).querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===st[k])));
+    q('#c32-tel').innerHTML=mensaje();
+    const r=simular();
+    const orden=[].concat(Array(r.ok).fill('ok'),Array(r.per).fill('per'),Array(r.fru).fill('fru'),Array(r.aba).fill('aba'));
+    q('#c32-pts').innerHTML=orden.map((k,i)=>'<i style="background:var('+COL[k]+')'+(k!=='aba'&&st.bot==='no'&&(k==='fru'||k==='per')&&i>=r.ok&&(i-r.ok)<r.eng?';outline:2px solid var(--ink);outline-offset:-2px':'')+'"></i>').join('');
+    q('#c32-kpi').innerHTML=[['ok','Resuelven con el bot'],['per','Pasan a una persona sin frustrarse'],['fru','Se frustran antes de llegar'],['aba','Abandonan']].map(([k,t])=>'<div style="--cc:var('+COL[k]+')"><b>'+r[k]+'</b><small>'+t+'</small></div>').join('');
+    const msg=[];
+    if(st.bot==='no')msg.push('<span class="warn">No se presenta como bot: '+r.eng+' usuarios (los marcados con borde) descubren a mitad de camino que hablaban con una máquina y se sienten engañados. En la Unión Europea, desde agosto de 2026, avisarlo es obligatorio.</span>');
+    if(st.pro==='amplia')msg.push('<span class="warn">«Lo que necesites» invita a pedir lo que Pía no hace: casi todos los pedidos fuera de alcance terminan en «no entendí».</span>');
+    if(st.sal==='no')msg.push('<span class="warn">Sin salida visible, quien quiere una persona tiene que adivinar cómo llegar: la mitad se rinde.</span>');
+    if(st.opc==='lista')msg.push('<span>Una lista de nueve opciones obliga a leer y elegir: más abandonos en el primer turno que con tres botones.</span>');
+    if(st.opc==='libre')msg.push('<span>Sin opciones, cada cliente escribe a su manera: el clasificador acierta menos al primer intento que con botones.</span>');
+    if(!msg.length||(st.bot==='si'&&st.pro==='concreta'&&st.sal==='si'&&st.opc==='tres'))msg.unshift('<span class="ok">Esta es la combinación de Pía: se presenta como asistente virtual, dice su alcance real, ofrece tres botones y deja visible la salida humana.</span>');
+    q('#c32-out').innerHTML='<span>De 100 usuarios: <b>'+r.ok+'</b> resuelven con el bot, <b>'+r.per+'</b> pasan a una persona sin frustrarse, <b>'+r.fru+'</b> se frustran y <b>'+r.aba+'</b> abandonan.</span>'+msg.join('');
+  }
+  ['bot','pro','opc','sal'].forEach(k=>q('#c32-'+k).addEventListener('click',e=>{const b=e.target.closest('button');if(b){st[k]=b.dataset.v;pintar();}}));
+  pintar();
+})();
+</script>
+</body>
+</html>

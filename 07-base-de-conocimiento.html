@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La base de conocimiento · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="base-de-conocimiento">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 07 DE 17</span><h1>La base de conocimiento del bot</h1><p class="lede">Un modelo de lenguaje redacta muy bien lo que le pongas delante. Si le pones un artículo viejo, redacta muy bien una política vencida. Este capítulo trata del contenido que alimenta al bot: cómo se escribe, se divide, se aprueba y se mantiene vigente.</p></header>
+<section><div class="prose"><p>Laura le pregunta a Pía: «si pago hoy, ¿cuándo me reconectan el servicio?». No es una pregunta sobre su cuenta; es una pregunta sobre una <b>política</b> de Servicios Ejemplo. La respuesta correcta no está en la facturación ni en el CRM: está escrita en algún documento. Si ese documento está bien escrito, vigente y aprobado, Pía responde bien. Si hay dos documentos que dicen cosas distintas, Pía puede responder cualquiera de las dos, con la misma seguridad.</p><p>En el capítulo 5 viste que las políticas y condiciones no las decide el modelo, sino «un artículo oficial y vigente». Este capítulo trata de ese artículo: el contenido que forma la <b>base de conocimiento</b> (<i>knowledge base</i>) del bot.</p></div></section>
+<section><h2>Por qué un FAQ estático no escala a una conversación</h2><div class="prose"><p>La primera base de conocimiento de casi todas las empresas es la página de <b>preguntas frecuentes</b> (<i>FAQ, Frequently Asked Questions</i>) del sitio web: una lista de veinte preguntas con su respuesta, escrita para que una persona la lea de arriba abajo. Para un bot, ese formato se queda corto por tres razones.</p><ul><li><b>Las personas no preguntan con las palabras del FAQ.</b> El FAQ dice «Plazos de reactivación del servicio»; Laura escribe «si pago hoy, ¿cuándo vuelve el internet?». Un bot que busca la pregunta exacta no la encuentra.</li><li><b>Las respuestas del FAQ suponen contexto.</b> «Se aplica lo dicho en el punto anterior» o «ver condiciones» funcionan en una página que se lee entera, no en un pedazo de texto que el bot saca suelto.</li><li><b>Nadie es dueño del FAQ.</b> Lo escribió alguien de mercadeo hace dos años, cobranza cambió la política el mes pasado y nadie actualizó la página. El FAQ dice una cosa, el sistema hace otra y el bot repite lo que dice el FAQ.</li></ul></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en la diferencia entre el folleto que te dan en una agencia y el manual que usa la persona de la ventanilla. El folleto tiene diez preguntas y una foto bonita; se imprime una vez y se reparte durante meses. El manual tiene una ficha por trámite, con la fecha de la última actualización, quién la aprobó y qué hacer en cada caso. Cuando cambia una regla, se cambia la ficha y se retira la vieja. El bot necesita el manual, no el folleto.</p></div></section>
+<section><h2>Cómo se busca y cómo se escribe para que se encuentre</h2><div class="prose"><p>Para responder con contenido, los bots actuales usan <b>RAG</b> (<i>Retrieval-Augmented Generation</i>, generación aumentada con recuperación): ante una pregunta, un buscador encuentra los pedazos de contenido más parecidos, y el modelo redacta la respuesta usando solo esos pedazos y citándolos. Cómo funciona por dentro (los <i>embeddings</i>, los índices vectoriales, cómo se elige cuántos pedazos traer) está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>. Aquí interesa lo que casi siempre se descuida: <b>el contenido mismo</b>.</p></div><figure class="fig fig-flujo" id="07-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 476" style="min-width:740px" role="img" aria-label="Diagrama de secuencia de una respuesta con RAG: Laura pregunta cuándo la reconectan, Pía pide una búsqueda, el buscador filtra y compara en la base de conocimiento, trae tres fragmentos y Pía redacta solo con ellos citando el artículo; tres notas marcan dónde un contenido mal escrito arruina la respuesta">
+  <defs>
+    <marker id="d07a-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d07a-tra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-tra"/></marker>
+    <marker id="d07a-enl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-enl"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="50" rx="10" class="caja"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="53" class="t t-s t-m" text-anchor="middle">clienta</text>
+  <rect x="185" y="14" width="130" height="50" rx="10" class="c-tra"/><text x="250" y="36" class="t t-b" text-anchor="middle">Pía</text><text x="250" y="53" class="t t-s t-m" text-anchor="middle">modelo que redacta</text>
+  <rect x="370" y="14" width="130" height="50" rx="10" class="c-enl"/><text x="435" y="36" class="t t-b" text-anchor="middle">Buscador</text><text x="435" y="53" class="t t-s t-m" text-anchor="middle">índice</text>
+  <rect x="555" y="14" width="150" height="50" rx="10" class="c-enl"/><text x="630" y="36" class="t t-b" text-anchor="middle">Base de</text><text x="630" y="53" class="t t-s t-m" text-anchor="middle">conocimiento</text>
+  <line x1="70" y1="64" x2="70" y2="320" class="vida"/>
+  <line x1="250" y1="64" x2="250" y2="320" class="vida"/>
+  <line x1="435" y1="64" x2="435" y2="320" class="vida"/>
+  <line x1="630" y1="64" x2="630" y2="320" class="vida"/>
+
+  <g class="t t-s">
+    <line x1="70" y1="100" x2="247" y2="100" class="ln s-fis" style="stroke-width:2" marker-end="url(#d07a-fis)"/>
+    <text x="78" y="93">① «si pago hoy, ¿cuándo me reconectan?»</text>
+    <line x1="250" y1="140" x2="432" y2="140" class="ln s-tra" style="stroke-width:2" marker-end="url(#d07a-tra)"/>
+    <text x="258" y="133">② buscar: reconexión tras el pago</text>
+    <line x1="435" y1="180" x2="627" y2="180" class="ln s-enl" style="stroke-width:2" marker-end="url(#d07a-enl)"/>
+    <text x="443" y="166">③ solo aprobados y vigentes;</text>
+    <text x="443" y="176">compara por parecido</text>
+    <line x1="435" y1="240" x2="253" y2="240" class="ln s-enl" style="stroke-width:2" marker-end="url(#d07a-enl)"/>
+    <text x="260" y="220">④ los 3 fragmentos más</text>
+    <text x="260" y="233">parecidos, con su artículo</text>
+    <line x1="250" y1="300" x2="73" y2="300" class="ln s-tra" style="stroke-width:2" marker-end="url(#d07a-tra)"/>
+    <text x="80" y="268">⑤ «Hasta 24 horas después de que</text>
+    <text x="80" y="281">el pago se acredita.» Fuente:</text>
+    <text x="80" y="294">«¿Cuánto tarda la reconexión…?» v3</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <rect x="660" y="96" width="230" height="58" rx="8" class="caja s-warm" style="stroke-width:1.6;stroke-dasharray:5 3"/>
+    <text x="670" y="114" class="t-b k-warm">A · no se parece</text>
+    <text x="670" y="130">el artículo correcto tiene un</text>
+    <text x="670" y="144">título técnico y no se encuentra</text>
+    <rect x="660" y="166" width="230" height="58" rx="8" class="caja s-warm" style="stroke-width:1.6;stroke-dasharray:5 3"/>
+    <text x="670" y="184" class="t-b k-warm">B · llega cortado</text>
+    <text x="670" y="200">el fragmento trae «24 horas»</text>
+    <text x="670" y="214">pero no «después de acreditado»</text>
+    <rect x="660" y="236" width="230" height="58" rx="8" class="caja s-warm" style="stroke-width:1.6;stroke-dasharray:5 3"/>
+    <text x="670" y="254" class="t-b k-warm">C · se contradicen</text>
+    <text x="670" y="270">llegan «24 horas» y «4 horas»</text>
+    <text x="670" y="284">y el modelo elige o mezcla</text>
+  </g>
+  <path d="M658 125H640" class="ln s-warm" style="stroke-dasharray:3 3"/>
+  <path d="M658 195H640" class="ln s-warm" style="stroke-dasharray:3 3"/>
+  <path d="M658 265H640" class="ln s-warm" style="stroke-dasharray:3 3"/>
+
+  <g class="t t-xs t-b">
+    <path d="M10 340H890" class="ln" style="stroke:var(--line)"/>
+  </g>
+  <g class="t t-s">
+    <text x="10" y="372" class="t-b">Lo que el modelo ve es solo lo de ④.</text>
+    <text x="10" y="392">Si el contenido correcto no llegó entero, ningún modelo lo recupera después.</text>
+    <text x="10" y="412">Por eso la calidad de la respuesta se decide antes: al escribir, dividir, aprobar y retirar los artículos.</text>
+  </g>
+  <rect x="10" y="430" width="880" height="36" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="453" class="t t-s" text-anchor="middle">Si no llega ningún fragmento vigente que responda, Pía dice que no lo sabe y ofrece una persona: no completa de memoria.</text>
+</svg></div><figcaption><b>Dónde decide el contenido en una respuesta con RAG.</b> Arriba, los participantes: Laura, Pía, el buscador y la base de conocimiento. La pregunta (①) se convierte en una búsqueda (②); el buscador trae los tres fragmentos más parecidos (③ y ④); el modelo redacta solo con ellos y cita el artículo (⑤). Las notas naranjas marcan los tres puntos donde un contenido mal escrito arruina la respuesta aunque el modelo sea excelente: el fragmento correcto no se parece a la pregunta, el fragmento traído está cortado a la mitad, o vienen dos fragmentos que se contradicen.</figcaption></figure><div class="prose"><p>El buscador no entiende la política: compara textos. Trae los <b>fragmentos</b> (<i>chunks</i>) que más se parecen a la pregunta, y el modelo no ve nada más. De ahí sale la regla que guía todo el capítulo: <b>el bot solo puede responder bien lo que el buscador puede encontrar entero</b>.</p></div></section>
+<section><h2>Una respuesta por artículo, títulos que son preguntas y fragmentos que se entienden solos</h2><div class="prose"><p>Antes de entrar al buscador, cada documento se divide en fragmentos. Esa división se llama <b>fragmentación</b> (<i>chunking</i>), y hay varias formas de hacerla: por tamaño fijo (cada 500 caracteres, por ejemplo), por tamaño con <b>solapamiento</b> (<i>overlap</i>, cada fragmento repite el final del anterior para no cortar ideas), por párrafo, o por sección. Ninguna técnica salva un documento mal escrito, pero un documento bien escrito se fragmenta bien casi de cualquier forma.</p><p>Tres reglas de redacción hacen la diferencia:</p><ol class="steps"><li><span><b>Una respuesta por artículo</b> (o por sección). Un artículo que mezcla reconexión, pagos parciales y recargos produce fragmentos que hablan de todo un poco. Uno que responde una sola pregunta produce fragmentos que responden esa pregunta.</span></li><li><span><b>Títulos que son preguntas</b>, escritos como las escribe un cliente. «¿Cuánto tarda la reconexión después de pagar?» se parece mucho más a lo que escribe Laura que «Reactivación: plazos operativos». Muchos equipos agregan, además, dos o tres formas alternativas de preguntar lo mismo.</span></li><li><span><b>Fragmentos que se entienden solos</b> (<i>self-contained</i>). Cada sección repite lo que necesita para entenderse sin el resto: el producto, el caso, la condición. «Se reconecta en 24 horas» no sirve suelto; «El servicio de internet suspendido por falta de pago se reconecta hasta 24 horas después de que el pago se acredita» sí.</span></li></ol><p>Así queda un artículo escrito para el bot:</p><div class="code-copia"><pre><code># ¿Cuánto tarda la reconexión después de pagar?
+También se pregunta: ¿cuándo vuelve mi internet si pago hoy?
+                     ¿pagué y sigo sin servicio?
+
+El servicio de internet o TV suspendido por falta de pago se reconecta
+hasta 24 horas después de que el pago se acredita. Los pagos con enlace
+o tarjeta se acreditan al momento; las transferencias, hasta el día
+hábil siguiente.
+
+Si pasaron más de 24 horas desde que el pago se acreditó y el servicio
+sigue suspendido, el caso se atiende como una falla.
+
+Dueño: Cobranza · Vigente desde: 2026-03-01 · Próxima revisión: 2026-09-01
+Versión: 3 · Aprobó: jefa de Cobranza</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>El laboratorio siguiente te deja ver el efecto con el mismo contenido escrito de dos formas y cortado de cuatro.</p></div><div class="lab" id="07-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Fragmentación: el mismo artículo, cortado de cuatro formas</h3></div><p class="hint">Elige cómo se escribe el artículo de políticas (un texto corrido o una sección por pregunta) y cómo se corta (tamaño fijo, tamaño con solapamiento, por párrafo o por sección). Para cada una de las cinco preguntas de clientes, mira qué fragmento trae el buscador y si contiene la respuesta completa, una parte o nada. Con tamaño fijo, mueve el tamaño y mira dónde se cortan las respuestas.</p><style>
+[id="07-lab-1"] .c71-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+[id="07-lab-1"] .c71-frags{display:flex;flex-wrap:wrap;gap:5px;max-height:15em;overflow:auto;border:1px solid var(--line);border-radius:9px;padding:7px;background:var(--paper)}
+[id="07-lab-1"] .c71-frags span{font:400 .78rem/1.35 var(--f-body);border:1px solid var(--line);border-left:4px solid var(--c-enl);border-radius:6px;padding:4px 7px;background:var(--card);max-width:100%}
+[id="07-lab-1"] .c71-frags span b{font:700 .7rem var(--f-mono);color:var(--c-enl);margin-right:4px}
+[id="07-lab-1"] table{width:100%;border-collapse:collapse;font:400 .84rem var(--f-body)}
+[id="07-lab-1"] th,[id="07-lab-1"] td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+[id="07-lab-1"] th{font:600 .78rem var(--f-display);color:var(--muted)}
+[id="07-lab-1"] td.r{font-weight:700;white-space:nowrap}
+[id="07-lab-1"] tr.ok td.r{color:var(--good)} [id="07-lab-1"] tr.par td.r{color:var(--accent)} [id="07-lab-1"] tr.no td.r{color:var(--warm)}
+[id="07-lab-1"] td small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+[id="07-lab-1"] mark{background:var(--good-soft);color:inherit;padding:0 2px;border-radius:3px}
+</style>
+<div class="opciones">
+  <label>Cómo está escrito el artículo
+    <select id="c71-doc"><option value="A">Texto corrido, temas mezclados</option><option value="B">Una sección por pregunta</option></select>
+  </label>
+  <label>Cómo se corta
+    <select id="c71-modo"><option value="fijo">Tamaño fijo</option><option value="solape">Tamaño fijo con solapamiento</option><option value="parrafo">Por párrafo</option><option value="seccion">Por sección</option></select>
+  </label>
+</div>
+<div class="ctls" id="c71-tam-box">
+  <label class="ctl">Tamaño de cada fragmento (caracteres) <output id="c71-tam-o"></output><input id="c71-tam" type="range" min="80" max="400" step="20" value="160"></label>
+</div>
+<div>
+  <p class="c71-tit" id="c71-ft"></p>
+  <div class="c71-frags" id="c71-frags"></div>
+</div>
+<p class="hint" style="margin:0">El buscador trae los 2 fragmentos que más se parecen a cada pregunta. En verde, las partes de la respuesta que encontró.</p>
+<div class="tbl"><table><thead><tr><th>Pregunta</th><th>Lo que recibe el modelo</th><th>Resultado</th></tr></thead><tbody id="c71-tb"></tbody></table></div>
+<div class="readout texto" id="c71-out" aria-live="polite"></div></div><div class="prose"><p>Lo que muestra el laboratorio vale para cualquier herramienta: la técnica de corte importa, pero importa más que el texto ya venga dividido en respuestas completas. Por eso los equipos que mejor funcionan no le piden al equipo técnico «un mejor algoritmo de fragmentación»: le piden a cada área que escriba sus artículos con este formato, y luego prueban el resultado con <b>preguntas reales de clientes</b>, no leyendo el documento.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Reescribe un FAQ para el bot</h3></div><p>Vas a convertir un texto escrito para leer de corrido en fragmentos que se entienden solos. Abre cualquier asistente de IA gratuito (cualquiera sirve) y pega este pedido.</p><div class="code-copia"><pre><code>Reescribe este texto como artículos de una base de
+conocimiento para un chatbot. Reglas: un artículo por
+pregunta; el título es la pregunta como la haría un
+cliente; agrega dos formas alternativas de preguntarla;
+cada artículo debe entenderse solo, sin "ver arriba".
+No inventes datos que no estén en el texto.
+
+Texto: "Reactivación y pagos. Una vez acreditado el pago,
+el servicio se reactiva dentro de las 24 h. Ver arriba
+los medios de pago: las transferencias demoran un día
+hábil. No se admiten pagos parciales salvo convenio con
+Cobranza. Lo anterior aplica también a TV."</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Cuenta cuántos artículos salieron y qué pregunta responde cada uno.</span></li><li><span>Toma un artículo cualquiera, tápale el título y léelo: ¿se entiende de qué servicio y en qué caso habla?</span></li><li><span>Busca si el asistente agregó algo que no estaba en el texto original (un plazo, un medio de pago, un número de teléfono).</span></li></ol><p><b>Qué observar:</b> el texto original tenía al menos tres respuestas mezcladas (plazo de reconexión, demora de las transferencias y pagos parciales) y dos referencias que solo funcionan en la página completa («ver arriba», «lo anterior»). Los artículos nuevos deberían nombrar el servicio en cada uno. Si el asistente inventó un dato, acabas de ver por qué todo contenido generado pasa por la aprobación de su dueño antes de publicarse.</p></div></section>
+<section><h2>Fuentes de verdad: un dueño por tema, vigencia y qué hacer cuando dos fuentes se contradicen</h2><div class="prose"><p>Una <b>fuente de verdad</b> (<i>source of truth</i>) es el documento o sistema que manda sobre un tema: si otro dice algo distinto, el otro está mal. El problema de las empresas no es que no tengan fuentes de verdad, sino que tienen varias que creen serlo: la política de cobranza, el FAQ del sitio, el guion de los agentes, una presentación de mercadeo y un correo del gerente.</p><p>La base de conocimiento resuelve eso con tres reglas:</p><ul><li><b>Un dueño por tema.</b> Cada tema tiene un área responsable con nombre: la reconexión es de Cobranza, los planes y precios son de Producto, la instalación es de Operaciones. Solo el dueño aprueba lo que se publica de su tema.</li><li><b>Vigencia explícita.</b> Cada artículo dice desde cuándo vale, hasta cuándo (si se sabe) y cuándo se revisa. Un artículo sin fecha de revisión es un artículo que nadie va a revisar.</li><li><b>Jerarquía para los conflictos.</b> Si dos fuentes se contradicen, gana la del dueño del tema; entre dos del mismo dueño, la vigente más reciente; y si nada vigente responde, el bot dice que no lo sabe y ofrece una persona. Además, todo conflicto detectado se avisa a los dueños: el bot no debe ser el lugar donde la empresa descubre sus contradicciones, pero a veces lo es.</li></ul></div><figure class="fig fig-esquema" id="07-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" style="min-width:720px" role="img" aria-label="A la izquierda, la ficha de un artículo de la base de conocimiento con pregunta, formas alternativas, respuesta y metadatos de dueño, vigencia, versión y estado; a la derecha, los pasos para resolver un conflicto entre fuentes: descartar no aprobados y vencidos, preferir al dueño del tema, preferir el más reciente y, si no queda ninguno, decir no lo sé y traspasar">
+  <defs>
+    <marker id="d07b-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <text x="14" y="22" class="t t-xs t-b t-m">LA FICHA DE UN ARTÍCULO</text>
+  <text x="484" y="22" class="t t-xs t-b t-m">CUANDO DOS FUENTES SE CONTRADICEN</text>
+
+  
+  <rect x="10" y="34" width="440" height="376" rx="12" class="caja" style="stroke-width:1.6"/>
+  <g class="t">
+    <text x="26" y="62" class="t-b">¿Cuánto tarda la reconexión después de pagar?</text>
+    <text x="26" y="84" class="t-s t-m">También: ¿cuándo vuelve mi internet si pago hoy?</text>
+    <text x="26" y="100" class="t-s t-m">¿pagué y sigo sin servicio?</text>
+    <text x="26" y="128" class="t-s">El servicio de internet o TV suspendido por falta de</text>
+    <text x="26" y="144" class="t-s">pago se reconecta hasta 24 horas después de que el</text>
+    <text x="26" y="160" class="t-s">pago se acredita. Los pagos con enlace se acreditan</text>
+    <text x="26" y="176" class="t-s">al momento; las transferencias, al día hábil siguiente.</text>
+  </g>
+  <line x1="26" y1="210" x2="434" y2="210" class="ln" style="stroke:var(--line)"/>
+  <g class="t t-s">
+    <rect x="26" y="224" width="196" height="40" rx="7" class="c-apl"/><text x="36" y="240" class="t-xs t-b k-apl">DUEÑO</text><text x="36" y="256">Cobranza</text>
+    <rect x="238" y="224" width="196" height="40" rx="7" class="d-casa"/><text x="248" y="240" class="t-xs t-b k-casa">VIGENCIA</text><text x="248" y="256">desde 2026-03-01</text>
+    <rect x="26" y="274" width="196" height="40" rx="7" class="caja"/><text x="36" y="290" class="t-xs t-b t-m">PRÓXIMA REVISIÓN</text><text x="36" y="306">2026-09-01</text>
+    <rect x="238" y="274" width="196" height="40" rx="7" class="caja"/><text x="248" y="290" class="t-xs t-b t-m">VERSIÓN</text><text x="248" y="306">3 · aprobó la jefa de Cobranza</text>
+    <rect x="26" y="324" width="196" height="40" rx="7" class="c-enl"/><text x="36" y="340" class="t-xs t-b k-enl">ESTADO</text><text x="36" y="356">aprobado y publicado</text>
+    <rect x="238" y="324" width="196" height="40" rx="7" class="caja"/><text x="248" y="340" class="t-xs t-b t-m">PÚBLICO</text><text x="248" y="356">clientes</text>
+    <text x="26" y="394" class="t-m">El buscador filtra por estos datos antes de comparar textos.</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <rect x="484" y="40" width="400" height="56" rx="10" class="c-enl"/>
+    <text x="498" y="62" class="t-b k-enl">1 · Descartar lo que no vale hoy</text>
+    <text x="498" y="80">borradores, vencidos y retirados nunca llegan al modelo</text>
+    <rect x="484" y="118" width="400" height="56" rx="10" class="c-apl"/>
+    <text x="498" y="140" class="t-b k-apl">2 · Preferir al dueño del tema</text>
+    <text x="498" y="158">la reconexión es de Cobranza, no de Mercadeo</text>
+    <rect x="484" y="196" width="400" height="56" rx="10" class="d-casa"/>
+    <text x="498" y="218" class="t-b k-casa">3 · Entre dos del mismo dueño, el más reciente</text>
+    <text x="498" y="236">el de vigencia más nueva, con su versión</text>
+    <rect x="484" y="274" width="400" height="56" rx="10" class="caja s-warm" style="stroke-width:1.8"/>
+    <text x="498" y="296" class="t-b k-warm">4 · Si no queda ninguno: «no lo sé»</text>
+    <text x="498" y="314">y la opción de hablar con una persona</text>
+  </g>
+  <g>
+    <line x1="684" y1="96" x2="684" y2="116" class="ln" marker-end="url(#d07b-m)"/>
+    <line x1="684" y1="174" x2="684" y2="194" class="ln" marker-end="url(#d07b-m)"/>
+    <line x1="684" y1="252" x2="684" y2="272" class="ln" marker-end="url(#d07b-m)"/>
+  </g>
+  <rect x="484" y="348" width="400" height="48" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="498" y="368" class="t t-s t-b">Y siempre: avisar a los dueños del conflicto.</text>
+  <text x="498" y="384" class="t t-s t-m">El bot no corrige la contradicción; la corrige el área.</text>
+</svg></div><figcaption><b>La ficha de un artículo y la jerarquía de fuentes.</b> A la izquierda, un artículo de la base de conocimiento con sus metadatos: la pregunta, las formas alternativas, la respuesta y, abajo, el dueño, la vigencia, la versión y el estado de aprobación. A la derecha, el orden en que se resuelve un conflicto: primero se descartan los artículos no aprobados o vencidos, después gana el del dueño del tema y, entre dos del mismo dueño, el más reciente. Si no queda ninguno, la respuesta es «no lo sé» y un traspaso.</figcaption></figure><div class="prose"><p>Esos metadatos no son burocracia: el buscador los usa. Antes de buscar por parecido, se <b>filtran</b> los fragmentos por estado (solo aprobados), por vigencia (solo los que valen hoy) y, si hace falta, por público (un artículo interno para agentes no se le muestra a un cliente). Así, un artículo vencido puede seguir guardado para la historia, pero nunca llega al modelo.</p></div><div class="lab" id="07-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Dos fuentes que se contradicen</h3></div><p class="hint">Hay dos artículos sobre la reconexión: el de Cobranza dice «hasta 24 horas» y una página de una campaña de Mercadeo dice «en 4 horas». Cambia la fecha de hoy, las fechas de vigencia, el dueño y el estado de cada uno, y activa o desactiva las reglas de la base de conocimiento. Mira qué fragmentos llegan al modelo, qué responde Pía y qué artículo cita.</p><style>
+[id="07-lab-2"] .c72-arts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:640px){[id="07-lab-2"] .c72-arts{grid-template-columns:minmax(0,1fr)}}
+[id="07-lab-2"] .c72-art{border:1.5px solid var(--line);border-top:5px solid var(--cc,var(--line));border-radius:10px;padding:9px 11px;background:var(--card);display:grid;gap:7px;min-width:0}
+[id="07-lab-2"] .c72-art h4{margin:0;font:700 .92rem var(--f-display)}
+[id="07-lab-2"] .c72-art blockquote{margin:0;font:400 .86rem/1.4 var(--f-body);color:var(--ink);border-left:3px solid var(--line);padding-left:8px}
+[id="07-lab-2"] .c72-campos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+[id="07-lab-2"] .c72-campos label{display:grid;gap:2px;font:600 .74rem var(--f-display);color:var(--muted);min-width:0}
+[id="07-lab-2"] .c72-campos select{font-size:.82rem;padding:4px 6px}
+[id="07-lab-2"] .c72-est{font:700 .7rem var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+[id="07-lab-2"] .c72-reglas{display:grid;gap:6px}
+[id="07-lab-2"] .c72-reglas label{display:flex;gap:8px;align-items:flex-start;font:500 .88rem var(--f-display)}
+[id="07-lab-2"] .c72-reglas input{margin-top:3px}
+[id="07-lab-2"] .c72-pia{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:10px;display:grid;gap:6px}
+[id="07-lab-2"] .c72-m{max-width:92%;padding:6px 10px;border-radius:10px;font:400 .9rem/1.4 var(--f-body)}
+[id="07-lab-2"] .c72-m.u{justify-self:end;background:var(--accent);color:var(--card)}
+[id="07-lab-2"] .c72-m.b{justify-self:start;background:var(--card);border:1px solid var(--line)}
+[id="07-lab-2"] .c72-m small{display:block;color:var(--muted);font:500 .74rem var(--f-display);margin-top:4px}
+[id="07-lab-2"] .c72-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+</style>
+<label class="ctl">Hoy es <output id="c72-hoy-o"></output><input id="c72-hoy" type="range" min="0" max="24" step="1" value="17"></label>
+<div class="c72-arts" id="c72-arts"></div>
+<div>
+  <p class="c72-tit">Reglas de la base de conocimiento</p>
+  <div class="c72-reglas">
+    <label><input type="checkbox" id="c72-r1"> Antes de buscar, descartar borradores y artículos fuera de vigencia</label>
+    <label><input type="checkbox" id="c72-r2"> Si hay conflicto, preferir al dueño del tema (la reconexión es de Cobranza)</label>
+    <label><input type="checkbox" id="c72-r3"> Responder solo con una fuente; si no queda ninguna, decir «no lo sé» y ofrecer una persona</label>
+  </div>
+</div>
+<div class="c72-pia" id="c72-pia" aria-live="polite"></div>
+<div class="readout texto" id="c72-out" aria-live="polite"></div></div></section>
+<section><h2>Curaduría y versionado: quién aprueba, cómo se publica y cómo se audita</h2><div class="prose"><p>El contenido del bot se trata como el código: tiene un ciclo de vida, versiones y un registro de cambios. A ese trabajo se le llama <b>curaduría</b> (<i>content curation</i>).</p></div><figure class="fig fig-flujo" id="07-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" style="min-width:740px" role="img" aria-label="Ciclo de vida de un artículo: borrador, revisión de forma, aprobación del dueño, pruebas con preguntas reales y publicado con versión; la revisión periódica y el cambio de política vuelven al borrador; la versión vieja se retira del índice y se guarda para auditoría">
+  <defs>
+    <marker id="d07c-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d07c-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <g class="t t-s" text-anchor="middle">
+    <rect x="10" y="110" width="150" height="64" rx="10" class="caja"/><text x="85" y="136" class="t-b">1 · Borrador</text><text x="85" y="154" class="t-m">el área o el diseñador</text>
+    <rect x="186" y="110" width="150" height="64" rx="10" class="c-tra"/><text x="261" y="136" class="t-b k-tra">2 · Revisión de forma</text><text x="261" y="154">¿se entiende solo?</text>
+    <rect x="362" y="110" width="150" height="64" rx="10" class="c-apl"/><text x="437" y="136" class="t-b k-apl">3 · Aprobación</text><text x="437" y="154">del dueño del tema</text>
+    <rect x="538" y="110" width="150" height="64" rx="10" class="c-red"/><text x="613" y="136" class="t-b k-red">4 · Pruebas</text><text x="613" y="154">preguntas reales</text>
+    <rect x="714" y="110" width="176" height="64" rx="10" class="c-enl" style="stroke-width:2"/><text x="802" y="136" class="t-b k-enl">5 · Publicado</text><text x="802" y="154">versión 4 · fecha</text>
+  </g>
+  <g>
+    <line x1="160" y1="142" x2="184" y2="142" class="ln" marker-end="url(#d07c-m)"/>
+    <line x1="336" y1="142" x2="360" y2="142" class="ln" marker-end="url(#d07c-m)"/>
+    <line x1="512" y1="142" x2="536" y2="142" class="ln" marker-end="url(#d07c-m)"/>
+    <line x1="688" y1="142" x2="712" y2="142" class="ln" marker-end="url(#d07c-m)"/>
+  </g>
+  
+  <path d="M802 110C802 40 85 40 85 106" class="ln" style="stroke-dasharray:5 4" marker-end="url(#d07c-m)"/>
+  <text x="444" y="36" class="t t-s t-b" text-anchor="middle">revisión periódica: llega la fecha y el dueño confirma o corrige</text>
+  <path d="M760 174C760 214 140 214 140 178" class="ln s-warm" style="stroke-width:1.6" marker-end="url(#d07c-w)"/>
+  <text x="444" y="232" class="t t-s t-b k-warm" text-anchor="middle">cambia la política: versión nueva, nunca una edición silenciosa</text>
+  
+  <rect x="610" y="256" width="280" height="62" rx="10" class="d-inet" style="stroke-dasharray:5 4"/>
+  <g class="t t-s">
+    <text x="624" y="278" class="t-b k-inet">Retiro de la versión 3</text>
+    <text x="624" y="296">vencida, fuera del índice,</text>
+    <text x="624" y="311">guardada para auditoría</text>
+  </g>
+  <path d="M850 174V254" class="ln" marker-end="url(#d07c-m)"/>
+  <text x="10" y="290" class="t t-s t-m">Cada respuesta del bot guarda qué artículo y qué versión citó:</text>
+  <text x="10" y="306" class="t t-s t-m">así se sabe qué leyó el modelo el día de un reclamo.</text>
+</svg></div><figcaption><b>El ciclo de vida de un artículo.</b> De izquierda a derecha: un borrador lo escribe el área o el diseñador conversacional; pasa una revisión de forma (que se entienda solo y tenga título de pregunta) y una aprobación del dueño del tema; se prueba en un entorno de pruebas con preguntas reales; se publica con versión y fecha. Desde ahí, dos caminos vuelven al principio: la revisión periódica, cuando llega su fecha, y el cambio de la política, que obliga a una versión nueva. Abajo, a la derecha, el retiro: la versión vieja se marca como vencida, se saca del índice y se guarda para auditoría.</figcaption></figure><div class="prose"><p>Los pasos que más se olvidan son dos. El primero es <b>probar antes de publicar</b>: un artículo nuevo puede «robarle» preguntas a otro que estaba bien, porque se parece más a ellas. Por eso cada cambio se prueba con un juego de preguntas reales que deben seguir encontrando el artículo correcto (en el capítulo 15 se verá como prueba de regresión). El segundo es <b>retirar lo viejo</b>: publicar la versión nueva no borra la anterior del índice. Si nadie la retira, las dos conviven y el buscador elige cualquiera.</p><p>Para auditar, cada respuesta del bot guarda qué artículo y qué versión citó. Así, si un cliente reclama «el bot me dijo cuatro horas», se puede saber qué texto leyó el modelo ese día, quién lo aprobó y desde cuándo estaba publicado. Las herramientas varían: un gestor de contenidos con flujo de aprobación, la base de conocimiento de la propia plataforma del bot o simples archivos de texto en un repositorio con historial. Lo que no varía es el principio: <b>nada se publica sin dueño, versión y fecha</b>.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Compara dos versiones de un artículo</h3></div><p>Vas a crear dos versiones de un artículo y a pedirle al sistema que muestre exactamente qué cambió, como lo hace un repositorio con historial. Los comandos crean dos archivos pequeños, <code>v1.txt</code> y <code>v2.txt</code>, en la carpeta donde estés; puedes borrarlos al terminar.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>Set-Content v1.txt "La reconexión se hace hasta 24 horas después del pago.","Dueño: Cobranza. Vigente desde 2026-03-01. Versión 3."</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>Set-Content v2.txt "La reconexión se hace hasta 4 horas después del pago.","Dueño: Cobranza. Vigente desde 2026-12-01. Versión 4."</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>Compare-Object (Get-Content v1.txt) (Get-Content v2.txt)</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>printf 'La reconexión se hace hasta 24 horas después del pago.\nDueño: Cobranza. Vigente desde 2026-03-01. Versión 3.\n' &gt; v1.txt</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>printf 'La reconexión se hace hasta 4 horas después del pago.\nDueño: Cobranza. Vigente desde 2026-12-01. Versión 4.\n' &gt; v2.txt</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>diff -u v1.txt v2.txt</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta las tres líneas de tu sistema.</span></li><li><span>En Windows, las líneas con <code>&lt;=</code> son de la versión 1 y las de <code>=&gt;</code>, de la versión 2. En macOS y Linux, las que empiezan con <code>-</code> son de la versión 1 y las de <code>+</code>, de la versión 2.</span></li><li><span>Cambia en <code>v2.txt</code> solo la fecha, vuelve a comparar y mira qué línea aparece ahora.</span></li></ol><p><b>Qué observar:</b> la comparación muestra solo las líneas que cambiaron, con su versión de origen. En una base de conocimiento, esa diferencia es lo que revisa el dueño antes de aprobar, y lo que se consulta cuando alguien pregunta «¿qué decía el bot el mes pasado y por qué?». Un cambio de 24 a 4 horas en una política es una línea; sin historial, sería imposible saber cuándo pasó.</p></div></section>
+<section><h2>Datos vivos frente a contenido: la deuda se consulta al sistema</h2><div class="prose"><p>No todo lo que sabe el bot debe estar en la base de conocimiento. Hay dos clases de información, y mezclarlas es uno de los errores más caros:</p><div class="tbl"><table><thead><tr><th>Contenido (va a la base de conocimiento)</th><th>Datos vivos (se consultan al sistema en cada conversación)</th></tr></thead><tbody><tr><td>cuánto tarda la reconexión</td><td>si el servicio de Laura está suspendido</td></tr><tr><td>qué medios de pago se aceptan</td><td>cuánto debe Laura y cuándo vence</td></tr><tr><td>qué incluye cada plan</td><td>qué plan tiene Laura y si puede cambiarlo</td></tr><tr><td>cómo se reporta una falla</td><td>si hay una avería en su zona y el estado de su ticket</td></tr><tr><td>horario de atención de las agencias</td><td>si hay agentes disponibles en este momento</td></tr></tbody></table></div><p>La regla de la columna derecha es tajante: <b>un dato que cambia por cliente o por minuto nunca se copia a un documento</b>. Si alguien exporta una tabla de saldos al índice del bot «para que responda más rápido», el bot responderá con el saldo de ayer, y lo hará con seguridad. La deuda se pregunta a la facturación, en vivo y con la identidad verificada, como en el capítulo 5. Lo mismo vale para los precios y las promociones: aunque parezcan contenido, cambian con campañas y fechas, y conviene que salgan del catálogo de productos, no de un párrafo.</p><p>La mejor respuesta suele combinar las dos columnas. «Si pago hoy, ¿cuándo me reconectan?» se responde con el artículo (hasta 24 horas después de acreditado el pago) y con el dato vivo (tu pago de hoy con enlace ya está acreditado). El artículo da la regla; el sistema dice cómo se aplica a Laura.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que carga en el bot todos los documentos que encuentra (manuales internos, presentaciones, el FAQ viejo y el nuevo) suele ver en la primera semana respuestas con plazos distintos para la misma pregunta. El arreglo que funciona no es técnico: es nombrar un dueño por tema, sacar del índice todo lo que no tenga dueño y fecha, y volver a cargar solo lo aprobado. La base queda más chica y responde mejor.</p></div></section>
+<section><h2>Caso Air Canada: el bot que inventó una política y la empresa que tuvo que cumplirla</h2><div class="prose"><p>En el capítulo 1 viste el resultado del caso. Aquí interesa cómo se produjo, porque es una lección de base de conocimiento.</p><p>En noviembre de 2022, tras la muerte de su abuela, un pasajero le preguntó al chatbot de Air Canada por la tarifa especial por duelo. El bot le respondió que podía comprar el pasaje a precio normal y pedir el descuento después, dentro de los 90 días siguientes. En la misma respuesta, el bot incluyó un enlace a la página oficial de la política de duelo, que decía lo contrario: el descuento no se aplicaba a viajes ya realizados. El pasajero confió en el bot, viajó y pidió la diferencia. La aerolínea se negó.</p><p>En febrero de 2024, el tribunal civil de Columbia Británica falló a favor del pasajero. La aerolínea argumentó que el chatbot era una entidad separada, responsable de sus propios actos, y que el pasajero debió leer la página enlazada. El tribunal no lo aceptó: el chatbot es parte del sitio de la empresa, la empresa responde por toda la información de su sitio, y el cliente no tenía por qué saber que una parte del sitio era más confiable que otra. Ordenó pagar la diferencia más intereses y costos.</p></div><div class="ml"><b>En la práctica</b><p><b>Lo que el caso enseña sobre el contenido.</b> El bot tenía a mano la fuente correcta: la enlazó. Pero su respuesta no salió de esa fuente, o salió de otra que decía otra cosa. Tres controles de este capítulo habrían cortado la cadena: que las políticas se respondan <b>solo</b> con un artículo aprobado y vigente, citado y con el texto de la respuesta pegado a él; que cuando el bot no encuentre una fuente que responda exactamente, diga que no lo sabe y ofrezca una persona; y que los conflictos entre fuentes se detecten y se corrijan antes de que un cliente los encuentre. Ninguno de los tres depende de un modelo más inteligente.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>el contenido del bot es un producto con dueño, fuente autorizada, vigencia y versiones.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué un FAQ escrito para leerse de corrido funciona mal en un bot con RAG?</summary><p>Porque los clientes no preguntan con sus palabras, sus respuestas suponen el contexto de la página («ver arriba») y casi nunca tiene un dueño que lo mantenga vigente. El buscador saca pedazos sueltos que no se entienden solos.</p></details><details><summary>¿Qué tres reglas de redacción ayudan más a que un artículo se recupere bien?</summary><p>Una respuesta por artículo, títulos que son preguntas como las haría un cliente (con formas alternativas) y fragmentos que se entienden solos.</p></details><details><summary>Dos artículos dicen plazos distintos de reconexión. ¿Cómo se decide cuál usa el bot?</summary><p>Se descartan los no aprobados y los vencidos; gana el del dueño del tema; entre dos del mismo dueño, el vigente más reciente. Si no queda ninguno, el bot dice que no lo sabe y ofrece una persona, y el conflicto se avisa a los dueños.</p></details><details><summary>¿Por qué publicar la versión nueva de un artículo no basta?</summary><p>Porque la versión vieja sigue en el índice si nadie la retira, y el buscador puede traer cualquiera de las dos. El retiro es un paso explícito del ciclo de vida.</p></details><details><summary>¿Por qué la deuda de Laura no va en la base de conocimiento?</summary><p>Porque cambia por cliente y por minuto. Una copia en un documento queda vieja enseguida y el bot la repetiría con seguridad. Se consulta en vivo a la facturación, con identidad verificada.</p></details><details><summary>En el caso Air Canada, ¿qué argumentó la aerolínea y qué decidió el tribunal?</summary><p>La aerolínea dijo que el chatbot era una entidad separada y que el cliente debió leer la página enlazada. El tribunal decidió que la empresa responde por toda la información de su sitio, chatbot incluido, y ordenó pagar.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es BM25 y cómo decide un buscador por palabras qué documento se parece más a una pregunta?<small>Pista: busca «BM25 ranking function».</small></li><li>¿Qué es la similitud del coseno y por qué se usa para comparar <i>embeddings</i>?<small>Pista: busca «cosine similarity vectores».</small></li><li>¿Qué es la búsqueda híbrida y qué agrega un paso de reclasificación (<i>reranking</i>) después de buscar?<small>Pista: busca «hybrid search reranking RAG».</small></li><li>¿Qué es la tergiversación negligente (<i>negligent misrepresentation</i>) y por qué fue la figura que usó el tribunal en el caso Air Canada?<small>Pista: busca «negligent misrepresentation common law».</small></li><li>¿Qué es un gestor de contenidos «sin cabeza» (<i>headless CMS</i>) y por qué sirve para publicar el mismo contenido en un sitio y en un bot?<small>Pista: busca «headless CMS».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://en.wikipedia.org/wiki/Moffatt_v._Air_Canada" target="_blank" rel="noopener">Moffatt v. Air Canada <small>el caso completo, con los argumentos de las dos partes</small></a><a class="vid" href="https://www.pinecone.io/learn/chunking-strategies/" target="_blank" rel="noopener">Chunking strategies for LLM applications, de Pinecone <small>las técnicas de fragmentación, con sus ventajas y límites</small></a><a class="vid" href="https://en.wikipedia.org/wiki/Retrieval-augmented_generation" target="_blank" rel="noopener">Retrieval-augmented generation <small>un panorama de RAG, sus variantes y sus límites</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const DOC={
+    A:{secciones:[['Política de pagos, reactivación y servicio técnico',[
+      'Las facturas vencen el día 5 de cada mes; después del vencimiento se aplica un recargo de US$ 2,00. Los equipos entregados en comodato deben devolverse al terminar el contrato. Una vez acreditado el pago, el servicio se reactiva dentro de las 24 horas siguientes.',
+      'Los pagos con enlace o tarjeta se acreditan al momento y las transferencias demoran hasta un día hábil. Las visitas técnicas se agendan en franjas de cuatro horas. No se admiten pagos parciales salvo convenio firmado con Cobranza.',
+      'Para mudanzas, el cliente debe avisar con 15 días de anticipación. El corte por falta de pago ocurre 10 días después del vencimiento, previo aviso por SMS. Lo anterior aplica también al servicio de TV. Para pagar en agencia, el horario es de lunes a sábado de 8 a 18 horas.']]]},
+    B:{secciones:[
+      ['¿Cuánto tarda la reconexión después de pagar? También: ¿cuándo vuelve el servicio si pago hoy?',['El servicio de internet o TV suspendido por falta de pago se reconecta hasta 24 horas después de que el pago se acredita.']],
+      ['¿Cuándo se acredita mi pago?',['Los pagos de internet o TV con enlace o tarjeta se acreditan al momento. Las transferencias se acreditan hasta un día hábil después.']],
+      ['¿Puedo pagar mi factura en partes? También: ¿puedo pagar solo una parte o la mitad?',['No se admiten pagos parciales de la factura de internet o TV, salvo que tengas un convenio firmado con Cobranza.']],
+      ['¿Qué pasa si pago tarde o no pago? También: ¿cuándo me cortan el servicio?',['Las facturas de internet y TV vencen el día 5 de cada mes. Si pagas tarde, después del vencimiento se suma un recargo de US$ 2,00. Si pasan 10 días sin pago, el corte del servicio se hace con aviso previo por SMS.']],
+      ['¿Cuál es el horario de las agencias para pagar?',['Las agencias atienden pagos de lunes a sábado de 8 a 18 horas.']],
+      ['¿Tengo que devolver los equipos?',['Los equipos de internet o TV entregados en comodato se devuelven al terminar el contrato.']],
+      ['¿Cómo se agenda una visita técnica?',['Las visitas técnicas se agendan en franjas de cuatro horas.']],
+      ['¿Qué hago si me mudo?',['Si te mudas, avisa con 15 días de anticipación para trasladar tu servicio de internet o TV.']]]}
+  };
+  const PREG=[
+    {t:'Si pago hoy por transferencia, ¿cuándo me reconectan?',k:[['24 horas'],['un día hábil']]},
+    {t:'¿Puedo pagar solo la mitad de la factura?',k:[['pagos parciales'],['convenio']]},
+    {t:'¿Cuánto me cobran si pago tarde?',k:[['recargo'],['2,00']]},
+    {t:'¿Cuándo me cortan el servicio si no pago?',k:[['10 días'],['corte']]},
+    {t:'¿La reconexión en 24 horas también vale para la TV?',k:[['TV'],['24 horas']],ctx:true}
+  ];
+  const STOP=new Set('el la los las de del un una y o a en mi me te tu que por para con es se lo le al si su sus no solo cuando cuanto cual puedo pago'.split(' '));
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ');
+  const raiz=w=>w.slice(0,5);
+  const toks=t=>norm(t).split(/\s+/).filter(w=>w&&!STOP.has(w)).map(raiz);
+  function cortar(doc,modo,tam){
+    const S=DOC[doc].secciones;
+    if(modo==='seccion')return S.map(s=>s[0]+'. '+s[1].join(' '));
+    if(modo==='parrafo'){const out=[];S.forEach(s=>s[1].forEach((p,i)=>out.push((i===0?s[0]+'. ':'')+p)));return out;}
+    const texto=S.map(s=>s[0]+'. '+s[1].join(' ')).join(' ');
+    const ws=texto.split(' ');const out=[];let i=0;
+    const paso=modo==='solape'?Math.max(1,Math.round(tam*0.7)):tam;
+    while(i<ws.length){
+      let j=i,len=0;while(j<ws.length&&len+ws[j].length+1<=tam){len+=ws[j].length+1;j++;}
+      if(j===i)j=i+1;out.push(ws.slice(i,j).join(' '));
+      if(j>=ws.length)break;
+      if(modo==='solape'){let k=i,l=0;while(k<j&&l<paso){l+=ws[k].length+1;k++;}i=Math.max(i+1,k);}else i=j;
+    }
+    return out;
+  }
+  function buscar(fr,preg){
+    const T=fr.map(toks);const N=fr.length;
+    const df={};T.forEach(t=>new Set(t).forEach(w=>df[w]=(df[w]||0)+1));
+    const qt=[...new Set(toks(preg))];
+    const sc=T.map((t,i)=>{const set=new Set(t);let s=0;qt.forEach(w=>{if(set.has(w))s+=Math.log(1+(N+1)/(df[w]+0.5));});return {i,s:s/Math.pow(Math.max(8,t.length),0.35)};});
+    return sc.sort((a,b)=>b.s-a.s).slice(0,2).filter(x=>x.s>0).map(x=>x.i);
+  }
+  function evaluar(txt,p){
+    const tiene=p.k.map(alts=>alts.some(a=>txt.includes(a)));
+    let n=tiene.filter(x=>x).length;
+    // «lo anterior aplica también a TV» no dice qué es «lo anterior»: esa mención de TV no responde la pregunta
+    if(p.ctx&&!/TV/.test(txt.replace('Lo anterior aplica también al servicio de TV','')))n=Math.min(n,1);
+    return n===p.k.length?'ok':n>0?'par':'no';
+  }
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function marcar(txt,p){let h=esc(txt);p.k.flat().forEach(a=>{h=h.split(a).join('<mark>'+a+'</mark>');});return h;}
+  function calcular(){
+    const doc=q('#c71-doc').value,modo=q('#c71-modo').value,tam=+q('#c71-tam').value;
+    q('#c71-tam-box').style.display=(modo==='fijo'||modo==='solape')?'':'none';
+    q('#c71-tam-o').textContent=tam;
+    const fr=cortar(doc,modo,tam);
+    q('#c71-ft').textContent=fr.length+' fragmentos';
+    q('#c71-frags').innerHTML=fr.map((f,i)=>'<span><b>#'+(i+1)+'</b>'+esc(f)+'</span>').join('');
+    const R={ok:0,par:0,no:0};let chars=0;
+    q('#c71-tb').innerHTML=PREG.map(p=>{
+      const idx=buscar(fr,p.t);const txt=idx.map(i=>fr[i]).join(' … ');chars+=txt.length;
+      const r=evaluar(txt,p);R[r]++;
+      const lbl={ok:'✓ completa',par:'◐ a medias',no:'✗ no está'}[r];
+      return '<tr class="'+r+'"><td>'+p.t+'</td><td>'+(idx.length?idx.map(i=>'<b>#'+(i+1)+'</b> '+marcar(fr[i],p)).join('<small>…</small>'):'—')+'</td><td class="r">'+lbl+'</td></tr>';
+    }).join('');
+    const tok=Math.round(chars/5/4);
+    let s='<span class="big">'+R.ok+' de 5 respuestas completas · '+R.par+' a medias · '+R.no+' sin respuesta</span>';
+    s+='<span>El modelo recibe, en promedio, unos '+tok+' tokens de contenido por pregunta.</span>';
+    if(R.par)s+='<span class="warn">Una respuesta «a medias» es la más peligrosa: el modelo recibe «24 horas» sin la condición, o «TV» sin saber qué aplica, y completa el resto con lo que le parece.</span>';
+    if(doc==='A'&&modo==='seccion')s+='<span>El texto corrido tiene una sola sección: el fragmento es todo el documento. Aquí parece funcionar, pero en una base con cientos de artículos el buscador traería documentos enteros que hablan de todo.</span>';
+    if(doc==='B'&&R.ok===5)s+='<span class="ok">Con una sección por pregunta, cada fragmento es una respuesta completa que se entiende sola.</span>';
+    if((modo==='fijo'||modo==='solape')&&R.ok<5)s+='<span>Prueba a mover el tamaño: los cortes caen en lugares distintos y cambian las respuestas que se rompen. '+(modo==='solape'?'El solapamiento repite el final de cada fragmento al principio del siguiente y salva algunos cortes, a cambio de más fragmentos.':'Compara con el solapamiento.')+'</span>';
+    q('#c71-out').innerHTML=s;
+  }
+  ['#c71-doc','#c71-modo','#c71-tam'].forEach(id=>q(id).addEventListener('input',calcular));
+  if(window.__c71test){window.__c71test({cortar,buscar,evaluar,PREG});return;}
+  calcular();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const MES=[];for(let i=0;i<25;i++){const y=2025+Math.floor((5+i)/12),m=(5+i)%12;MES.push({k:y+'-'+String(m+1).padStart(2,'0'),t:MESES[m]+' de '+y});}
+  const ART=[
+    {id:'A',tit:'¿Cuánto tarda la reconexión después de pagar?',txt:'El servicio suspendido por falta de pago se reconecta hasta 24 horas después de que el pago se acredita.',resp:'Tu servicio se reconecta hasta 24 horas después de que el pago se acredita.',parecido:.74,v:{desde:'2026-03',hasta:'',duenio:'Cobranza',estado:'aprobado'}},
+    {id:'B',tit:'Campaña «Paga y vuelve a navegar»',txt:'¡Paga hoy y vuelve a navegar en 4 horas! Reconexión express para todos los clientes.',resp:'Si pagas hoy, vuelves a navegar en 4 horas.',parecido:.82,v:{desde:'2026-06',hasta:'2026-08',duenio:'Mercadeo',estado:'aprobado'}}
+  ];
+  const opt=(lista,sel)=>lista.map(o=>'<option value="'+o[0]+'"'+(o[0]===sel?' selected':'')+'>'+o[1]+'</option>').join('');
+  const meses=MES.map(m=>[m.k,m.t]);
+  q('#c72-arts').innerHTML=ART.map(a=>'<div class="c72-art" id="c72-art-'+a.id+'"><h4>'+a.id+' · '+a.tit+'</h4><blockquote>'+a.txt+'</blockquote><div class="c72-campos">'+
+    '<label>Dueño<select data-a="'+a.id+'" data-c="duenio">'+opt([['Cobranza','Cobranza'],['Mercadeo','Mercadeo'],['','sin dueño']],a.v.duenio)+'</select></label>'+
+    '<label>Estado<select data-a="'+a.id+'" data-c="estado">'+opt([['aprobado','aprobado'],['borrador','borrador']],a.v.estado)+'</select></label>'+
+    '<label>Vigente desde<select data-a="'+a.id+'" data-c="desde">'+opt(meses,a.v.desde)+'</select></label>'+
+    '<label>Vigente hasta<select data-a="'+a.id+'" data-c="hasta">'+opt([['','sin fecha de fin']].concat(meses),a.v.hasta)+'</select></label>'+
+    '</div><span class="c72-est" id="c72-est-'+a.id+'"></span></div>').join('');
+  function vale(a,hoy){return a.v.estado==='aprobado'&&a.v.desde<=hoy&&(!a.v.hasta||hoy<=a.v.hasta);}
+  function calcular(){
+    const hoy=MES[+q('#c72-hoy').value].k;q('#c72-hoy-o').textContent=MES[+q('#c72-hoy').value].t;
+    const r1=q('#c72-r1').checked,r2=q('#c72-r2').checked,r3=q('#c72-r3').checked;
+    ART.forEach(a=>{
+      const e=q('#c72-est-'+a.id);const ok=vale(a,hoy);
+      const motivo=a.v.estado!=='aprobado'?'borrador':a.v.desde>hoy?'todavía no vigente':(a.v.hasta&&hoy>a.v.hasta)?'vencido':'vigente';
+      e.textContent=(ok?'✓ ':'✗ ')+motivo+(a.v.duenio?' · dueño: '+a.v.duenio:' · sin dueño');
+      e.style.color='var('+(ok?'--good':'--warm')+')';
+      q('#c72-art-'+a.id).style.setProperty('--cc','var('+(ok?'--c-enl':'--line')+')');
+    });
+    // la verdad: lo que dice la política vigente y aprobada del dueño del tema
+    const autoridad=ART.filter(a=>vale(a,hoy)&&a.v.duenio==='Cobranza').sort((x,y)=>y.v.desde.localeCompare(x.v.desde))[0]||null;
+    let cand=ART.slice();const pasos=[];
+    if(r1){const n=cand.length;cand=cand.filter(a=>vale(a,hoy));pasos.push('filtro de estado y vigencia: '+(n-cand.length)+' descartado'+(n-cand.length===1?'':'s'));}
+    if(r2&&cand.length>1){const d=cand.filter(a=>a.v.duenio==='Cobranza');if(d.length){cand=d.sort((x,y)=>y.v.desde.localeCompare(x.v.desde)).slice(0,1);pasos.push('jerarquía: gana el de Cobranza');}}
+    let resp,cita,tipo;
+    if(!cand.length){
+      if(r3){resp='No tengo ese dato confirmado en este momento. ¿Quieres que te pase con una persona del equipo?';cita='sin fuente: se abstiene';tipo='abst';}
+      else{resp='La reconexión suele ser inmediata apenas pagas.';cita='sin fuente: el modelo completó de memoria';tipo='inv';}
+    }else if(cand.length===1){const a=cand[0];resp=a.resp;cita='Fuente: '+a.id+' · «'+a.tit+'» · '+(a.v.duenio||'sin dueño');tipo=a;}
+    else{
+      resp='Si pagas hoy, vuelves a navegar en unas 4 horas, aunque en algunos casos puede tardar hasta 24.';cita='Fuentes: A y B mezcladas (el modelo recibió las dos)';tipo='mezcla';
+    }
+    q('#c72-pia').innerHTML='<div class="c72-m u">si pago hoy, ¿cuándo me reconectan?</div><div class="c72-m b">'+resp+'<small>'+cita+'</small></div>';
+    let s='<span>'+(pasos.length?'Pasos aplicados: '+pasos.join('; ')+'. ':'Sin reglas: el buscador entrega los dos artículos al modelo. ')+'Llegaron al modelo: '+(cand.length?cand.map(a=>a.id).join(' y '):'ninguno')+'.</span>';
+    const verdad=autoridad?'la política vigente de Cobranza dice: «'+autoridad.resp.replace(/\.$/,'')+'»':'hoy no hay ninguna política vigente y aprobada de Cobranza sobre este tema';
+    if(tipo==='mezcla')s+='<span class="warn">Pía mezcla dos fuentes que se contradicen y promete «unas 4 horas». Además, '+verdad+'. Hay un conflicto que nadie resolvió: debería avisarse a Cobranza y a Mercadeo.</span>';
+    else if(tipo==='inv')s+='<span class="warn">Ninguna fuente llegó y el modelo respondió igual, de memoria: inventó una política. Es el error del caso Air Canada. Además, '+verdad+'.</span>';
+    else if(tipo==='abst')s+=autoridad?'<span class="warn">Pía se abstiene, pero sí existía una respuesta válida: revisa por qué no llegó al modelo.</span>':'<span class="ok">Correcto: '+verdad+', y Pía no inventa una. Decir «no lo sé» y ofrecer una persona es la respuesta segura.</span>';
+    else if(autoridad&&tipo===autoridad)s+='<span class="ok">Respuesta correcta y citada: sale de la política vigente del dueño del tema.</span>';
+    else s+='<span class="warn">Pía responde con '+tipo.id+' y lo cita con seguridad, pero '+verdad+'. Una respuesta citada no es correcta si la fuente no es la autorizada o no está vigente.</span>';
+    q('#c72-out').innerHTML=s;
+  }
+  q('#c72-arts').addEventListener('change',e=>{const t=e.target;if(t.dataset.a){ART.find(a=>a.id===t.dataset.a).v[t.dataset.c]=t.value;calcular();}});
+  ['#c72-hoy','#c72-r1','#c72-r2','#c72-r3'].forEach(id=>q(id).addEventListener('input',calcular));
+  ['#c72-r1','#c72-r2','#c72-r3'].forEach(id=>q(id).addEventListener('change',calcular));
+  calcular();
+})();
+</script>
+</body>
+</html>

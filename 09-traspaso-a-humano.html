@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Traspaso a humano · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="traspaso-a-humano">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 09 DE 17</span><h1>Escalamiento y traspaso a un humano con el contexto</h1><p class="lede">El mejor momento de un bot a veces es cuando se aparta. Este capítulo decide cuándo Pía debe ceder la conversación, qué le entrega a la persona que sigue y cómo la recupera cuando el agente termina, sin que Laura repita una sola palabra.</p></header>
+<section><div class="prose"><p>Laura abre su factura de diciembre y ve un recargo de US$ 5,00 por reconexión. Ella pagó a tiempo, así que escribe a Pía: «Me cobraron una reconexión que no corresponde, pagué el día 3». Pía puede consultar la factura, puede mostrar el recargo y puede explicar en qué casos se cobra. Lo que no puede, ni debe, es decidir si el cobro se anula. Ese es el momento del <b>traspaso a humano</b> (<i>human handoff</i>): la conversación pasa a una persona del equipo de cobranza.</p><p>El capítulo 1 lo puso entre los tres ingredientes de un chatbot empresarial: la salida humana se diseña desde el primer día. El capítulo 4 ya trató un caso particular, el del bot que no entiende y escala después de uno o dos respaldos. Aquí va el diseño completo: todos los motivos para ceder, la cola en la que espera el cliente, el paquete que recibe el agente, la herramienta donde lo recibe y la vuelta al bot.</p></div></section>
+<section><h2>Los disparadores: cuándo Pía cede la conversación</h2><div class="prose"><p>Un <b>disparador de escalamiento</b> (<i>escalation trigger</i>) es una regla que, al cumplirse, saca la conversación del flujo automático y la pone en la cola de una persona. Pía tiene cinco tipos, y cada escalamiento registra cuál lo provocó:</p><div class="tbl"><table><thead><tr><th>Disparador</th><th>Cómo se detecta</th><th>Ejemplo en Servicios Ejemplo</th><th>Motivo registrado</th></tr></thead><tbody><tr><td><b>Pedido explícito</b></td><td>la intención «hablar con una persona», o el botón</td><td>«Quiero hablar con alguien»</td><td><code>pedido_cliente</code></td></tr><tr><td><b>Respaldo repetido</b></td><td>el contador de respaldos llega al límite (capítulo 4), o se detecta frustración</td><td>dos «no te entendí» seguidos</td><td><code>respaldo</code></td></tr><tr><td><b>Política del negocio</b></td><td>una regla del flujo: ciertos temas van siempre a personas</td><td>reclamo por un cobro, pedido de baja, mención de una demanda</td><td><code>politica</code></td></tr><tr><td><b>Baja confianza</b></td><td>la comprensión queda bajo el umbral en un tema sensible</td><td>«lo de la plata del mes pasado que me pusieron», ¿pago, recargo o reembolso?</td><td><code>baja_confianza</code></td></tr><tr><td><b>Límite de autoridad</b></td><td>el flujo llega a una acción que el bot no puede ejecutar</td><td>pedir un plan de pagos fuera de la regla</td><td><code>limite_autoridad</code></td></tr></tbody></table></div><p>El primero se respeta de inmediato y sin discutir: el primer mensaje de Pía prometió la salida humana (capítulo 3), y un bot que responde «antes de pasarte, cuéntame qué necesitas» tres veces seguidas está rompiendo esa promesa. El segundo es el del capítulo 4. Los otros tres son nuevos y tienen algo en común: <b>el bot entendió perfectamente</b>, y aun así no debe seguir.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en un cajero de banco. Atiende depósitos y retiros todo el día sin llamar a nadie. Pero si un cliente reclama un cobro, pide una excepción o quiere cerrar la cuenta, el cajero no improvisa: llama al supervisor, aunque sepa perfectamente qué le están pidiendo. No es que no entienda; es que no le corresponde. Los disparadores de política y de autoridad son ese «esto lo ve el supervisor».</p></div><div class="prose"><p>La <b>baja confianza</b> merece una aclaración. En un tema inofensivo, como el horario de una agencia, una duda se resuelve con una pregunta cerrada («¿Buscas el horario o la dirección?»). En un tema de dinero o de identidad, adivinar es caro: si Pía interpreta mal «lo de la plata del mes pasado» y abre un trámite de reembolso, crea un problema que alguien deshará a mano. Por eso el umbral para escalar es más alto en los temas sensibles que en los demás.</p></div><figure class="fig fig-flujo" id="09-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" style="min-width:720px" role="img" aria-label="Diagrama de secuencia del traspaso de un reclamo por cobro: Laura reclama, Pía consulta la factura, la regla de política obliga a pasar a una persona, el paquete entra a la cola de cobranza, Carla toma el caso, responde por WhatsApp y devuelve la conversación a Pía para la encuesta">
+  <defs>
+    <marker id="d09a-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d09a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d09a-apl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-apl"/></marker>
+    <marker id="d09a-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d09a-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="170" y="14" width="120" height="52" rx="10" class="c-red"/><text x="230" y="36" class="t t-b" text-anchor="middle">Pía</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">el bot</text>
+  <rect x="330" y="14" width="120" height="52" rx="10" class="c-apl"/><text x="390" y="36" class="t t-b" text-anchor="middle">Reglas</text><text x="390" y="54" class="t t-s t-m" text-anchor="middle">y facturación</text>
+  <rect x="490" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="550" y="36" class="t t-b" text-anchor="middle">Cola</text><text x="550" y="54" class="t t-s t-m" text-anchor="middle">de cobranza</text>
+  <rect x="650" y="14" width="120" height="52" rx="10" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="710" y="36" class="t t-b" text-anchor="middle">Carla</text><text x="710" y="54" class="t t-s t-m" text-anchor="middle">agente, en la bandeja</text>
+  <line x1="70" y1="66" x2="70" y2="550" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="550" class="vida"/>
+  <line x1="390" y1="66" x2="390" y2="550" class="vida"/>
+  <line x1="550" y1="66" x2="550" y2="550" class="vida"/>
+  <line x1="710" y1="66" x2="710" y2="550" class="vida"/>
+  <g class="t t-s">
+    <line x1="70" y1="100" x2="227" y2="100" class="ln s-fis" style="stroke-width:2" marker-end="url(#d09a-fis)"/>
+    <text x="78" y="93">① «Me cobraron una reconexión…»</text>
+    <line x1="230" y1="136" x2="387" y2="136" class="ln s-apl" style="stroke-width:2" marker-end="url(#d09a-apl)"/>
+    <text x="238" y="129">② consulta F-2207</text>
+    <line x1="390" y1="170" x2="233" y2="170" class="ln ln-d s-apl" style="stroke-width:2" marker-end="url(#d09a-apl)"/>
+    <text x="238" y="163">③ recargo US$ 5,00 · pago día 6</text>
+    <line x1="390" y1="206" x2="233" y2="206" class="ln ln-d s-apl" style="stroke-width:2" marker-end="url(#d09a-apl)"/>
+    <text x="238" y="199">④ regla: reclamo por cobro → persona</text>
+
+    <line x1="230" y1="250" x2="547" y2="250" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d09a-sis)"/>
+    <text x="238" y="243">⑤ paquete de traspaso · cola cobranza · prioridad alta</text>
+    <line x1="230" y1="290" x2="73" y2="290" class="ln s-fis" style="stroke-width:2" marker-end="url(#d09a-fis)"/>
+    <text x="80" y="283">⑥ «Lo revisa cobranza…</text>
+    <text x="80" y="308" class="t-m">espera: unos 4 min»</text>
+
+    <line x1="550" y1="340" x2="707" y2="340" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#d09a-w)"/>
+    <text x="558" y="333">⑦ Carla toma el caso</text>
+    <text x="558" y="356" class="t-m">el bot deja de responder</text>
+    <line x1="710" y1="396" x2="73" y2="396" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#d09a-w)"/>
+    <text x="80" y="389">⑧ «Hola, Laura, soy Carla, de cobranza. Ya vi tu caso del recargo…» (mismo WhatsApp)</text>
+
+    <line x1="710" y1="450" x2="233" y2="450" class="ln ln-d" style="stroke:var(--warm);stroke-width:2" marker-end="url(#d09a-w)"/>
+    <text x="244" y="443">⑨ devuelve al bot con estado «encuesta»</text>
+    <line x1="230" y1="490" x2="73" y2="490" class="ln s-red" style="stroke-width:2" marker-end="url(#d09a-red)"/>
+    <text x="80" y="483">«Del 1 al 5, ¿cómo te atendimos?»</text>
+  </g>
+  <g class="t t-xs t-b">
+    <path d="M800 84 v134" class="ln s-apl" style="stroke-width:3"/><text x="810" y="146" class="k-apl">DETECTAR</text><text x="810" y="160" class="t-m">①–④</text>
+    <path d="M800 232 v80" class="ln" style="stroke:var(--d-sis);stroke-width:3"/><text x="810" y="268" class="k-sis">ENTREGAR</text><text x="810" y="282" class="t-m">⑤–⑥</text>
+    <path d="M800 326 v84" class="ln s-warm" style="stroke-width:3"/><text x="810" y="364" class="k-warm">ATENDER</text><text x="810" y="378" class="t-m">⑦–⑧</text>
+    <path d="M800 430 v74" class="ln s-red" style="stroke-width:3"/><text x="810" y="462" class="k-red">DEVOLVER</text><text x="810" y="476" class="t-m">⑨</text>
+  </g>
+  <rect x="10" y="558" width="770" height="34" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="395" y="580" class="t t-s" text-anchor="middle">Laura nunca cambia de canal ni repite su caso: lo que Pía supo en ①–④ llega a Carla en ⑤.</text>
+</svg></div><figcaption><b>El traspaso de un reclamo por un cobro.</b> Los participantes están arriba: Laura, Pía, el motor de reglas, la cola de cobranza y Carla, la agente que la atiende. Laura reclama el recargo (①); Pía consulta la factura y confirma el dato (② y ③); la regla de política marca el tema como «siempre a una persona» (④). Pía arma el paquete de traspaso y lo deja en la cola con prioridad (⑤), le dice a Laura qué pasa y cuánto puede tardar (⑥), y Carla toma el caso con todo el contexto (⑦). Carla responde por el mismo WhatsApp (⑧) y, al resolver, devuelve la conversación a Pía (⑨), que cierra con la encuesta. Las fases de la derecha separan detectar, entregar, atender y devolver.</figcaption></figure></section>
+<section><h2>Cola y prioridad según el motivo, y qué se le dice al cliente mientras espera</h2><div class="prose"><p>Escalar no es tirar la conversación a un buzón. Cada caso entra a una <b>cola</b> (<i>queue</i>) que atiende un equipo con la habilidad que hace falta: cobranza, soporte técnico de segundo nivel, retención, ventas. A esto se le llama <b>enrutamiento por habilidades</b> (<i>skills-based routing</i>), y lo hace la misma herramienta donde trabajan los agentes, como en un centro de llamadas.</p><p>Dentro de cada cola, el orden no es solo de llegada. La <b>prioridad</b> se calcula con reglas sobre el motivo y el contexto:</p><ul><li><b>Lo urgente y lo irreversible primero</b>: un cliente sin servicio que trabaja desde la casa, un aviso de corte para mañana, un pago que salió dos veces.</li><li><b>El riesgo de perder al cliente</b>: un pedido de baja va antes que una consulta de plan.</li><li><b>El tiempo que ya esperó</b>: la prioridad sube con la espera, para que ningún caso quede al fondo para siempre.</li></ul><p>Cada cola tiene un <b>acuerdo de nivel de servicio</b> (<i>SLA, Service Level Agreement</i>), por ejemplo «el 80 % de los casos de cobranza se toma en menos de 5 minutos en horario de atención». Ese número decide cuántos agentes se necesitan, y se mide.</p><p>Mientras Laura espera, el peor mensaje es el silencio. El segundo peor es «Un agente te atenderá pronto», repetido cada minuto. Un buen <b>mensaje de transición</b> (<i>transition message</i>) hace tres cosas: dice qué pasó, dice qué sigue con una expectativa honesta y dice qué puede hacer mientras tanto.</p><p>&gt; «Los reclamos por cobros los revisa una persona del equipo de cobranza. Ya le pasé tu caso con la factura y el recargo, así que no tendrás que repetir nada. El tiempo de espera ahora es de unos 4 minutos. Puedes cerrar el chat: te responderán por aquí mismo.»</p><p>La última frase importa más de lo que parece. En la mensajería, a diferencia del teléfono, el cliente no tiene que quedarse «en línea». La conversación es <b>asíncrona</b> (<i>asynchronous</i>): Laura puede irse a hacer otra cosa y la respuesta de Carla le llega como cualquier mensaje. Una cola de chat bien diseñada lo aprovecha.</p></div></section>
+<section><h2>El paquete de traspaso: lo que recibe el agente</h2><div class="prose"><p>Si el agente recibe solo el último mensaje («pagué el día 3»), le toca empezar de cero: pedir la cuenta, verificar la identidad, buscar la factura, preguntar qué pasó. Laura repite todo y el bot no sirvió de nada. Por eso el traspaso entrega un <b>paquete de traspaso</b> (<i>handoff package</i>): un objeto con forma fija, igual para todos los flujos, que la herramienta del agente sabe mostrar.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en el cambio de turno de enfermería en un hospital. La enfermera que se va no le dice a la que llega «en la cama 4 hay un señor». Le entrega, en un formato que todas conocen, quién es el paciente, por qué está, qué se le hizo, qué se probó sin éxito y qué falta. Así la que llega sigue el tratamiento sin volver a preguntarle todo al paciente. El paquete de traspaso es ese parte de turno.</p></div><div class="prose"><p>El de Laura se ve así:</p><div class="code-copia"><pre><code>{
+  "conversacion": "wa:15550001001",
+  "canal": "whatsapp",
+  "cliente": "1001",
+  "identidad": {"verificada": true, "metodo": "otp_sms", "hace_min": 3},
+  "motivo": "politica",
+  "regla": "reclamo_cobro_siempre_persona",
+  "cola": "cobranza",
+  "prioridad": "alta",
+  "resumen": "Reclama el recargo de US$ 5,00 de F-2207; dice que pagó el día 3.",
+  "datos": {
+    "factura": "F-2207", "monto": "25.00", "recargo": "5.00",
+    "fecha_pago_dicha": "día 3"
+  },
+  "consultas": [
+    {"sistema": "facturacion", "resultado": "pago registrado el día 6"}
+  ],
+  "intentos_fallidos": 0,
+  "sentimiento": "molesta",
+  "transcripcion": "/conversaciones/wa:15550001001/hoy"
+}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>Cada campo le ahorra una pregunta a Carla:</p><ul><li><b>Identidad y cómo se verificó.</b> No basta con «verificada»: el método y hace cuánto le dicen a Carla si puede hablar de datos de pago sin volver a pedir un código.</li><li><b>Motivo y regla.</b> Por qué llegó el caso a ella. Si el motivo es <code>politica</code>, el bot no falló; si es <code>respaldo</code>, quizás sí, y ese caso sirve para mejorarlo (capítulo 14).</li><li><b>Resumen.</b> Dos o tres líneas que se leen en diez segundos.</li><li><b>Datos recogidos.</b> Lo que el cliente ya dio: la factura, el monto, la fecha.</li><li><b>Consultas a sistemas.</b> Lo que el bot ya preguntó y lo que le respondieron. Aquí hay un hallazgo: la facturación registró el pago el día 6, no el 3. Carla empieza su conversación sabiendo dónde está la diferencia.</li><li><b>Intentos fallidos y sentimiento.</b> Cuántas veces el bot no entendió y cómo llega el cliente. Carla no saluda igual a alguien molesto.</li><li><b>Transcripción completa.</b> A un toque, para quien la necesite.</li></ul><p>El laboratorio te deja provocar cada disparador y comparar dos maneras de traspasar: con el paquete completo o con solo el último mensaje. Fíjate en cuántas preguntas tiene que repetir el agente en cada caso.</p></div><div class="lab" id="09-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Provoca cada disparador y mira lo que recibe el agente</h3></div><p class="hint">Toca uno de los seis disparadores: la conversación de la izquierda muestra cómo llega Laura al traspaso y qué le dice Pía. A la derecha, el paquete que recibe el agente, con su cola y su prioridad. Cambia a «Solo el último mensaje» y mira qué datos desaparecen y cuántas preguntas le toca repetir al agente.</p><style>
+[id="09-lab-1"] .c91-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:720px){[id="09-lab-1"] .c91-grid{grid-template-columns:minmax(0,1fr)}}
+[id="09-lab-1"] .c91-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+[id="09-lab-1"] .c91-chat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:7px;min-height:240px}
+[id="09-lab-1"] .c91-m{max-width:92%;padding:7px 10px;border-radius:12px;font:400 .86rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="09-lab-1"] .c91-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="09-lab-1"] .c91-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="09-lab-1"] .c91-b{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+[id="09-lab-1"] .c91-h{align-self:flex-start;background:var(--warm-soft);border:1px solid var(--warm)}
+[id="09-lab-1"] .c91-s{align-self:stretch;font:500 .74rem var(--f-mono);color:var(--muted)}
+[id="09-lab-1"] .c91-pq{border:1.5px solid var(--warm);border-radius:12px;background:var(--card);padding:10px;display:grid;gap:6px}
+[id="09-lab-1"] .c91-f{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px;font:400 .84rem/1.35 var(--f-body);border-bottom:1px dashed var(--line);padding-bottom:4px}
+[id="09-lab-1"] .c91-f b{font:600 .76rem var(--f-display);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+[id="09-lab-1"] .c91-f.falta span{color:var(--warm);font-style:italic}
+@media (max-width:420px){[id="09-lab-1"] .c91-f{grid-template-columns:minmax(0,1fr)}}
+</style>
+<div class="btns" id="c91-dis" role="group" aria-label="Disparadores"></div>
+<div class="btns" role="group" aria-label="Forma del traspaso">
+  <button type="button" id="c91-full" aria-pressed="true">Paquete completo</button>
+  <button type="button" id="c91-last" aria-pressed="false">Solo el último mensaje</button>
+</div>
+<div class="c91-grid">
+  <div style="min-width:0"><p class="c91-tit">La conversación</p><div class="c91-chat" id="c91-chat" aria-live="polite"></div></div>
+  <div style="min-width:0"><p class="c91-tit">Lo que recibe el agente</p><div class="c91-pq" id="c91-pq" aria-live="polite"></div></div>
+</div>
+<div class="readout texto" id="c91-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Supuesto del ejemplo: cada pregunta que el agente tiene que repetir le suma unos 40 segundos a la atención y le resta paciencia al cliente.</p></div></section>
+<section><h2>Resumir con un modelo y dejar la transcripción completa a mano</h2><div class="prose"><p>El resumen del paquete casi siempre lo escribe un <b>LLM</b> (<i>Large Language Model</i>, modelo de lenguaje grande): es justo el tipo de tarea en que el modelo brilla, condensar una conversación desordenada en tres líneas claras. Pero un resumen puede equivocarse de una forma peligrosa: <b>omitir o cambiar un dato</b> por ser breve. «Reclama un recargo» sin el monto, o «pagó el 6» cuando Laura dijo el 3, cambian el caso.</p><p>Por eso el patrón híbrido del capítulo 5 también vale aquí:</p><ul><li><b>Los datos no salen del resumen.</b> El monto, la factura, las fechas y la identidad viajan en campos estructurados que vienen de los sistemas y de lo que el cliente escribió, no del texto que redactó el modelo.</li><li><b>El resumen se valida.</b> Una regla simple compara: si el paquete tiene un monto y el resumen no lo menciona, o menciona otro, se marca para revisión o se usa un resumen de plantilla («Reclamo por cobro · F-2207 · recargo US$ 5,00»).</li><li><b>La transcripción completa siempre está a un toque.</b> El resumen acelera, no reemplaza. Si Carla duda, lee lo que Laura escribió de verdad.</li><li><b>El resumen distingue lo que dijo el cliente de lo que dicen los sistemas.</b> «Dice que pagó el día 3» no es lo mismo que «pagó el día 3».</li></ul></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Pide un resumen de traspaso y revísalo como validador</h3></div><p>Abre cualquier asistente de IA gratuito (cualquiera sirve) y pega este pedido con una conversación inventada. Vas a comprobar si el resumen conserva los datos críticos.</p><div class="code-copia"><pre><code>Resume en 2 líneas, para la agente que recibe el caso,
+esta conversación de un chat de atención:
+Cliente: hola me cobraron 5 dolares de reconexion
+Bot: Veo un recargo de US$ 5,00 en la factura F-2207.
+Cliente: pero si yo pague el 3, antes de que venciera
+Bot: En nuestro sistema el pago figura el día 6.
+Cliente: pague por transferencia el 3, tengo el comprobante
+Cliente: y no es la primera vez que pasa, ya me paso en agosto</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Lee el resumen y marca si aparecen: el monto (US$ 5,00), la factura (F-2207), las dos fechas (3 y 6), el medio de pago y el antecedente de agosto.</span></li><li><span>Fíjate si el resumen separa lo que dice la clienta de lo que dice el sistema, o si mezcla las fechas.</span></li><li><span>Pide de nuevo el resumen, ahora «en una sola línea», y repite la revisión.</span></li></ol><p><b>Qué observar:</b> con dos líneas suele quedar casi todo; con una, lo que el modelo sacrifica primero suelen ser las fechas, el medio de pago o el antecedente, justo lo que la agente necesita para resolver. A veces el modelo afirma «pagó el día 3» como un hecho, cuando es lo que dice la clienta. Por eso los datos van en campos aparte y la transcripción queda a mano: el resumen es una ayuda para leer rápido, no la fuente.</p></div></section>
+<section><h2>Mismo canal, mensaje de transición y el regreso al bot</h2><div class="prose"><p>Para Laura, el traspaso no debería notarse como un cambio de lugar. Escribió por WhatsApp y Carla le responde por WhatsApp, en el mismo hilo, sin pedirle que llame a un número ni que entre a otra aplicación. Lo que sí debe notar es <b>quién</b> le escribe: «Hola, Laura, soy Carla, del equipo de cobranza. Ya vi tu caso del recargo de la factura F-2207». Presentarse como persona es tan importante como que Pía se presente como asistente virtual.</p><p>Por dentro, cada conversación tiene un <b>dueño del control</b> (<i>conversation control</i>): en todo momento, o la tiene el bot, o está en cola, o la tiene un agente. Las plataformas lo resuelven de distintas maneras; Messenger e Instagram, por ejemplo, tienen un mecanismo de <b>enrutamiento de conversaciones</b> (<i>conversation routing</i>, que reemplazó al antiguo <i>handover protocol</i>) para que el bot y la herramienta de agentes se pasen el control del mismo hilo. La regla que importa en cualquier plataforma: <b>mientras un agente tiene el control, el bot no responde</b>. Sin esa regla, Laura recibe a la vez la respuesta de Carla y un «¿En qué más te ayudo?» de Pía.</p></div><figure class="fig fig-esquema" id="09-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" style="min-width:720px" role="img" aria-label="Máquina de estados del control de la conversación: con el bot, en cola, con un agente, devuelta al bot y cerrada, con los eventos que provocan cada transición y quién puede escribir al cliente en cada estado">
+  <defs>
+    <marker id="d09b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <g class="t">
+    <rect x="20" y="90" width="150" height="64" rx="12" class="c-red"/><text x="95" y="118" class="t-b" text-anchor="middle">Con el bot</text><text x="95" y="138" class="t-s t-m" text-anchor="middle">Pía conversa</text>
+    <rect x="250" y="90" width="150" height="64" rx="12" class="d-sis"/><text x="325" y="118" class="t-b" text-anchor="middle">En cola</text><text x="325" y="138" class="t-s t-m" text-anchor="middle">espera con prioridad</text>
+    <rect x="480" y="90" width="150" height="64" rx="12" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="555" y="118" class="t-b" text-anchor="middle">Con un agente</text><text x="555" y="138" class="t-s t-m" text-anchor="middle">Carla atiende</text>
+    <rect x="720" y="30" width="160" height="64" rx="12" class="c-red"/><text x="800" y="58" class="t-b" text-anchor="middle">Devuelta al bot</text><text x="800" y="78" class="t-s t-m" text-anchor="middle">con un estado</text>
+    <rect x="720" y="160" width="160" height="64" rx="12" class="caja"/><text x="800" y="188" class="t-b" text-anchor="middle">Cerrada</text><text x="800" y="208" class="t-s t-m" text-anchor="middle">queda en el historial</text>
+  </g>
+  <g class="t t-s">
+    <path d="M170 122 H246" class="ln" style="stroke-width:2" marker-end="url(#d09b)"/>
+    <text x="208" y="112" text-anchor="middle">disparador</text>
+    <path d="M400 122 H476" class="ln" style="stroke-width:2" marker-end="url(#d09b)"/>
+    <text x="438" y="112" text-anchor="middle">tomar</text>
+    <path d="M630 108 C680 100 690 70 716 64" class="ln" style="stroke-width:2" marker-end="url(#d09b)"/>
+    <text x="640" y="80">devolver</text>
+    <path d="M630 138 C680 150 690 185 716 190" class="ln" style="stroke-width:2" marker-end="url(#d09b)"/>
+    <text x="648" y="186">cerrar</text>
+    <path d="M800 94 V156" class="ln ln-d" style="stroke-width:1.6" marker-end="url(#d09b)"/>
+    <text x="808" y="130">termina la tarea</text>
+    <path d="M325 154 C325 200 170 200 110 158" class="ln ln-d" style="stroke-width:1.6" marker-end="url(#d09b)"/>
+    <text x="150" y="214">el cliente cancela la espera</text>
+    <path d="M720 50 C450 0 200 20 100 86" class="ln ln-d" style="stroke-width:1.6" marker-end="url(#d09b)"/>
+    <text x="300" y="68" class="t-m">el estado dice dónde retoma Pía (encuesta, enlace de pago…)</text>
+  </g>
+  <text x="20" y="262" class="t t-xs t-b t-m">QUIÉN PUEDE ESCRIBIRLE AL CLIENTE</text>
+  <g class="t t-s">
+    <rect x="20" y="272" width="150" height="52" rx="8" class="caja"/><text x="95" y="294" text-anchor="middle" class="t-b">el bot</text><text x="95" y="312" text-anchor="middle" class="t-m">los agentes, no</text>
+    <rect x="250" y="272" width="150" height="52" rx="8" class="caja"/><text x="325" y="294" text-anchor="middle" class="t-b">el bot, solo avisos</text><text x="325" y="312" text-anchor="middle" class="t-m">de espera</text>
+    <rect x="480" y="272" width="150" height="52" rx="8" class="caja"/><text x="555" y="294" text-anchor="middle" class="t-b">el agente</text><text x="555" y="312" text-anchor="middle" class="k-warm t-b">el bot calla</text>
+    <rect x="720" y="272" width="160" height="52" rx="8" class="caja"/><text x="800" y="294" text-anchor="middle" class="t-b">el bot, en su tarea</text><text x="800" y="312" text-anchor="middle" class="t-m">o nadie, si se cerró</text>
+  </g>
+  <text x="450" y="362" class="t t-s t-m" text-anchor="middle">En ningún estado escriben los dos a la vez. Por eso el estado se guarda en un solo lugar y lo leen el bot y la bandeja.</text>
+</svg></div><figcaption><b>Quién tiene el control de la conversación.</b> Cada caja es un estado: con el bot, en cola, con un agente, devuelta al bot y cerrada. Las flechas son las transiciones, con el evento que las provoca: un disparador lleva de «con el bot» a «en cola», tomar el caso lleva a «con un agente», y el agente puede cerrar o devolver al bot. La franja de abajo dice quién puede escribirle al cliente en cada estado; en ningún estado escriben los dos a la vez.</figcaption></figure><div class="prose"><p>Cuando Carla termina, tiene dos opciones. Puede <b>cerrar</b> la conversación, o puede <b>devolverla al bot</b> (<i>handback</i>) para algo concreto: la encuesta de satisfacción, el enlace de pago de la diferencia o el aviso de cuándo se verá el ajuste en la próxima factura. La devolución lleva su propio dato: en qué estado debe retomar Pía. Una devolución sin estado deja a Pía saludando como si la conversación empezara.</p></div></section>
+<section><h2>La bandeja unificada: todas las conversaciones en una sola vista</h2><div class="prose"><p>Carla no atiende un chat; atiende varios a la vez, de varios canales. Si tuviera que abrir una herramienta para WhatsApp, otra para Instagram y otra para el widget, perdería tiempo y contexto. La <b>bandeja unificada</b> (<i>unified inbox</i>) junta todo en una sola vista. Son ejemplos del mercado Zendesk, Freshdesk, Intercom, Twilio Flex o Chatwoot (de código abierto), entre muchas otras; casi todas las plataformas conversacionales traen la suya.</p></div><figure class="fig fig-esquema" id="09-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" style="min-width:740px" role="img" aria-label="Anatomía de una bandeja unificada: lista de conversaciones de varios canales con motivo y prioridad, hilo central con mensajes del bot y del agente, panel de contexto con el paquete de traspaso y acciones rápidas, estado arriba y acciones de cerrar o devolver abajo">
+  <rect x="10" y="10" width="880" height="410" rx="14" class="caja"/>
+  <rect x="10" y="10" width="880" height="40" rx="14" class="d-inet" style="opacity:.5"/>
+  <text x="28" y="35" class="t t-s t-b">Bandeja de Carla · cobranza</text>
+  <rect x="530" y="18" width="200" height="24" rx="12" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <text x="630" y="35" class="t t-s t-b k-warm" text-anchor="middle">estado: con agente · Carla</text>
+  <text x="872" y="35" class="t t-s t-m" text-anchor="end">3 en cola</text>
+
+  <text x="24" y="72" class="t t-xs t-b t-m">① CONVERSACIONES</text>
+  <g class="t t-s">
+    <rect x="22" y="80" width="230" height="62" rx="8" class="c-fis" style="stroke-width:2"/>
+    <text x="34" y="100" class="t-b">WhatsApp · Laura</text><text x="34" y="116">reclamo por cobro</text><text x="34" y="132" class="k-warm t-b">alta · 3 min</text>
+    <rect x="22" y="150" width="230" height="62" rx="8" class="c-apl"/>
+    <text x="34" y="170" class="t-b">Instagram · @marta</text><text x="34" y="186">descuento fuera de regla</text><text x="34" y="202" class="t-m">normal · 6 min</text>
+    <rect x="22" y="220" width="230" height="62" rx="8" class="d-sis"/>
+    <text x="34" y="240" class="t-b">Web · Jorge</text><text x="34" y="256">pago rechazado</text><text x="34" y="272" class="k-warm t-b">alta · 1 min</text>
+    <text x="34" y="306" class="t-m">ordenadas por prioridad</text>
+    <text x="34" y="322" class="t-m">y tiempo en cola</text>
+  </g>
+
+  <text x="276" y="72" class="t t-xs t-b t-m">② EL HILO, EN SU CANAL</text>
+  <rect x="270" y="80" width="330" height="270" rx="10" style="fill:var(--paper);stroke:var(--line)"/>
+  <g class="t t-s">
+    <rect x="380" y="92" width="210" height="40" rx="10" class="c-fis"/><text x="390" y="110">Me cobraron una reconexión</text><text x="390" y="125">que no corresponde…</text>
+    <rect x="282" y="142" width="230" height="40" rx="10" class="c-red"/><text x="292" y="160" class="t-b">Pía (bot)</text><text x="292" y="175">Lo revisa cobranza. Espera: 4 min</text>
+    <rect x="282" y="196" width="10" height="1" style="fill:none"/>
+    <line x1="282" y1="200" x2="588" y2="200" class="ln ln-d"/>
+    <text x="435" y="214" class="t-m" text-anchor="middle">Carla tomó la conversación</text>
+    <rect x="282" y="226" width="300" height="56" rx="10" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="292" y="244" class="t-b">Carla (agente)</text><text x="292" y="260">Hola, Laura, soy Carla, de cobranza.</text><text x="292" y="274">Ya vi tu caso del recargo…</text>
+    <rect x="282" y="296" width="306" height="42" rx="8" class="caja"/><text x="294" y="322" class="t-m">Escribe una respuesta…</text>
+  </g>
+
+  <text x="624" y="72" class="t t-xs t-b t-m">③ PANEL DE CONTEXTO</text>
+  <rect x="618" y="80" width="260" height="270" rx="10" class="c-tra" style="opacity:.55"/>
+  <g class="t t-s">
+    <text x="632" y="102" class="t-b">Identidad</text><text x="632" y="118">verificada · SMS · hace 3 min</text>
+    <text x="632" y="142" class="t-b">Resumen</text><text x="632" y="158">Recargo de US$ 5,00 en F-2207;</text><text x="632" y="173">dice que pagó el día 3</text>
+    <text x="632" y="197" class="t-b">Consultas del bot</text><text x="632" y="213">facturación: pago el día 6</text>
+    <text x="632" y="237" class="t-b">Motivo</text><text x="632" y="253">política · reclamo por cobro</text>
+    <rect x="632" y="270" width="112" height="28" rx="6" class="caja"/><text x="688" y="288" text-anchor="middle">Ver factura</text>
+    <rect x="752" y="270" width="112" height="28" rx="6" class="caja"/><text x="808" y="288" text-anchor="middle">Crear ticket</text>
+    <rect x="632" y="306" width="232" height="28" rx="6" class="caja"/><text x="748" y="324" text-anchor="middle">Transcripción completa</text>
+  </g>
+
+  <text x="276" y="378" class="t t-xs t-b t-m">④ AL TERMINAR</text>
+  <g class="t t-s">
+    <rect x="270" y="386" width="150" height="26" rx="6" class="caja"/><text x="345" y="404" text-anchor="middle">Cerrar</text>
+    <rect x="430" y="386" width="250" height="26" rx="6" class="c-red"/><text x="555" y="404" text-anchor="middle">Devolver al bot: encuesta</text>
+  </g>
+  <text x="872" y="404" class="t t-s t-m" text-anchor="end">acciones con permisos de Carla</text>
+</svg></div><figcaption><b>Anatomía de la bandeja unificada.</b> A la izquierda, la lista de conversaciones de todos los canales, con el ícono del canal, el motivo, la prioridad y el tiempo en cola. En el centro, el hilo con el cliente, donde los mensajes del bot y los del agente se distinguen. A la derecha, el panel de contexto con el paquete de traspaso: identidad, resumen, datos, consultas y acciones rápidas. Arriba, el estado de la conversación y quién la tiene; abajo, las acciones de cerrar y devolver al bot.</figcaption></figure><div class="prose"><p>Lo que separa una buena bandeja de una lista de chats:</p><ul><li><b>Agrupa por cliente, no por canal.</b> Si Laura escribió ayer por Instagram y hoy por WhatsApp, Carla ve las dos conversaciones juntas (es la identidad del capítulo 8).</li><li><b>Muestra el panel de contexto.</b> El paquete de traspaso no sirve si queda escondido en un campo que nadie abre.</li><li><b>Tiene acciones rápidas.</b> Consultar la factura, crear un ticket o registrar un ajuste sin salir de la bandeja, con las mismas integraciones que usa el bot y con los permisos de la persona, no los del bot.</li><li><b>Hace visible el estado.</b> Todos ven quién tiene cada conversación, para que dos agentes no respondan al mismo cliente.</li><li><b>Mide.</b> Tiempo en cola, tiempo de primera respuesta, conversaciones por agente y motivo de cada traspaso.</li></ul></div><div class="lab" id="09-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Bandeja unificada: atiende tres conversaciones y devuelve una al bot</h3></div><p class="hint">Eres agente. En la lista hay tres conversaciones de canales distintos. Ábrelas, lee el panel de contexto y atiende cada una con las respuestas sugeridas: toma la conversación, responde, y luego ciérrala o devuélvela al bot con un estado. Prueba a desactivar «Sincronizar el estado con el bot» y mira qué recibe el cliente.</p><style>
+[id="09-lab-2"] .c92-app{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr) minmax(0,1fr);gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper)}
+@media (max-width:820px){[id="09-lab-2"] .c92-app{grid-template-columns:minmax(0,1fr)}}
+[id="09-lab-2"] .c92-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+[id="09-lab-2"] .c92-lst{display:grid;gap:6px}
+[id="09-lab-2"] .c92-it{display:grid;gap:2px;text-align:left;border:1px solid var(--line);border-left:5px solid var(--cc);border-radius:8px;padding:6px 8px;background:var(--card);font:400 .8rem/1.3 var(--f-body);color:var(--ink)}
+[id="09-lab-2"] .c92-it[aria-pressed="true"]{outline:2px solid var(--accent);background:var(--card);color:var(--ink)}
+[id="09-lab-2"] .c92-it b{font:700 .84rem var(--f-display)}
+[id="09-lab-2"] .c92-est{font:700 .66rem var(--f-display);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:4px;justify-self:start}
+[id="09-lab-2"] .e-cola{background:var(--warm-soft);color:var(--warm)}
+[id="09-lab-2"] .e-agente{background:var(--accent-soft);color:var(--accent)}
+[id="09-lab-2"] .e-bot{background:var(--good-soft);color:var(--good)}
+[id="09-lab-2"] .e-cerrada{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+[id="09-lab-2"] .c92-hilo{display:flex;flex-direction:column;gap:6px;min-height:220px;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
+[id="09-lab-2"] .c92-m{max-width:92%;padding:6px 9px;border-radius:11px;font:400 .82rem/1.35 var(--f-body);overflow-wrap:anywhere}
+[id="09-lab-2"] .c92-m small{display:block;font:600 .62rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+[id="09-lab-2"] .m-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="09-lab-2"] .m-b{align-self:flex-start;background:var(--paper);border:1px solid var(--line)}
+[id="09-lab-2"] .m-a{align-self:flex-start;background:var(--good-soft);border:1px solid var(--good)}
+[id="09-lab-2"] .m-x{align-self:flex-start;background:var(--warm-soft);border:1.5px dashed var(--warm)}
+[id="09-lab-2"] .c92-ctx{display:grid;gap:4px;font:400 .8rem/1.35 var(--f-body)}
+[id="09-lab-2"] .c92-ctx div{border-bottom:1px dashed var(--line);padding-bottom:3px}
+[id="09-lab-2"] .c92-ctx b{font:600 .7rem var(--f-display);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);display:block}
+[id="09-lab-2"] .c92-acc{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+[id="09-lab-2"] .c92-acc button{font-size:.78rem;padding:5px 8px}
+[id="09-lab-2"] .c92-chk{font:500 .86rem var(--f-display);display:flex;gap:8px;align-items:center}
+</style>
+<label class="c92-chk"><input type="checkbox" id="c92-sync" checked> Sincronizar el estado con el bot (mientras un agente atiende, el bot calla)</label>
+<div class="c92-app">
+  <div style="min-width:0"><p class="c92-tit">Conversaciones</p><div class="c92-lst" id="c92-lst" role="group" aria-label="Lista de conversaciones"></div></div>
+  <div style="min-width:0;display:grid;gap:6px;align-content:start"><p class="c92-tit" id="c92-hilo-t">Hilo</p><div class="c92-hilo" id="c92-hilo" aria-live="polite"></div><div class="c92-acc" id="c92-acc" role="group" aria-label="Acciones del agente"></div></div>
+  <div style="min-width:0"><p class="c92-tit">Panel de contexto</p><div class="c92-ctx" id="c92-ctx"></div></div>
+</div>
+<div class="readout texto" id="c92-out" aria-live="polite"></div></div></section>
+<section><h2>Fuera de horario y sin agentes disponibles</h2><div class="prose"><p>El bot atiende a las tres de la mañana; las personas, no. Y hay momentos en horario de atención en que todos los agentes de una cola están ocupados. El diseño tiene que decir qué pasa en cada caso, y la peor respuesta es dejar al cliente en una cola que nadie mira hasta el lunes.</p><p>Las opciones, de mejor a peor según el caso:</p><ol class="steps"><li><span><b>Decirlo con honestidad y con una hora concreta.</b> «Nuestro equipo de cobranza atiende de lunes a viernes de 8:00 a 18:00. Tu caso ya quedó registrado y te escribirán por aquí mañana a primera hora.»</span></li><li><span><b>Dejar el caso listo para mañana.</b> El paquete de traspaso se guarda igual, la conversación queda en la cola con su prioridad y la primera persona que llega la toma con todo el contexto.</span></li><li><span><b>Seguir con el bot en lo que sí puede.</b> Si Laura además quiere el enlace de pago de su factura, Pía puede enviárselo: el traspaso pendiente no bloquea lo demás.</span></li><li><span><b>Ofrecer otro camino para lo urgente.</b> Una falla total del servicio puede tener una guardia técnica de 24 horas aunque cobranza duerma.</span></li></ol><p>Hay un detalle técnico que une este capítulo con el anterior. Si Laura escribe por WhatsApp a las 21:00 y Carla responde a las 9:00 del día siguiente, todavía está dentro de la ventana de 24 horas. Pero si el caso entra el viernes a las 19:00 y lo toman el lunes, la ventana se cerró: Carla tiene que reabrir con una plantilla aprobada («Hola, Laura, te escribe el equipo de cobranza sobre tu reclamo. ¿Seguimos por aquí?»). En Instagram, la ventana de 7 días para respuestas de personas cubre un fin de semana. Una cola sin esa lógica deja casos que nadie puede responder.</p><p>Y otro detalle que causa errores: el horario se evalúa en la <b>zona horaria</b> (<i>time zone</i>) de la empresa, no en la del servidor. Los servidores en la nube suelen trabajar en <b>UTC</b> (<i>Coordinated Universal Time</i>, tiempo universal coordinado); si el bot compara «son las 19:00» con el reloj del servidor, en Servicios Ejemplo anunciará el cierre a la hora equivocada.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>¿Está abierta la oficina? La hora del servidor y la de la empresa</h3></div><p>Vas a ver la hora actual en UTC, como la ve un servidor en la nube, y en una zona horaria de ejemplo (la de Bogotá, UTC−5, que no cambia en verano). Windows trae PowerShell; macOS y Linux traen <code>date</code>.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>(Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm 'UTC'")</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, "SA Pacific Standard Time").ToString("yyyy-MM-dd HH:mm")</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, "Pacific SA Standard Time").ToString("yyyy-MM-dd HH:mm")</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>date -u "+%Y-%m-%d %H:%M UTC"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>TZ=America/Bogota date "+%Y-%m-%d %H:%M"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>TZ=America/Santiago date "+%Y-%m-%d %H:%M"</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Anota las tres horas: UTC, Bogotá y Santiago de Chile.</span></li><li><span>Supón que el equipo de cobranza atiende de 8:00 a 18:00 en Bogotá. Con la hora de UTC, ¿el bot diría «abierto» o «cerrado»? ¿Y con la de Bogotá?</span></li><li><span>Compara Bogotá con Santiago: ¿la diferencia entre las dos es la misma en enero y en julio?</span></li></ol><p><b>Qué observar:</b> la hora de UTC está 5 horas adelante de la de Bogotá. Un bot que compara el horario de atención con el reloj del servidor «cierra» la oficina a las 13:00 hora local, o la «abre» de madrugada. Por eso el horario se guarda con su zona horaria escrita, por su nombre (<code>America/Bogota</code>) y no como un número fijo de horas, porque hay países que cambian la hora en verano y otros que no. Si tu equipo está en otro país, cambia la zona por la tuya.</p></div></section>
+<section><h2>Casos IRS y Klarna: la salida humana siempre visible y la recalibración</h2><div class="ml"><b>En la práctica</b><p><b>IRS, 2022-2023.</b> La agencia tributaria de Estados Unidos puso en marcha asistentes de voz y de chat, en inglés y en español, para preguntas básicas, avisos y planes de pago. En septiembre de 2023 informó que habían atendido a más de 13 millones de contribuyentes que así evitaron la espera telefónica, y que habían ayudado a configurar unos 151 millones de dólares en acuerdos de pago. Dos decisiones de diseño explican buena parte del resultado: un alcance acotado, con tareas de resultado claro, y una salida a una persona disponible en todo momento. Es evidencia de nivel A en los términos del capítulo 1: un resultado operativo publicado por el propio organismo público, con cifras concretas.</p></div><div class="prose"><p>El otro caso ya apareció en el capítulo 1: <b>Klarna</b>, que anunció en 2024 que su asistente atendía dos tercios de los chats y, meses después, volvió a reforzar la atención humana para los casos con matices. Visto desde este capítulo, la lección es de operación: la frontera entre bot y persona no se fija el día del lanzamiento. Se mueve con los datos de los traspasos: cuántos hubo por cada motivo, cuántos eran evitables, cuántos clientes volvieron por lo mismo y cómo calificaron la atención. Si los traspasos por <code>respaldo</code> crecen, hay que mejorar el bot; si los clientes que nunca llegaron a una persona vuelven a escribir, hay que bajar el umbral o abrir una salida más visible. Medir eso es el tema del capítulo 14.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que lanza su bot con la consigna de «contener» lo más posible suele esconder el botón de hablar con una persona detrás de dos o tres menús. El primer mes la contención sube, y el segundo mes suben también las llamadas al centro de contacto y las quejas en redes. La corrección habitual es volver a poner la salida humana en el primer mensaje, medir los traspasos por motivo y atacar los motivos evitables uno por uno. La contención baja un poco y la resolución real sube.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>escalar con motivo registrado y entregar el caso completo, para que el cliente no repita nada.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>Pía entendió perfectamente que Laura reclama un recargo y tiene acceso a la factura. ¿Por qué igual pasa la conversación a una persona?</summary><p>Porque es un disparador de política: los reclamos por cobros van siempre a una persona. Decidir si el cobro se anula compromete a la empresa y no está dentro de la autoridad del bot.</p></details><details><summary>¿Por qué el umbral de confianza para escalar es más alto en temas de dinero que en una consulta de horario?</summary><p>Porque adivinar mal en un tema sensible es caro (un trámite equivocado, un dato personal expuesto), mientras que en un tema inofensivo basta una pregunta cerrada para aclarar.</p></details><details><summary>¿Qué gana el agente con el campo «consultas» del paquete de traspaso?</summary><p>No repite consultas que el bot ya hizo y ve de entrada lo que respondieron los sistemas, por ejemplo que el pago figura el día 6 y no el 3, que es justo la diferencia que tiene que resolver.</p></details><details><summary>¿Por qué el monto y la factura no deben salir del resumen escrito por el modelo?</summary><p>Porque el resumen puede omitir o cambiar un dato por ser breve. Los datos críticos viajan en campos estructurados que vienen de los sistemas y de lo que escribió el cliente; el resumen solo ayuda a leer rápido y se valida contra esos campos.</p></details><details><summary>¿Qué pasa si el bot no sabe que un agente tomó la conversación?</summary><p>El cliente recibe dos respuestas a la vez, la del agente y la del bot. Mientras un agente tiene el control, el bot no debe responder.</p></details><details><summary>Un caso de WhatsApp entra el viernes a las 19:00 y lo toman el lunes a las 9:00. ¿Cómo le escribe el agente al cliente?</summary><p>Con una plantilla aprobada, porque la ventana de 24 horas se cerró. Si el cliente responde, se abre una ventana nueva y la conversación sigue libre.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es la fórmula de Erlang C y cómo la usan los centros de contacto para calcular cuántos agentes necesitan para un tiempo de espera dado?<small>Pista: busca «Erlang C staffing calculator».</small></li><li>¿Qué es el «tiempo medio de atención» (<i>AHT, Average Handle Time</i>) y por qué un agente de chat puede atender varias conversaciones a la vez y uno de teléfono no?<small>Pista: busca «chat concurrency average handle time».</small></li><li>¿Qué es el formato SBAR que se usa en hospitales para pasar un paciente de un turno a otro, y qué tiene en común con un paquete de traspaso?<small>Pista: busca «SBAR handoff communication».</small></li><li>¿Cómo decide Messenger qué aplicación tiene el control de una conversación cuando una página tiene conectados un bot y una herramienta de agentes?<small>Pista: busca «Messenger Platform conversation routing default app».</small></li><li>¿Por qué algunos países cambian la hora en verano y otros no, y qué base de datos usan los sistemas para saberlo?<small>Pista: busca «IANA tz database».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://www.irs.gov/newsroom/irs-expands-use-of-chatbots-to-help-answer-questions-on-key-notices-expands-on-technology-thats-served-13-million-taxpayers" target="_blank" rel="noopener">IRS expands use of chatbots… served 13 million taxpayers <small>el anuncio del organismo con sus cifras y el alcance del servicio</small></a><a class="vid" href="https://github.com/chatwoot/chatwoot" target="_blank" rel="noopener">Chatwoot <small>una bandeja de atención multicanal de código abierto, para ver cómo se organiza por dentro</small></a><a class="vid" href="https://developers.facebook.com/docs/messenger-platform/conversation-routing" target="_blank" rel="noopener">Messenger Platform: conversation routing <small>cómo se pasan el control un bot y una herramienta de agentes en el mismo hilo</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const ID={v:'Verificada por código SMS hace 3 min',n:'Sin verificar'};
+  const D={
+    pedido:{n:'Pedido explícito',chat:[['c','Hola, quiero hablar con una persona'],['s','intención «hablar con una persona» · se respeta de inmediato'],['h','Claro. Te paso con una persona del equipo de atención. Ya le dejé tu mensaje, así que no tendrás que repetirlo. La espera ahora es de unos 3 minutos.']],
+      p:{motivo:'pedido_cliente',cola:'Atención general',prioridad:'Normal',identidad:ID.n,resumen:'Pidió hablar con una persona desde el primer mensaje, sin decir el tema.',datos:'—',consultas:'—',intentos:'0',sentimiento:'neutral'},rep:['¿En qué te puedo ayudar?']},
+    respaldo:{n:'Respaldo repetido',chat:[['c','lo del aparato que me dejaron'],['b','Perdón, no te entendí bien. ¿Me cuentas en pocas palabras qué necesitas?'],['c','el aparato ese, el que pusieron'],['b','Puedo ayudarte con esto: [Mi factura] [Una falla] [Un ticket] [Otra cosa]'],['c','otra cosa'],['s','2 respaldos seguidos · límite alcanzado'],['h','Prefiero no hacerte perder tiempo: te paso con una persona que verá todo lo que me escribiste.']],
+      p:{motivo:'respaldo',cola:'Atención general',prioridad:'Normal',identidad:ID.n,resumen:'Habla de «el aparato que me dejaron»; el bot no identificó la intención en 2 intentos. Posible consulta sobre el módem.',datos:'—',consultas:'—',intentos:'2 (reformular, opciones)',sentimiento:'neutral'},rep:['¿Qué aparato?','¿Cuál es tu número de cuenta?']},
+    politica:{n:'Política: reclamo por un cobro',chat:[['c','Me cobraron una reconexión que no corresponde, pagué el día 3'],['b','Veo en tu factura F-2207 un recargo de reconexión de US$ 5,00.'],['s','regla reclamo_cobro_siempre_persona · cola cobranza'],['h','Los reclamos por cobros los revisa una persona del equipo de cobranza. Ya le pasé tu caso con la factura y el recargo. La espera es de unos 4 minutos; puedes cerrar el chat, te responden por aquí.']],
+      p:{motivo:'politica (reclamo_cobro_siempre_persona)',cola:'Cobranza',prioridad:'Alta',identidad:ID.v,resumen:'Reclama el recargo de reconexión de US$ 5,00 de la factura F-2207. Dice que pagó el día 3.',datos:'Factura F-2207 · US$ 25,00 · recargo US$ 5,00 · pago dicho: día 3',consultas:'Facturación: pago registrado el día 6',intentos:'0',sentimiento:'molesta'},rep:['¿Me confirmas tu identidad?','¿Qué factura es?','¿Cuánto te cobraron?','¿Cuándo pagaste?']},
+    confianza:{n:'Baja confianza en tema sensible',chat:[['c','y lo de la plata del mes pasado que me pusieron?'],['s','intenciones: recargo 0,41 · reembolso 0,38 · pago 0,21 · tema de dinero: umbral 0,75'],['h','Para no equivocarme con algo de tu dinero, te paso con una persona de cobranza. Ya le dejé tu mensaje y tu factura.']],
+      p:{motivo:'baja_confianza (0,41 en tema de dinero)',cola:'Cobranza',prioridad:'Normal',identidad:ID.v,resumen:'Pregunta por «la plata del mes pasado que me pusieron». Ambiguo entre recargo y reembolso.',datos:'Última factura: F-2207',consultas:'Facturación: sin reembolsos pendientes; recargo de US$ 5,00 en F-2207',intentos:'0',sentimiento:'neutral'},rep:['¿Me confirmas tu identidad?','¿De qué cobro hablas?']},
+    autoridad:{n:'Límite de autoridad',chat:[['c','¿Me pueden dividir la factura en tres pagos?'],['b','Revisé tu cuenta: los planes de pago automáticos son para deudas de más de US$ 60,00.'],['c','pero es que este mes no me alcanza'],['s','acción fuera de la regla · el bot no puede aprobar excepciones'],['h','Una excepción así la puede evaluar una persona de cobranza. Ya le pasé tu pedido con el monto de tu factura.']],
+      p:{motivo:'limite_autoridad (plan de pagos fuera de regla)',cola:'Cobranza',prioridad:'Normal',identidad:ID.v,resumen:'Pide dividir la factura F-2207 (US$ 25,00) en 3 pagos. No cumple la regla automática (mínimo US$ 60,00).',datos:'Factura F-2207 · US$ 25,00 · pedido: 3 cuotas',consultas:'Regla plan_pagos: no aplica (monto < 60)',intentos:'0',sentimiento:'preocupada'},rep:['¿Me confirmas tu identidad?','¿Qué factura quieres dividir?','¿En cuántos pagos?']},
+    frustracion:{n:'Frustración',chat:[['c','no tengo internet desde ayer'],['b','¿Probaste reiniciar el módem?'],['c','YA TE DIJE QUE SI!!! 3 VECES!!!'],['s','frustración: mayúsculas + signos repetidos + «ya te dije» · atajo a una persona'],['h','Perdón por hacerte repetir. Te paso ya con una persona de soporte, que verá que reiniciaste el módem y que sigues sin servicio.']],
+      p:{motivo:'respaldo (frustración detectada)',cola:'Soporte técnico, nivel 2',prioridad:'Alta',identidad:ID.v,resumen:'Sin internet desde ayer. Ya reinició el módem 3 veces. Está molesta por repetir.',datos:'Servicio: internet · desde: ayer · reinicio: hecho',consultas:'Monitoreo: sin avería masiva en su zona',intentos:'0',sentimiento:'enojada'},rep:['¿Me confirmas tu identidad?','¿Qué servicio falla?','¿Desde cuándo?','¿Reiniciaste el módem?']}
+  };
+  const CAMPOS=[['motivo','Motivo'],['cola','Cola'],['prioridad','Prioridad'],['identidad','Identidad'],['resumen','Resumen'],['datos','Datos'],['consultas','Consultas'],['intentos','Respaldos'],['sentimiento','Sentimiento']];
+  let act='politica',full=true;
+  q('#c91-dis').innerHTML=Object.keys(D).map(k=>'<button type="button" data-k="'+k+'">'+D[k].n+'</button>').join('');
+  function pintar(){
+    const d=D[act];
+    q('#c91-dis').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===act));
+    q('#c91-full').setAttribute('aria-pressed',full);q('#c91-last').setAttribute('aria-pressed',!full);
+    q('#c91-chat').innerHTML=d.chat.map(([t,x])=>t==='s'?'<div class="c91-s">'+x+'</div>':'<div class="c91-m c91-'+t+'"><small>'+(t==='c'?'Laura':'Pía')+'</small>'+x+'</div>').join('');
+    const ult=d.chat.filter(m=>m[0]==='c').pop()[1];
+    let h='';
+    if(full){CAMPOS.forEach(([k,n])=>{h+='<div class="c91-f"><b>'+n+'</b><span>'+d.p[k]+'</span></div>';});h+='<div class="c91-f"><b>Transcripción</b><span>completa, a un toque</span></div>';}
+    else{h+='<div class="c91-f"><b>Mensaje</b><span>«'+ult+'»</span></div>';CAMPOS.slice(0,3).forEach(([k,n])=>{h+='<div class="c91-f'+(k==='cola'?'':' falta')+'"><b>'+n+'</b><span>'+(k==='cola'?d.p[k]:'no llega')+'</span></div>';});h+='<div class="c91-f falta"><b>El resto</b><span>identidad, resumen, datos y consultas no llegan</span></div>';}
+    q('#c91-pq').innerHTML=h;
+    const rep=full?(d.p.identidad===ID.n&&act!=='pedido'?['¿Me confirmas tu identidad?']:act==='pedido'?d.rep:[]):d.rep.concat(d.p.identidad===ID.v?[]:[]);
+    const seg=rep.length*40;
+    q('#c91-out').innerHTML='<span>Disparador: <b>'+d.n+'</b> · motivo registrado: <b>'+d.p.motivo+'</b> · cola: <b>'+d.p.cola+'</b> · prioridad: <b>'+d.p.prioridad+'</b></span>'+
+      '<span>Preguntas que el agente repite: <b>'+rep.length+'</b>'+(rep.length?' ('+rep.join(' · ')+'), unos '+seg+' s más':'')+'</span>'+
+      (full?(rep.length?'<span>Con el paquete completo solo queda lo que el bot no podía saber.</span>':'<span class="ok">El agente empieza por la solución: Laura no repite nada.</span>'):'<span class="warn">Con solo el último mensaje, el bot trabajó para nada: Laura cuenta todo de nuevo.</span>');
+  }
+  q('#c91-dis').addEventListener('click',e=>{const b=e.target.closest('button');if(b){act=b.dataset.k;pintar();}});
+  q('#c91-full').addEventListener('click',()=>{full=true;pintar();});
+  q('#c91-last').addEventListener('click',()=>{full=false;pintar();});
+  pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const C=[
+    {id:'wa',canal:'WhatsApp',cc:'--c-fis',quien:'Laura · cliente 1001',motivo:'Reclamo por cobro',prio:'Alta',espera:3,est:'cola',
+     msgs:[['c','Me cobraron una reconexión que no corresponde, pagué el día 3'],['b','Los reclamos por cobros los revisa una persona del equipo de cobranza. Ya le pasé tu caso. Espera: unos 4 minutos.']],
+     ctx:[['Identidad','Verificada por SMS hace 3 min'],['Resumen','Reclama el recargo de reconexión de US$ 5,00 de la factura F-2207. Dice que pagó el día 3.'],['Consultas','Facturación: pago registrado el día 6 (transferencia)'],['Sentimiento','molesta']],
+     resp:['Hola, Laura, soy Carla, de cobranza. Ya vi tu caso: el pago entró el día 6 porque la transferencia tardó en acreditarse.','Como pagaste antes del vencimiento, anulé el recargo de US$ 5,00. Lo verás descontado en tu próxima factura.'],
+     ideal:'enc',fin:{enc:'Bien: el caso está resuelto y Pía hace la encuesta en el mismo hilo, con el estado «encuesta».',pago:'No hacía falta: el recargo se anuló y no hay nada que pagar. Laura recibe un enlace que no pidió.',cerrar:'Resuelto, pero sin encuesta: se pierde la señal de calidad de esta atención.'}},
+    {id:'ig',canal:'Instagram',cc:'--c-apl',quien:'@marta.ejemplo · prospecto',motivo:'Descuento fuera de regla',prio:'Normal',espera:6,est:'cola',
+     msgs:[['c','Vi el plan de 500 Mbps. ¿Me lo dejan en 30 si me cambio hoy?'],['b','El plan de 500 Mbps cuesta US$ 35,00 al mes. Un precio distinto lo puede ver una persona de ventas; ya le pasé tu pedido.']],
+     ctx:[['Identidad','Sin verificar (usuario de Instagram)'],['Resumen','Interesada en el plan de 500 Mbps; pide US$ 30,00 si contrata hoy.'],['Origen','Respuesta privada a un comentario en la publicación del plan'],['Sentimiento','interesada']],
+     resp:['Hola, Marta, soy Andrés, de ventas. No puedo bajar el precio, pero este mes la instalación no tiene costo.','¿Te reviso la cobertura en tu dirección para agendar la instalación?'],
+     ideal:'cerrar',fin:{enc:'Antes de tiempo: la venta no terminó y una encuesta corta la conversación.',pago:'No corresponde: no hay factura, y un pago por Instagram no es el camino; primero cobertura y contrato.',cerrar:'Bien: la venta sigue con ventas, que registra la oportunidad en el CRM (capítulo 10).'}},
+    {id:'web',canal:'Widget web',cc:'--d-sis',quien:'Jorge · cliente 1002',motivo:'Pago rechazado dos veces',prio:'Alta',espera:1,est:'cola',
+     msgs:[['c','La tarjeta me rechaza el pago y mañana me cortan'],['b','Veo dos intentos rechazados por el banco. Te paso con una persona para revisarlo contigo.']],
+     ctx:[['Identidad','Sesión del portal (token válido)'],['Resumen','Dos pagos rechazados de la factura F-3110 (US$ 40,00); aviso de corte para mañana.'],['Consultas','Pasarela: rechazo «fondos insuficientes» ×2 · corte programado: mañana'],['Sentimiento','preocupado']],
+     resp:['Hola, Jorge, soy Carla. El banco rechazó por fondos; no es un problema de nuestro sistema. Pospuse el corte 48 horas.','Te dejo con Pía para que te envíe un enlace nuevo cuando quieras pagar con otra tarjeta.'],
+     ideal:'pago',fin:{enc:'Incompleto: Jorge todavía tiene que pagar. La encuesta llega antes de resolver.',pago:'Bien: Pía retoma en el estado «enviar enlace de pago» y Jorge paga sin volver a la cola.',cerrar:'Incompleto: Jorge queda sin enlace y volverá a escribir mañana.'}}
+  ];
+  let sel='wa',inc=0;const res={};
+  const E={cola:['e-cola','En cola'],agente:['e-agente','Con agente'],bot:['e-bot','Devuelta al bot'],cerrada:['e-cerrada','Cerrada']};
+  function lista(){
+    q('#c92-lst').innerHTML=C.map(c=>'<button type="button" class="c92-it" style="--cc:var('+c.cc+')" data-id="'+c.id+'" aria-pressed="'+(c.id===sel)+'"><b>'+c.canal+'</b>'+c.quien+'<br>'+c.motivo+' · prioridad '+c.prio.toLowerCase()+(c.est==='cola'?' · '+c.espera+' min en cola':'')+'<span class="c92-est '+E[c.est][0]+'">'+E[c.est][1]+'</span></button>').join('');
+  }
+  function hilo(){
+    const c=C.find(x=>x.id===sel);
+    q('#c92-hilo-t').textContent='Hilo · '+c.canal;
+    q('#c92-hilo').innerHTML=c.msgs.map(([t,x])=>'<div class="c92-m m-'+t+'"><small>'+({c:c.quien.split(' ·')[0],b:'Pía (bot)',a:'Agente',x:'Pía (bot), automático'})[t]+'</small>'+x+'</div>').join('');
+    q('#c92-hilo').scrollTop=q('#c92-hilo').scrollHeight;
+    q('#c92-ctx').innerHTML=c.ctx.map(([k,v])=>'<div><b>'+k+'</b>'+v+'</div>').join('');
+    let a='';
+    if(c.est==='cola')a='<button type="button" class="primary" data-a="tomar">Tomar la conversación</button>';
+    else if(c.est==='agente'){
+      const n=c.msgs.filter(m=>m[0]==='a').length;
+      if(n<c.resp.length)a='<button type="button" class="primary" data-a="resp">Responder: «'+c.resp[n].slice(0,38)+'…»</button>';
+      a+='<button type="button" data-a="enc">Devolver al bot: encuesta</button><button type="button" data-a="pago">Devolver al bot: enlace de pago</button><button type="button" data-a="cerrar">Cerrar</button>';
+    } else a='<span class="hint">'+(res[c.id]||'')+'</span>';
+    q('#c92-acc').innerHTML=a;
+  }
+  function accion(t){
+    const c=C.find(x=>x.id===sel);
+    if(t==='tomar'){c.est='agente';}
+    else if(t==='resp'){const n=c.msgs.filter(m=>m[0]==='a').length;c.msgs.push(['a',c.resp[n]]);if(!q('#c92-sync').checked){c.msgs.push(['x','¡Hola de nuevo! ¿En qué más te puedo ayudar hoy?']);inc++;}}
+    else{
+      const ok=t===c.ideal;res[c.id]=(ok?'✔ ':'✖ ')+c.fin[t];
+      if(t==='enc'){c.est='bot';c.msgs.push(['b','Gracias por escribirnos. Del 1 al 5, ¿cómo te atendimos hoy?']);}
+      else if(t==='pago'){c.est='bot';c.msgs.push(['b',c.id==='web'?'Aquí tienes un enlace nuevo para pagar la factura F-3110 por US$ 40,00: [Pagar]':'Te envío el enlace de pago de tu factura: [Pagar]']);}
+      else{c.est='cerrada';}
+      c.ok=ok;
+    }
+    lista();hilo();lectura();
+  }
+  function lectura(){
+    const fin=C.filter(c=>c.est==='bot'||c.est==='cerrada'),bien=fin.filter(c=>c.ok).length,cola=C.filter(c=>c.est==='cola').length;
+    let s='<span>Atendidas: <b>'+fin.length+' de 3</b> · bien cerradas: <b>'+bien+'</b> · en cola: <b>'+cola+'</b> · respuestas dobles del bot: <b>'+inc+'</b></span>';
+    if(inc)s+='<span class="warn">Con el estado sin sincronizar, el bot siguió respondiendo mientras el agente atendía: el cliente recibió dos voces a la vez.</span>';
+    else if(fin.length===3)s+=bien===3?'<span class="ok">Las tres bien: cada una terminó donde correspondía, y las devueltas al bot retomaron con un estado concreto.</span>':'<span>Revisa las marcadas con ✖: devolver al bot sirve cuando queda una tarea concreta para él.</span>';
+    else s+='<span>Empieza por la de mayor prioridad y menor paciencia. ¿Cuál tomarías primero?</span>';
+    q('#c92-out').innerHTML=s;
+  }
+  q('#c92-lst').addEventListener('click',e=>{const b=e.target.closest('button');if(b){sel=b.dataset.id;lista();hilo();}});
+  q('#c92-acc').addEventListener('click',e=>{const b=e.target.closest('button');if(b)accion(b.dataset.a);});
+  lista();hilo();lectura();
+})();
+</script>
+</body>
+</html>

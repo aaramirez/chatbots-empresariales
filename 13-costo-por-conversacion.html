@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Costo por conversación · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="costo-por-conversacion">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 13 DE 17</span><h1>El costo por conversación</h1><p class="lede">Cada «Hola, ¿cuánto debo?» le cuesta dinero a Servicios Ejemplo: tokens del modelo, llamadas a sistemas, mensajes del canal y, a veces, una persona. Este capítulo desarma ese costo pieza por pieza, muestra cómo bajarlo sin empeorar el servicio y cómo evitar que un mal día se coma el presupuesto del mes.</p></header>
+<section><div class="prose"><p>Cuando Pía era un bot de menús, su costo era casi fijo: un servidor y una licencia. Desde que entiende con un modelo de lenguaje, consulta sistemas y escribe por WhatsApp, <b>cada conversación tiene su propio costo</b>, y ese costo varía mucho: un «¿a qué hora abren?» cuesta una fracción de centavo, y una conversación de quince turnos sobre un cobro que termina con una persona cuesta cientos de veces más.</p><p>Este capítulo responde tres preguntas que el área de finanzas le va a hacer al equipo del bot: cuánto cuesta una conversación, de qué depende y cómo se evita una sorpresa a fin de mes. La comparación de plataformas a tres años (construir, comprar o combinar) quedó en el capítulo 5; aquí se mira el costo que crece con cada mensaje.</p></div></section>
+<section><h2>Los componentes del costo</h2><div class="analogia"><b>Imagínalo así</b><p>Piensa en un taxi. Pagas un banderazo al subir, un tanto por kilómetro, un tanto por minuto de espera y, si cruzas un peaje, el peaje. Dos viajes con la misma distancia pueden costar distinto si uno se quedó en un trancón. La conversación con un bot se cobra igual: unas piezas fijas por turno, otras que crecen con lo largo de la conversación y algunos peajes que paga solo quien pasa por ellos.</p></div><div class="prose"><p>Los modelos de lenguaje no cobran por palabra sino por <b>token</b> (<i>token</i>): un pedazo de texto, que puede ser una palabra corta, parte de una palabra larga o un signo. Como referencia, mil tokens son unas 700 a 750 palabras en inglés y algo menos en español, que se parte en más pedazos. El proveedor cobra por separado los <b>tokens de entrada</b> (<i>input tokens</i>), todo lo que se le envía al modelo, y los <b>tokens de salida</b> (<i>output tokens</i>), lo que el modelo escribe, que suelen costar varias veces más.</p><p>La pieza que más sorprende es que <b>la entrada de cada turno no es solo el mensaje del cliente</b>. En cada turno, Pía le envía al modelo todo esto:</p><div class="tbl"><table><thead><tr><th>Pieza de la entrada</th><th>Qué es</th><th>Tokens típicos por turno</th></tr></thead><tbody><tr><td>Instrucciones del sistema</td><td>papel, tono, límites, reglas (capítulo 3)</td><td>1.000 a 3.000</td></tr><tr><td>Definiciones de herramientas</td><td>las funciones que puede proponer y sus parámetros (capítulo 5)</td><td>300 a 1.500</td></tr><tr><td>Historial</td><td>los turnos anteriores de la conversación (capítulo 6)</td><td>crece con cada turno</td></tr><tr><td>Fragmentos recuperados</td><td>los artículos de la base de conocimiento (capítulo 7)</td><td>0 a 2.000</td></tr><tr><td>Mensaje del cliente</td><td>«¿y por qué subió este mes?»</td><td>10 a 60</td></tr></tbody></table></div><p>El mensaje de Laura es lo más pequeño de la lista. Y como el historial se vuelve a enviar en cada turno, una conversación de diez turnos no cuesta diez veces un turno: cuesta bastante más, porque el turno diez arrastra los nueve anteriores.</p></div><figure class="fig fig-comparacion" id="13-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:740px" role="img" aria-label="Barras de tokens de entrada por turno, del primero al octavo, con historial completo a la izquierda y con historial resumido a la derecha; el prefijo fijo de instrucciones y herramientas es la parte más grande de cada barra y el mensaje de la clienta es casi invisible">
+<text x="60" y="26" class="t t-xs t-b t-m">HISTORIAL COMPLETO</text>
+<text x="52" y="59" class="t t-s t-m" text-anchor="end">1</text>
+<rect x="60.0" y="44" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="44" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="44" width="2.3" height="20" class="c-fis"/>
+<text x="300.3" y="59" class="t t-s t-mono">4.040</text>
+<text x="52" y="89" class="t t-s t-m" text-anchor="end">2</text>
+<rect x="60.0" y="74" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="74" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="74" width="12.8" height="20" class="c-red"/>
+<rect x="304.8" y="74" width="2.3" height="20" class="c-fis"/>
+<text x="313.1" y="89" class="t t-s t-mono">4.260</text>
+<text x="52" y="119" class="t t-s t-m" text-anchor="end">3</text>
+<rect x="60.0" y="104" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="104" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="104" width="25.5" height="20" class="c-red"/>
+<rect x="317.5" y="104" width="2.3" height="20" class="c-fis"/>
+<text x="325.8" y="119" class="t t-s t-mono">4.480</text>
+<text x="52" y="149" class="t t-s t-m" text-anchor="end">4</text>
+<rect x="60.0" y="134" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="134" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="134" width="38.3" height="20" class="c-red"/>
+<rect x="330.3" y="134" width="2.3" height="20" class="c-fis"/>
+<text x="338.6" y="149" class="t t-s t-mono">4.700</text>
+<text x="52" y="179" class="t t-s t-m" text-anchor="end">5</text>
+<rect x="60.0" y="164" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="164" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="164" width="51.0" height="20" class="c-red"/>
+<rect x="343.0" y="164" width="2.3" height="20" class="c-fis"/>
+<text x="351.4" y="179" class="t t-s t-mono">4.920</text>
+<text x="52" y="209" class="t t-s t-m" text-anchor="end">6</text>
+<rect x="60.0" y="194" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="194" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="194" width="63.8" height="20" class="c-red"/>
+<rect x="355.8" y="194" width="2.3" height="20" class="c-fis"/>
+<text x="364.1" y="209" class="t t-s t-mono">5.140</text>
+<text x="52" y="239" class="t t-s t-m" text-anchor="end">7</text>
+<rect x="60.0" y="224" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="224" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="224" width="76.6" height="20" class="c-red"/>
+<rect x="368.6" y="224" width="2.3" height="20" class="c-fis"/>
+<text x="376.9" y="239" class="t t-s t-mono">5.360</text>
+<text x="52" y="269" class="t t-s t-m" text-anchor="end">8</text>
+<rect x="60.0" y="254" width="191.4" height="20" class="c-tra"/>
+<rect x="251.4" y="254" width="40.6" height="20" class="c-enl"/>
+<rect x="292.0" y="254" width="89.3" height="20" class="c-red"/>
+<rect x="381.3" y="254" width="2.3" height="20" class="c-fis"/>
+<text x="389.6" y="269" class="t t-s t-mono">5.580</text>
+<text x="60" y="300" class="t t-s t-b">Total de la conversación: 38.480 tokens</text>
+<text x="500" y="26" class="t t-xs t-b t-m">HISTORIAL RESUMIDO DESDE EL TURNO 4</text>
+<text x="492" y="59" class="t t-s t-m" text-anchor="end">1</text>
+<rect x="500.0" y="44" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="44" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="44" width="2.3" height="20" class="c-fis"/>
+<text x="740.3" y="59" class="t t-s t-mono">4.040</text>
+<text x="492" y="89" class="t t-s t-m" text-anchor="end">2</text>
+<rect x="500.0" y="74" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="74" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="74" width="12.8" height="20" class="c-red"/>
+<rect x="744.8" y="74" width="2.3" height="20" class="c-fis"/>
+<text x="753.1" y="89" class="t t-s t-mono">4.260</text>
+<text x="492" y="119" class="t t-s t-m" text-anchor="end">3</text>
+<rect x="500.0" y="104" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="104" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="104" width="25.5" height="20" class="c-red"/>
+<rect x="757.5" y="104" width="2.3" height="20" class="c-fis"/>
+<text x="765.8" y="119" class="t t-s t-mono">4.480</text>
+<text x="492" y="149" class="t t-s t-m" text-anchor="end">4</text>
+<rect x="500.0" y="134" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="134" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="134" width="40.0" height="20" class="c-red"/>
+<rect x="772.0" y="134" width="2.3" height="20" class="c-fis"/>
+<text x="780.3" y="149" class="t t-s t-mono">4.730</text>
+<text x="492" y="179" class="t t-s t-m" text-anchor="end">5</text>
+<rect x="500.0" y="164" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="164" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="164" width="40.0" height="20" class="c-red"/>
+<rect x="772.0" y="164" width="2.3" height="20" class="c-fis"/>
+<text x="780.3" y="179" class="t t-s t-mono">4.730</text>
+<text x="492" y="209" class="t t-s t-m" text-anchor="end">6</text>
+<rect x="500.0" y="194" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="194" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="194" width="40.0" height="20" class="c-red"/>
+<rect x="772.0" y="194" width="2.3" height="20" class="c-fis"/>
+<text x="780.3" y="209" class="t t-s t-mono">4.730</text>
+<text x="492" y="239" class="t t-s t-m" text-anchor="end">7</text>
+<rect x="500.0" y="224" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="224" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="224" width="40.0" height="20" class="c-red"/>
+<rect x="772.0" y="224" width="2.3" height="20" class="c-fis"/>
+<text x="780.3" y="239" class="t t-s t-mono">4.730</text>
+<text x="492" y="269" class="t t-s t-m" text-anchor="end">8</text>
+<rect x="500.0" y="254" width="191.4" height="20" class="c-tra"/>
+<rect x="691.4" y="254" width="40.6" height="20" class="c-enl"/>
+<rect x="732.0" y="254" width="40.0" height="20" class="c-red"/>
+<rect x="772.0" y="254" width="2.3" height="20" class="c-fis"/>
+<text x="780.3" y="269" class="t t-s t-mono">4.730</text>
+<text x="500" y="300" class="t t-s t-b">Total de la conversación: 36.430 tokens</text>
+<text x="34" y="40" class="t t-xs t-m" text-anchor="middle">TURNO</text>
+<rect x="60" y="318" width="12" height="12" rx="2" class="c-tra"/><text x="78" y="328" class="t t-s">instrucciones y herramientas (fijo)</text>
+<rect x="319.0" y="318" width="12" height="12" rx="2" class="c-enl"/><text x="337.0" y="328" class="t t-s">fragmentos recuperados</text>
+<rect x="497.4" y="318" width="12" height="12" rx="2" class="c-red"/><text x="515.4" y="328" class="t t-s">historial</text>
+<rect x="595.2" y="318" width="12" height="12" rx="2" class="c-fis"/><text x="613.2" y="328" class="t t-s">mensaje de Laura</text>
+<rect x="10" y="346" width="880" height="44" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+<text x="450" y="365" class="t t-s" text-anchor="middle">El resumen ahorra poco aquí (unos 5 %), porque la conversación es corta: la barra violeta, que se repite igual en cada turno,</text>
+<text x="450" y="381" class="t t-s" text-anchor="middle">es la mayor. Por eso las dos primeras palancas son recortar las instrucciones y la caché de instrucciones.</text>
+</svg></div><figcaption><b>Lo que viaja al modelo en cada turno.</b> Cada barra es un turno de la conversación de Laura sobre su factura, del primero al octavo, y su largo es el número de tokens de entrada. Los colores separan las piezas: instrucciones y herramientas (iguales en todos los turnos), fragmentos de la base de conocimiento, historial y, al final, el mensaje de Laura, casi invisible. El historial completo hace crecer cada barra; la columna de la derecha repite la conversación con el historial resumido a partir del cuarto turno. Fíjate en qué pieza es la más grande en todos los turnos: no es el historial ni el mensaje, sino el prefijo fijo que se repite igual.</figcaption></figure><div class="prose"><p>Además del modelo principal hay otras piezas, más pequeñas pero que se suman:</p><ul><li><b>Llamadas a herramientas</b> (<i>tool calls</i>). Cada consulta a la facturación o a la mesa de ayuda cuesta poco en infraestructura, pero agrega un turno del modelo: uno para proponer la llamada y otro para redactar con el resultado.</li><li><b>Modelo por turno.</b> No todos los turnos usan el mismo modelo; los precios de un modelo pequeño y uno grande pueden diferir veinte veces o más.</li><li><b>Embeddings</b> (<i>embeddings</i>, la representación numérica del texto que se usa para buscar en la base de conocimiento). Muy baratos por unidad, pero se calculan en cada búsqueda.</li><li><b>Moderación y guardrails</b> (capítulo 12). A veces gratuitos, a veces un modelo aparte que también se paga.</li><li><b>El canal y la verificación.</b> Los mensajes de WhatsApp que se cobran y los SMS con códigos de un solo uso.</li><li><b>La persona.</b> Cuando la conversación pasa a un agente, su tiempo es, por mucho, el componente más caro.</li></ul></div></section>
+<section><h2>Medir por conversación, no en promedio</h2><div class="prose"><p>El primer error es mirar la factura del proveedor del modelo una vez al mes y dividirla entre el número de conversaciones. El promedio esconde lo que importa: <b>el costo se concentra</b>. En casi cualquier bot, una minoría de conversaciones largas, con muchas herramientas y traspaso, se lleva una parte grande del gasto.</p><p>Para verlo hay que <b>atribuir el costo</b> (<i>cost attribution</i>): cada llamada al modelo, a una herramienta o al canal se registra con el identificador de la conversación, el canal, el flujo y el área. Con eso se puede responder lo que el promedio no responde:</p><div class="tbl"><table><thead><tr><th>Flujo de Pía</th><th>Conversaciones al mes</th><th>Costo medio</th><th>Costo del 5 % más caro</th><th>Pasa a persona</th></tr></thead><tbody><tr><td>Consultar deuda</td><td>18.000</td><td>US$ 0,02</td><td>US$ 0,06</td><td>2 %</td></tr><tr><td>Enlace de pago</td><td>9.000</td><td>US$ 0,03</td><td>US$ 0,09</td><td>3 %</td></tr><tr><td>Reportar falla</td><td>7.000</td><td>US$ 0,05</td><td>US$ 0,22</td><td>12 %</td></tr><tr><td>Reclamo por un cobro</td><td>1.500</td><td>US$ 0,11</td><td>US$ 0,40</td><td>55 %</td></tr></tbody></table></div><p>Las cifras son ilustrativas, pero la forma se repite: el reclamo por un cobro es pocas conversaciones, largas, con muchas vueltas, y más de la mitad termina con una persona. Mirar el costo <b>por flujo y por área</b> permite decidir con datos: quizá ese flujo conviene pasarlo antes a un agente, en vez de pagar ocho turnos de modelo que terminan igual en la bandeja.</p><p>Dos medidas completan la vista. La <b>mediana</b> (el costo de la conversación del medio) dice cuánto cuesta lo normal; el <b>percentil 95</b> (<i>p95</i>, el costo por debajo del cual queda el 95 % de las conversaciones) dice cuánto cuesta lo caro. Si el percentil 95 sube mientras la mediana sigue igual, algo está alargando unas pocas conversaciones: un bucle, un flujo roto o un abuso.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Cuenta los tokens de un turno de Pía</h3></div><p>Vas a usar un <b>tokenizador</b> (<i>tokenizer</i>) público, una herramienta que parte un texto en tokens como lo hace un modelo. El Tokenizer Playground de Hugging Face es gratuito, sin registro, y corre en tu navegador (cualquier tokenizador público sirve; el número exacto cambia de un modelo a otro).</p><ol class="steps"><li><span>Abre el <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" rel="noopener">Tokenizer Playground</a> y espera a que cargue.</span></li><li><span>Escribe «Hola, ¿cuánto debo?» y anota el número de tokens.</span></li><li><span>Escribe ahora una instrucción del sistema de ejemplo, de tres o cuatro líneas: «Eres Pía, la asistente virtual de Servicios Ejemplo. Respondes con frases cortas, en español neutro, tuteando. Nunca escribes montos que no vengan de la facturación…». Anota los tokens.</span></li><li><span>Escribe la misma pregunta en inglés, «Hi, how much do I owe?», y compara.</span></li></ol><p><b>Qué observar:</b> el mensaje de Laura son pocos tokens; las instrucciones, muchas veces más, y se envían en cada turno. El español suele necesitar más tokens que el inglés para decir lo mismo, porque los tokenizadores se entrenaron con más texto en inglés: el mismo bot puede costar algo más en español. Multiplica las instrucciones por los turnos de una conversación y por las conversaciones del mes, y verás por qué recortarlas es la primera optimización.</p></div></section>
+<section><h2>Optimizar instrucciones e historial</h2><div class="prose"><p>La regla es simple: <b>no enviar al modelo lo que no necesita en ese turno</b>. Cada token que no viaja es un ahorro en todas las conversaciones del mes.</p><ul><li><b>Instrucciones más cortas y por estado.</b> Las instrucciones generales (quién es Pía, su tono, sus límites) van siempre; las de cada flujo (cómo explicar un recargo, qué preguntar en una falla) van solo cuando ese flujo está activo. Lo mismo con las herramientas: en el saludo, Pía no necesita la definición de <code>crear_enlace_pago</code>.</li><li><b>Historial con ventana o resumen.</b> En vez de enviar toda la conversación, se envían los últimos turnos completos y un <b>resumen</b> (<i>summary</i>) de los anteriores, que escribe un modelo pequeño o que arma el propio gestor de diálogo a partir del estado: «Clienta verificada, cuenta 1001, preguntó por F-2207, aceptó el enlace». El estado del capítulo 6 ya guarda lo importante: el modelo no necesita releer cada palabra.</li><li><b>No reenviar fragmentos viejos.</b> Si en el turno dos se recuperó el artículo de recargos, en el turno seis no hace falta volver a enviarlo, salvo que la pregunta vuelva al tema.</li><li><b>Limitar la salida.</b> Pía responde en frases cortas por diseño (capítulo 3); fijar un máximo de tokens de salida evita respuestas largas por accidente, que además son las más caras.</li></ul><p>Ninguna de estas medidas es gratis: un resumen demasiado agresivo hace que Pía olvide algo que Laura dijo, y una instrucción recortada de más deja pasar un error de tono. Por eso cada optimización se prueba con la batería de conversaciones del capítulo 15 antes de salir.</p></div></section>
+<section><h2>Un modelo según la tarea</h2><div class="prose"><p>No todos los turnos necesitan el modelo más capaz. Clasificar «¿cuánto debo?», extraer una fecha o resumir para el agente son tareas que un <b>modelo pequeño</b> (<i>small model</i>) hace bien y por una fracción del precio. Entender un reclamo enredado o redactar una explicación delicada del recargo pide un <b>modelo grande</b> (<i>large model</i>).</p><p>La estrategia es <b>enrutar por tarea</b> (<i>model routing</i>): un primer paso barato decide qué tipo de turno es y lo manda al modelo que corresponde. Muchos turnos de Pía ni siquiera necesitan un modelo: el saludo, el menú y las confirmaciones salen del flujo con reglas. Cómo se construye un enrutador entre modelos y cómo se evalúa que el pequeño no pierda calidad está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p></div><figure class="fig fig-flujo" id="13-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" style="min-width:740px" role="img" aria-label="Flujo de un turno por el camino más barato: primero el flujo con reglas, luego la caché de respuestas aprobadas, luego un clasificador pequeño que manda el turno al modelo pequeño o al grande; debajo, el costo relativo de cada camino; abajo, la caché de instrucciones que cobra con descuento el prefijo fijo">
+  <defs>
+    <marker id="d13b-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d13b-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-enl"/></marker>
+  </defs>
+  
+  <rect x="10" y="60" width="110" height="60" rx="10" class="caja"/>
+  <text x="65" y="86" class="t t-b" text-anchor="middle">Mensaje</text><text x="65" y="104" class="t t-s t-m" text-anchor="middle">de Laura</text>
+  <line x1="120" y1="90" x2="147" y2="90" class="ln" style="stroke-width:2" marker-end="url(#d13b-fl)"/>
+
+  
+  <rect x="150" y="56" width="150" height="68" rx="10" class="c-red"/>
+  <text x="160" y="78" class="t t-xs t-b k-red">1 · FLUJO CON REGLAS</text>
+  <text x="160" y="96" class="t t-s">¿un botón, un sí,</text><text x="160" y="110" class="t t-s">un menú?</text>
+  <line x1="300" y1="90" x2="337" y2="90" class="ln" style="stroke-width:2" marker-end="url(#d13b-fl)"/>
+  <text x="304" y="82" class="t t-xs t-m">no</text>
+
+  <rect x="340" y="56" width="160" height="68" rx="10" class="c-enl"/>
+  <text x="350" y="78" class="t t-xs t-b k-enl">2 · CACHÉ DE RESPUESTAS</text>
+  <text x="350" y="96" class="t t-s">¿pregunta general ya</text><text x="350" y="110" class="t t-s">respondida y aprobada?</text>
+  <line x1="500" y1="90" x2="537" y2="90" class="ln" style="stroke-width:2" marker-end="url(#d13b-fl)"/>
+  <text x="504" y="82" class="t t-xs t-m">no</text>
+
+  <rect x="540" y="56" width="150" height="68" rx="10" class="c-tra"/>
+  <text x="550" y="78" class="t t-xs t-b k-tra">3 · CLASIFICADOR</text>
+  <text x="550" y="96" class="t t-s">modelo pequeño: ¿el</text><text x="550" y="110" class="t t-s">turno es simple?</text>
+
+  <rect x="730" y="20" width="160" height="56" rx="10" class="c-tra" style="opacity:.6"/>
+  <text x="742" y="44" class="t t-b">Modelo pequeño</text><text x="742" y="62" class="t t-s">extraer, clasificar</text>
+  <rect x="730" y="104" width="160" height="56" rx="10" class="c-tra"/>
+  <text x="742" y="128" class="t t-b">Modelo grande</text><text x="742" y="146" class="t t-s">reclamos y casos delicados</text>
+  <path d="M690 80 C 710 70, 715 50, 727 48" class="ln" style="stroke-width:2" marker-end="url(#d13b-fl)"/>
+  <text x="696" y="36" class="t t-xs t-m">simple</text>
+  <path d="M690 100 C 710 110, 715 130, 727 132" class="ln" style="stroke-width:2" marker-end="url(#d13b-fl)"/>
+  <text x="696" y="152" class="t t-xs t-m">difícil</text>
+
+  
+  <line x1="225" y1="124" x2="225" y2="170" class="ln s-enl" style="stroke-width:2" marker-end="url(#d13b-ok)"/>
+  <text x="232" y="152" class="t t-xs t-b k-enl">sí</text>
+  <line x1="420" y1="124" x2="420" y2="170" class="ln s-enl" style="stroke-width:2" marker-end="url(#d13b-ok)"/>
+  <text x="427" y="152" class="t t-xs t-b k-enl">sí</text>
+
+  
+  <text x="150" y="194" class="t t-xs t-b t-m">COSTO RELATIVO DEL TURNO</text>
+  <g class="t t-s">
+    <rect x="150" y="204" width="4" height="16" class="c-red"/><text x="160" y="217">casi cero · sin modelo</text>
+    <rect x="340" y="204" width="6" height="16" class="c-enl"/><text x="352" y="217">≈ 0,1 · una búsqueda</text>
+    <rect x="730" y="176" width="16" height="16" class="c-tra" style="opacity:.6"/><text x="752" y="189">≈ 1 · pequeño</text>
+    <rect x="730" y="204" width="160" height="16" class="c-tra"/><text x="736" y="217" class="t-b">≈ 10 a 20 · grande</text>
+  </g>
+
+  
+  <line x1="10" y1="244" x2="890" y2="244" class="ln"/>
+  <text x="10" y="268" class="t t-b">La caché de instrucciones, dentro de cada llamada al modelo</text>
+  <g class="t t-s">
+    <rect x="10" y="282" width="330" height="34" rx="6" class="c-tra"/><text x="20" y="303">instrucciones + herramientas (idéntico en cada llamada)</text>
+    <rect x="340" y="282" width="190" height="34" rx="6" class="c-red"/><text x="350" y="303">historial y fragmentos</text>
+    <rect x="530" y="282" width="60" height="34" rx="6" class="c-fis"/><text x="540" y="303">mensaje</text>
+    <text x="10" y="336" class="k-tra t-b">se cobra con gran descuento si se repite</text>
+    <text x="340" y="336">precio normal</text>
+    <text x="610" y="303">Orden: lo fijo primero, lo variable al final.</text>
+    <text x="610" y="319">Cambiar una coma del prefijo invalida la caché.</text>
+  </g>
+  <rect x="10" y="360" width="880" height="50" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="381" class="t t-s" text-anchor="middle">La caché de respuestas nunca guarda nada personal ni que cambie con una acción del cliente: el saldo y el estado del ticket</text>
+  <text x="450" y="398" class="t t-s" text-anchor="middle">se consultan en vivo. Solo guarda respuestas generales y se invalida cuando cambia el artículo del que salieron.</text>
+</svg></div><figcaption><b>El camino más barato que todavía responde bien.</b> El mensaje de Laura entra por la izquierda y pasa por tres puertas, de la más barata a la más cara. Primero, ¿lo resuelve el flujo con reglas (un botón, una confirmación)? Luego, ¿hay una respuesta en la caché de respuestas aprobadas? Después, un clasificador pequeño decide si el turno es simple (modelo pequeño) o difícil (modelo grande). Debajo de cada camino, el costo relativo por turno. Abajo, la caché de instrucciones: el prefijo fijo (instrucciones y herramientas) se cobra con descuento cuando se repite.</figcaption></figure></section>
+<section><h2>Caché de respuestas y de instrucciones</h2><div class="prose"><p>Hay dos cachés distintas, y conviene no confundirlas.</p><p>La <b>caché de respuestas</b> (<i>response cache</i>) guarda respuestas ya aprobadas para preguntas frecuentes que no dependen del cliente: «¿a qué hora abre la agencia del centro?», «¿qué necesito para trasladar el servicio?». Si la pregunta nueva es igual, o muy parecida según sus embeddings (<b>caché semántica</b>, <i>semantic cache</i>), se devuelve la respuesta guardada sin llamar al modelo. Dos reglas la hacen segura: <b>nunca se guarda en caché nada personal ni que cambie con una acción del cliente</b> (el saldo se consulta en vivo, capítulo 11), y cada respuesta guardada se invalida cuando cambia el artículo de la base de conocimiento del que salió (capítulo 7).</p><p>La <b>caché de instrucciones</b> (<i>prompt caching</i>) es un mecanismo del proveedor del modelo: si el comienzo de la entrada es idéntico al de una llamada reciente, esa parte se cobra con un descuento grande, a menudo de alrededor del 90 %, y se procesa más rápido. Para aprovecharla, la entrada se ordena de lo fijo a lo variable: primero instrucciones y herramientas (iguales para todos), después el historial y los fragmentos, y al final el mensaje. Cambiar una coma en las instrucciones invalida la caché de todos, así que las versiones de las instrucciones se publican con cuidado (capítulo 15).</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que revisa por primera vez el costo por turno de su bot suele encontrar que las instrucciones del sistema crecieron sin control: cada área agregó sus párrafos, sus ejemplos y sus advertencias. La limpieza típica tiene tres pasos: separar las instrucciones generales de las de cada flujo, poner primero todo lo fijo para que la caché de instrucciones funcione y mover a la base de conocimiento lo que era contenido y no instrucción. El costo por conversación suele bajar de forma notable sin que los clientes noten diferencia, porque la respuesta no cambió: solo dejó de pagarse varias veces lo mismo.</p></div><div class="prose"><p>Con todas las piezas sobre la mesa, puedes armar tu propia conversación y ver qué palanca mueve más el costo. Prueba primero el historial y la caché de instrucciones; después, la proporción de turnos que van al modelo pequeño.</p></div><div class="lab" id="13-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Calculadora de costo por conversación</h3></div><p class="hint">Mueve los turnos por conversación, el tamaño de las instrucciones, el manejo del historial, los fragmentos recuperados, las herramientas, la proporción de turnos que van al modelo pequeño, la caché de instrucciones y la de respuestas. La barra muestra de qué está hecho el costo de una conversación, y abajo ves el costo de mil conversaciones. Al final, activa «Incluir las personas» y ajusta el traspaso y la resolución correcta: es el costo total por resolución de la última sección del capítulo.</p><style>
+[id="13-lab-1"] .c131-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+[id="13-lab-1"] .c131-bar i{display:block;height:100%;transition:width .3s;min-width:0}
+@media (prefers-reduced-motion: reduce){[id="13-lab-1"] .c131-bar i{transition:none}}
+[id="13-lab-1"] .c131-ley{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:4px 14px;font:500 .82rem var(--f-display)}
+[id="13-lab-1"] .c131-ley span{display:flex;align-items:center;gap:7px}
+[id="13-lab-1"] .c131-ley i{width:11px;height:11px;border-radius:3px;flex:none}
+[id="13-lab-1"] .c131-ley b{margin-left:auto;font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+[id="13-lab-1"] .c131-big{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:8px}
+[id="13-lab-1"] .c131-big div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+[id="13-lab-1"] .c131-big small{display:block;font:600 .66rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+[id="13-lab-1"] .c131-big b{font:700 1.05rem var(--f-mono)}
+[id="13-lab-1"] .c131-chk{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 .86rem var(--f-display)}
+[id="13-lab-1"] .c131-chk label{display:flex;gap:6px;align-items:center}
+</style>
+<div class="ctls">
+  <label class="ctl">Turnos por conversación <output id="c131-t-o"></output><input id="c131-t" type="range" min="2" max="15" step="1" value="6"></label>
+  <label class="ctl">Tokens de instrucciones <output id="c131-i-o"></output><input id="c131-i" type="range" min="500" max="4000" step="250" value="2500"></label>
+  <label class="ctl">Fragmentos recuperados por turno <output id="c131-r-o"></output><input id="c131-r" type="range" min="0" max="4" step="1" value="2"></label>
+  <label class="ctl">Llamadas a herramientas <output id="c131-h-o"></output><input id="c131-h" type="range" min="0" max="6" step="1" value="2"></label>
+  <label class="ctl">Turnos al modelo pequeño <output id="c131-s-o"></output><input id="c131-s" type="range" min="0" max="100" step="5" value="0"></label>
+  <label class="ctl">Turnos resueltos por la caché de respuestas <output id="c131-c-o"></output><input id="c131-c" type="range" min="0" max="40" step="5" value="0"></label>
+  <label class="ctl">Conversaciones con una plantilla de WhatsApp <output id="c131-w-o"></output><input id="c131-w" type="range" min="0" max="100" step="5" value="20"></label>
+</div>
+<div class="opciones">
+  <label>Historial que se envía
+    <select id="c131-hist"><option value="todo">completo, en cada turno</option><option value="ventana">solo los últimos 4 turnos</option><option value="resumen">resumen + últimos 2 turnos</option></select></label>
+</div>
+<div class="c131-chk">
+  <label><input type="checkbox" id="c131-pc"> Caché de instrucciones (prefijo fijo con descuento)</label>
+  <label><input type="checkbox" id="c131-per"> Incluir las personas</label>
+</div>
+<div class="ctls" id="c131-pers" hidden>
+  <label class="ctl">Conversaciones que pasan a una persona <output id="c131-p-o"></output><input id="c131-p" type="range" min="0" max="50" step="1" value="10"></label>
+  <label class="ctl">Resolución correcta <output id="c131-ok-o"></output><input id="c131-ok" type="range" min="40" max="95" step="1" value="80"></label>
+</div>
+<div class="c131-bar" id="c131-bar" role="img" aria-label="Composición del costo de una conversación"></div>
+<div class="c131-ley" id="c131-ley"></div>
+<div class="c131-big" id="c131-big" aria-live="polite"></div>
+<div class="readout texto" id="c131-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Precios ilustrativos, por millón de tokens: modelo grande US$ 3 de entrada y US$ 15 de salida; pequeño US$ 0,25 y US$ 1,25; con la caché de instrucciones, el prefijo fijo (instrucciones y 800 tokens de herramientas) se cobra al 15 % en promedio. Cada turno anterior suma 220 tokens de historial; cada fragmento, 350; cada respuesta, 120. Herramienta: una llamada extra al modelo más US$ 0,0005 de infraestructura. Plantilla de WhatsApp: US$ 0,02. Persona: US$ 3,50 por traspaso; cada pedido no resuelto genera un recontacto de US$ 1,50 en promedio.</p></div></section>
+<section><h2>El costo del canal: WhatsApp y los SMS</h2><div class="prose"><p>El modelo no es el único que cobra por mensaje. Desde julio de 2025, WhatsApp Business Platform cobra <b>por mensaje entregado</b>, con una tarifa que depende de la categoría de la plantilla (marketing, utilidad o autenticación) y del país del cliente. Las respuestas dentro de la ventana de 24 horas, los mensajes de servicio, tienen sus propias reglas: según la tabla de Meta vigente al escribir este capítulo, desde octubre de 2026 cada número de la empresa tiene un tramo gratuito mensual de mensajes de servicio y, pasado ese tramo, se cobran. Las tarifas y las reglas cambian cada pocos trimestres, así que la cuenta se hace siempre con la tabla publicada por Meta, no de memoria. Las categorías y la ventana se explican en el capítulo 8.</p><p>Para Pía, eso se traduce en decisiones de diseño con precio:</p><ul><li><b>Resolver dentro de la ventana.</b> Si Laura escribió hoy, el aviso de su ticket sale dentro de la ventana; si se espera a mañana, puede necesitar una plantilla pagada.</li><li><b>No avisar lo que no hace falta.</b> Los avisos proactivos del capítulo 11 se eligen por lo que le cambian al cliente; cada aviso de más es ruido y, fuera de la ventana, una plantilla cobrada.</li><li><b>El código de verificación por el canal más barato que sea seguro.</b> Un SMS internacional puede costar más que una plantilla de autenticación de WhatsApp en algunos países y menos en otros; además, el bombeo de SMS del capítulo 12 se paga aquí.</li><li><b>Los canales sin cobro por mensaje</b> (el widget web, Telegram) solo cuestan infraestructura, pero cada uno tiene su propio costo de operación.</li></ul></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Calcula el costo de canal de un mes de Pía</h3></div><p>Vas a usar la página pública de precios de WhatsApp Business Platform y una hoja de cálculo (cualquiera: en línea o en tu computadora). La página está en inglés; el traductor del navegador sirve.</p><ol class="steps"><li><span>Abre <a href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank" rel="noopener">la página de precios de WhatsApp Business Platform</a> y busca la tabla de tarifas (<i>rate card</i>). Anota, para tu país o el más cercano, la tarifa de una plantilla de utilidad y una de autenticación.</span></li><li><span>Busca en la misma página qué mensajes no se cobran y si hay un tramo gratuito de mensajes de servicio. Anota la regla y desde qué fecha rige.</span></li><li><span>En la hoja, supón un mes de Pía: 30.000 conversaciones, 6.000 avisos de vencimiento fuera de la ventana (utilidad) y 4.000 códigos de verificación (autenticación). Calcula el costo de canal del mes y el costo de canal por conversación.</span></li><li><span>Cambia los avisos de vencimiento a 2.000 (porque la mitad se envía mientras la ventana sigue abierta) y compara.</span></li></ol><p><b>Qué observar:</b> el costo del canal depende mucho del país y de cuántos mensajes salen fuera de la ventana, y puede igualar o superar al del modelo en un bot con muchos avisos. Fíjate también en la fecha de cada regla: la tabla cambia, y un presupuesto hecho con la del año pasado puede quedarse corto. Por eso el costo de canal se recalcula cada vez que Meta publica una tabla nueva.</p></div></section>
+<section><h2>Presupuestos, alertas y límites</h2><div class="prose"><p>Un costo que crece con cada mensaje puede dispararse por razones que nadie planeó: una avería masiva que triplica las conversaciones en una tarde, un flujo con un bucle que repite turnos, un ataque que abre miles de conversaciones falsas. La disciplina que lo controla tiene nombre en el mundo de la nube: <b>FinOps</b> (<i>Financial Operations</i>, la práctica de gestionar en conjunto el gasto variable de la tecnología entre finanzas, ingeniería y negocio). Para un bot se resume en tres capas:</p><ol class="steps"><li><span><b>Presupuesto</b> (<i>budget</i>) por mes, por canal y por área, con la proyección diaria: si a mitad de mes ya se gastó el 70 %, el problema se ve el día 15, no el 31.</span></li><li><span><b>Alertas</b> (<i>alerts</i>) en umbrales fijos, por ejemplo al 50 %, al 80 % y al 100 % del presupuesto, y también alertas por anomalía: el costo de la última hora es tres veces el de la misma hora de la semana pasada.</span></li><li><span><b>Límites</b> (<i>limits</i>) automáticos, que actúan sin esperar a una persona: un máximo de turnos, de tokens y de llamadas a herramientas por conversación (si se supera, la conversación pasa a un agente, porque algo anda mal), un límite de uso por cliente (capítulo 12) y un plan de qué hacer si se llega al tope del mes.</span></li></ol><p>Ese plan es una decisión de negocio, no técnica. <b>Apagar el bot</b> al llegar al tope es lo más simple y lo peor: los clientes se van al teléfono, que cuesta mucho más. Lo habitual es <b>degradar con elegancia</b> (<i>graceful degradation</i>): pasar los turnos a un modelo pequeño, o a un modo de menús con reglas que sigue resolviendo los pedidos de la primera ola (cuánto debo, enlace de pago, estado del ticket), y dejar el modelo grande solo para los traspasos.</p></div><figure class="fig fig-esquema" id="13-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" style="min-width:740px" role="img" aria-label="Gráfica del gasto acumulado de un mes contra el presupuesto: una avería el día 12 empina la curva, saltan las alertas del 50 y del 80 por ciento y al llegar al 100 por ciento Pía pasa a modo degradado en lugar de apagarse; abajo, qué funciona en cada modo">
+<line x1="70" y1="290.0" x2="640" y2="290.0" class="ln" style="stroke:var(--line)"/><text x="62" y="294.0" class="t t-s t-m" text-anchor="end">0</text>
+<line x1="70" y1="227.5" x2="640" y2="227.5" class="ln" style="stroke:var(--line)"/><text x="62" y="231.5" class="t t-s t-m" text-anchor="end">900</text>
+<line x1="70" y1="165.0" x2="640" y2="165.0" class="ln" style="stroke:var(--line)"/><text x="62" y="169.0" class="t t-s t-m" text-anchor="end">1.800</text>
+<line x1="70" y1="102.5" x2="640" y2="102.5" class="ln" style="stroke:var(--line)"/><text x="62" y="106.5" class="t t-s t-m" text-anchor="end">2.700</text>
+<line x1="70" y1="40.0" x2="640" y2="40.0" class="ln" style="stroke:var(--line)"/><text x="62" y="44.0" class="t t-s t-m" text-anchor="end">3.600</text>
+<text x="70.0" y="308" class="t t-s t-m" text-anchor="middle">día</text>
+<text x="165.0" y="308" class="t t-s t-m" text-anchor="middle">5</text>
+<text x="260.0" y="308" class="t t-s t-m" text-anchor="middle">10</text>
+<text x="355.0" y="308" class="t t-s t-m" text-anchor="middle">15</text>
+<text x="450.0" y="308" class="t t-s t-m" text-anchor="middle">20</text>
+<text x="545.0" y="308" class="t t-s t-m" text-anchor="middle">25</text>
+<text x="640.0" y="308" class="t t-s t-m" text-anchor="middle">30</text>
+<text x="70" y="24" class="t t-xs t-b t-m">GASTO ACUMULADO (US$)</text>
+<rect x="279.0" y="40" width="38.0" height="250" class="c-fis" style="opacity:.35;stroke:none"/><text x="298.0" y="54" class="t t-xs t-b k-fis" text-anchor="middle">AVERÍA</text>
+<line x1="70.0" y1="290.0" x2="640.0" y2="81.7" class="ln ln-d" style="stroke-width:1.6"/>
+<text x="526.0" y="141.3" class="t t-s t-m">presupuesto por días</text>
+<line x1="70" y1="81.7" x2="640" y2="81.7" class="ln s-warm" style="stroke-width:1.6"/><text x="76" y="75.7" class="t t-s t-b k-warm">tope del mes: US$ 3.000</text>
+<path d="M70.0 290.0 L89.0 283.2 L108.0 276.5 L127.0 269.7 L146.0 262.9 L165.0 256.1 L184.0 251.6 L203.0 247.1 L222.0 240.3 L241.0 233.6 L260.0 226.8 L279.0 220.0 L298.0 193.6 L317.0 176.0 L336.0 171.5 L355.0 164.7 L374.0 158.0 L393.0 151.2 L412.0 144.4 L431.0 137.7 L450.0 133.1 L469.0 128.6 L488.0 121.9 L507.0 115.1 L526.0 108.3 L545.0 101.5 L564.0 94.8 L583.0 90.3 L602.0 85.7 L621.0 79.0" class="ln s-red" style="stroke-width:2.6"/>
+<path d="M621.0 79.0 L640.0 78.6" class="ln s-enl" style="stroke-width:2.6"/>
+<circle cx="317.0" cy="176.0" r="5" class="caja s-warm" style="fill:var(--warm)"/><text x="309.0" y="168.0" class="t t-s t-b k-warm" text-anchor="end">alerta 50 % · día 13</text>
+<circle cx="488.0" cy="121.9" r="5" class="caja s-warm" style="fill:var(--warm)"/><text x="480.0" y="113.9" class="t t-s t-b k-warm" text-anchor="end">alerta 80 % · día 22</text>
+<circle cx="621.0" cy="79.0" r="5" class="caja s-warm" style="fill:var(--warm)"/><text x="613.0" y="71.0" class="t t-s t-b k-warm" text-anchor="end">100 %: modo degradado · día 29</text>
+<rect x="670" y="40" width="220" height="250" rx="10" class="caja"/>
+<text x="682" y="62" class="t t-b">Qué hace cada umbral</text>
+<text x="682" y="88" class="t t-s t-b k-warm">50 %</text>
+<text x="740" y="88" class="t t-s">aviso al dueño del bot</text>
+<text x="682" y="110" class="t t-s t-b k-warm">80 %</text>
+<text x="740" y="110" class="t t-s">aviso a finanzas y revisión</text>
+<text x="740" y="132" class="t t-s">del pico: ¿es real o abuso?</text>
+<text x="682" y="154" class="t t-s t-b k-warm">100 %</text>
+<text x="740" y="154" class="t t-s">límite automático:</text>
+<text x="740" y="176" class="t t-s">modo degradado</text>
+<text x="682" y="198" class="t t-s t-b k-warm">siempre</text>
+<text x="740" y="198" class="t t-s">tope por conversación:</text>
+<text x="740" y="220" class="t t-s">turnos, tokens, herramientas</text>
+<line x1="10" y1="322" x2="890" y2="322" class="ln"/>
+<text x="10" y="346" class="t t-b">Qué sigue funcionando en cada modo</text>
+<rect x="10" y="360" width="212" height="86" rx="10" class="c-red"/>
+<text x="22" y="384" class="t t-b">Normal</text><text x="22" y="406" class="t t-s">modelo grande donde hace falta</text><text x="22" y="424" class="t t-s t-m">todo el catálogo</text>
+<rect x="232" y="360" width="212" height="86" rx="10" class="c-enl"/>
+<text x="244" y="384" class="t t-b">Modelo pequeño</text><text x="244" y="406" class="t t-s">deuda, pago, tickets, avisos</text><text x="244" y="424" class="t t-s t-m">reclamos van antes a personas</text>
+<rect x="454" y="360" width="212" height="86" rx="10" class="caja"/>
+<text x="466" y="384" class="t t-b">Menús con reglas</text><text x="466" y="406" class="t t-s">botones: deuda, pago, ticket</text><text x="466" y="424" class="t t-s t-m">el lenguaje libre va a personas</text>
+<rect x="676" y="360" width="212" height="86" rx="10" class="caja s-warm"/>
+<text x="688" y="384" class="t t-b">Apagado</text><text x="688" y="406" class="t t-s">nada: todo al teléfono</text><text x="688" y="424" class="t t-s t-m">el modo más caro de todos</text>
+</svg></div><figcaption><b>Un mes de gasto con presupuesto, alertas y límite.</b> El eje horizontal son los días del mes y el vertical, el gasto acumulado. La línea punteada es el presupuesto repartido por días; la línea de color, el gasto real. El día 12, una avería masiva triplica las conversaciones y la curva se empina. Las marcas señalan las alertas del 50 % y del 80 %, y la del 100 %, donde Pía pasa al modo degradado en lugar de apagarse. A la derecha, qué hace cada umbral; abajo, qué sigue funcionando en cada modo y qué deja de hacer.</figcaption></figure><div class="lab" id="13-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Presupuesto en vivo</h3></div><p class="hint">Avanza el mes día por día (o con «Reproducir») y mira cómo crece el gasto contra el presupuesto. Provoca un pico de tráfico por una avería masiva o un ataque de conversaciones falsas, ajusta el presupuesto y elige qué hace Pía al llegar al tope: apagarse, pasar a un modelo pequeño o pasar a menús con reglas. Activa o desactiva el límite de uso por cliente. Abajo verás qué alertas saltaron y cuándo, cuánto se gastó y cuántos clientes terminaron llamando por teléfono.</p><style>
+[id="13-lab-2"] .c132-svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:8px}
+[id="13-lab-2"] .c132-svg text{font:500 11px var(--f-display);fill:var(--muted)}
+[id="13-lab-2"] .c132-svg .eje{stroke:var(--line);stroke-width:1}
+[id="13-lab-2"] .c132-svg .pres{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+[id="13-lab-2"] .c132-svg .tope{stroke:var(--warm);stroke-width:1.5;fill:none}
+[id="13-lab-2"] .c132-svg .real{stroke:var(--accent);stroke-width:2.5;fill:none}
+[id="13-lab-2"] .c132-svg .deg{stroke:var(--good);stroke-width:2.5;fill:none}
+[id="13-lab-2"] .c132-svg .ev{fill:var(--warm-soft)}
+[id="13-lab-2"] .c132-svg .al{fill:var(--warm)}
+[id="13-lab-2"] .c132-svg .al-t{fill:var(--warm);font-weight:700}
+[id="13-lab-2"] .c132-dia{font:700 1.05rem var(--f-mono);color:var(--accent)}
+[id="13-lab-2"] .c132-chk{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 .86rem var(--f-display);align-items:center}
+[id="13-lab-2"] .c132-chk label{display:flex;gap:6px;align-items:center}
+</style>
+<div class="ctls">
+  <label class="ctl">Presupuesto del mes (US$) <output id="c132-b-o"></output><input id="c132-b" type="range" min="1500" max="6000" step="100" value="3200"></label>
+</div>
+<div class="opciones">
+  <label>Al llegar al tope, Pía…
+    <select id="c132-modo"><option value="reglas">pasa a menús con reglas</option><option value="peq">pasa a un modelo pequeño</option><option value="apagar">se apaga</option></select></label>
+</div>
+<div class="c132-chk">
+  <span style="color:var(--muted)">Eventos del mes:</span>
+  <div class="btns"><button type="button" id="c132-av" aria-pressed="false">Avería masiva el día 12</button><button type="button" id="c132-at" aria-pressed="false">Ataque el día 20</button></div>
+  <label><input type="checkbox" id="c132-lim" checked> Límite de uso por cliente</label>
+</div>
+<div class="btns"><button type="button" class="primary" id="c132-play">Reproducir el mes</button><button type="button" id="c132-sig">Siguiente día</button><button type="button" id="c132-fin">Ver el mes completo</button><span class="c132-dia" id="c132-dia" aria-live="polite"></span></div>
+<svg class="c132-svg" id="c132-svg" viewBox="0 0 640 300" role="img" aria-label="Gasto acumulado del mes contra el presupuesto"></svg>
+<div class="legend"><span><i style="background:var(--muted)"></i>Presupuesto repartido por días</span><span><i style="background:var(--accent)"></i>Gasto acumulado</span><span><i style="background:var(--good)"></i>Gasto en modo degradado</span><span><i style="background:var(--warm)"></i>Tope y alertas</span></div>
+<div class="readout texto" id="c132-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Supuestos del ejemplo: 1.500 conversaciones en día hábil y 1.000 en fin de semana, a US$ 0,065 cada una (modelo y canal). La avería triplica las conversaciones dos días y las alarga un 30 %. El ataque abre 9.000 conversaciones falsas al día durante dos días, a US$ 0,03 cada una; el límite por cliente frena el 95 %. En modo degradado: modelo pequeño US$ 0,015 por conversación y un 3 % más de traspasos; menús con reglas US$ 0,004 y un 10 % pasa a una persona; apagado, el 35 % llama por teléfono. Cada contacto humano cuesta US$ 3,50.</p></div></section>
+<section><h2>El costo total por resolución correcta</h2><div class="prose"><p>Todo lo anterior mide el costo del bot. Pero la pregunta que importa al negocio es otra: <b>¿cuánto cuesta resolver bien un pedido?</b> Para responderla hay que sumar lo que el bot no paga directamente:</p><div class="math-display">\text{costo por resolución correcta} = \frac{\text{costo del bot} + \text{costo de los traspasos} + \text{costo de los recontactos}}{\text{conversaciones resueltas correctamente}}</div><p>El costo de los traspasos es el tiempo de los agentes que reciben las conversaciones que el bot no cerró. El de los recontactos es el de los clientes que vuelven, por el bot o por el teléfono, porque el primer intento no los resolvió (capítulo 14). Y el denominador no son las conversaciones, sino las <b>resueltas correctamente</b>: un bot barato que no resuelve no es barato.</p><p>Esa cuenta cambia decisiones. Un modelo más caro que resuelve más a la primera puede bajar el costo por resolución, porque evita traspasos de varios dólares cada uno. Y al revés: un bot que se ahorra centavos de modelo pero deja a la mitad de los clientes en un callejón sin salida cuesta más que no tener bot. Vuelve a la calculadora de este capítulo, activa «Incluir las personas» y compruébalo: baja la resolución correcta cinco puntos y mira cuánto sube el costo por resolución, aunque el costo del bot no cambie.</p></div><div class="ml"><b>En la práctica</b><p><b>Jetblack, de Walmart, 2018-2020.</b> Walmart lanzó Jetblack, un servicio de compras por mensajes de texto para clientes de altos ingresos de Nueva York: el cliente escribía lo que necesitaba y el servicio lo compraba y lo entregaba. Detrás de la conversación había tecnología, pero sobre todo personas que atendían y resolvían los pedidos. El servicio tenía una cuota mensual alta y aun así no logró un costo por pedido sostenible; Walmart lo cerró a comienzos de 2020, tras intentar sin éxito encontrarle socios. La lección para un bot es el costo total por resolución: una conversación que parece automática pero que, en la práctica, resuelve una persona, cuesta lo que cuesta esa persona, y esa cuenta hay que hacerla antes de escalar, no después.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>costo medido por conversación y por resolución, con un modelo según la tarea y un presupuesto que avisa.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué el turno diez de una conversación cuesta más que el primero, si el cliente escribió lo mismo de largo?</summary><p>Porque en cada turno se reenvía el historial: el turno diez lleva los nueve anteriores, además de las instrucciones, las herramientas y los fragmentos. La entrada crece con cada turno.</p></details><details><summary>¿Qué pieza de la entrada suele ser más grande que el mensaje del cliente, y cómo se reduce?</summary><p>Las instrucciones del sistema y las definiciones de herramientas. Se reducen separando las generales de las de cada flujo, enviando solo las herramientas del estado actual y ordenando lo fijo al principio para aprovechar la caché de instrucciones.</p></details><details><summary>¿Por qué no basta con el costo promedio por conversación?</summary><p>Porque el costo se concentra en pocas conversaciones largas o con traspaso. Hay que atribuirlo por conversación, canal, flujo y área, y mirar la mediana y el percentil 95.</p></details><details><summary>¿Qué nunca debe guardarse en la caché de respuestas?</summary><p>Nada personal ni que cambie con una acción del cliente, como el saldo o el estado de un ticket. Esos datos se consultan en vivo.</p></details><details><summary>Al llegar al tope del presupuesto, ¿por qué no conviene apagar el bot?</summary><p>Porque los clientes se van al teléfono o a otro canal más caro. Es mejor degradar: pasar a un modelo pequeño o a menús con reglas que siguen resolviendo los pedidos frecuentes.</p></details><details><summary>¿Por qué un modelo más caro puede bajar el costo por resolución correcta?</summary><p>Porque si resuelve más pedidos a la primera, evita traspasos a personas y recontactos, que cuestan mucho más que la diferencia de precio del modelo.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué algoritmo usan muchos tokenizadores para partir el texto (BPE, <i>byte pair encoding</i>) y por qué las palabras frecuentes quedan en un solo token?<small>Pista: busca «byte pair encoding tokenización».</small></li><li>¿Qué es el costo marginal y en qué se diferencia del costo promedio cuando se decide atender un cliente más?<small>Pista: busca «costo marginal frente a costo medio».</small></li><li>¿Qué es la ley de Pareto y por qué aparece tan seguido en la distribución de costos y de contactos?<small>Pista: busca «principio de Pareto 80/20 distribución de cola larga».</small></li><li>¿Qué es la elasticidad de la demanda y cómo podría cambiar el volumen de conversaciones si el bot resuelve más rápido?<small>Pista: busca «paradoja de Jevons» y «demanda inducida».</small></li><li>¿Qué son los modelos destilados y cómo se entrena un modelo pequeño a partir de uno grande?<small>Pista: busca «knowledge distillation».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank" rel="noopener">Precios de WhatsApp Business Platform <small>las categorías, las tarifas por país y los mensajes que no se cobran</small></a><a class="vid" href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" target="_blank" rel="noopener">Caché de instrucciones en la API de Anthropic <small>un ejemplo del mercado de cómo se cobra el prefijo repetido</small></a><a class="vid" href="https://platform.openai.com/docs/guides/prompt-caching" target="_blank" rel="noopener">Caché de instrucciones en la API de OpenAI <small>otro proveedor, con reglas parecidas</small></a><a class="vid" href="https://www.finops.org/introduction/what-is-finops/" target="_blank" rel="noopener">Qué es FinOps <small>la práctica de gestionar el gasto variable de la tecnología</small></a><a class="vid" href="https://en.wikipedia.org/wiki/Jetblack" target="_blank" rel="noopener">Jetblack <small>el servicio de compras por mensajes que no logró un costo sostenible</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const P={gi:3e-6,go:15e-6,pi:.25e-6,po:1.25e-6};
+  const C=[['Entrada fija (instrucciones y herramientas)','--c-tra'],['Entrada variable (historial, fragmentos, mensaje)','--c-red'],['Salida del modelo','--c-apl'],['Herramientas y búsqueda','--d-sis'],['Canal (plantillas)','--c-fis'],['Personas (traspasos y recontactos)','--warm']];
+  const v=id=>+q('#c131-'+id).value;
+  const usd=x=>'US$ '+(x<0.1?x.toFixed(4):x.toFixed(2)).replace('.',',');
+  const mil=x=>String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  function hist(k,m){const p=k-1;if(m==='todo')return p*220;if(m==='ventana')return Math.min(p,4)*220;return p<=2?p*220:250+2*220;}
+  function calc(){
+    const T=v('t'),I=v('i'),R=v('r'),H=v('h'),s=v('s')/100,c=v('c')/100,w=v('w')/100,m=q('#c131-hist').value,pc=q('#c131-pc').checked;
+    const fijo=I+800,fpc=pc?.15:1;
+    let fix=0,vari=0,sal=0,tokIn=0,tokFijo=0;
+    const pin=(1-s)*P.gi+s*P.pi,pout=(1-s)*P.go+s*P.po;
+    for(let k=1;k<=T;k++){
+      const va=hist(k,m)+R*350+40;
+      fix+=fijo*fpc*pin;vari+=va*pin;sal+=120*pout;tokIn+=fijo+va;tokFijo+=fijo;
+    }
+    // herramientas: cada una es una llamada extra con la entrada de un turno medio
+    const medFijo=fijo, medVar=(tokIn-tokFijo)/T;
+    fix+=H*medFijo*fpc*pin;vari+=H*medVar*pin;sal+=H*60*pout;tokIn+=H*(medFijo+medVar);
+    fix*=(1-c);vari*=(1-c);sal*=(1-c);
+    const herr=H*0.0005+T*(R>0?40*0.02e-6:0);
+    const canal=w*0.02;
+    const bot=fix+vari+sal+herr+canal;
+    let pers=0,porRes=null;
+    if(q('#c131-per').checked){const tr=v('p')/100,ok=v('ok')/100;pers=tr*3.5+(1-ok)*1.5;porRes=(bot+pers)/ok;}
+    return {T,fix,vari,sal,herr,canal,pers,bot,porRes,tokIn,tokFijo};
+  }
+  function pintar(){
+    q('#c131-t-o').textContent=v('t');q('#c131-i-o').textContent=mil(v('i'));q('#c131-r-o').textContent=v('r');q('#c131-h-o').textContent=v('h');
+    q('#c131-s-o').textContent=v('s')+' %';q('#c131-c-o').textContent=v('c')+' %';q('#c131-w-o').textContent=v('w')+' %';
+    q('#c131-p-o').textContent=v('p')+' %';q('#c131-ok-o').textContent=v('ok')+' %';
+    q('#c131-pers').hidden=!q('#c131-per').checked;
+    const r=calc(),parts=[r.fix,r.vari,r.sal,r.herr,r.canal,r.pers],tot=parts.reduce((a,b)=>a+b,0)||1;
+    q('#c131-bar').innerHTML=parts.map((x,i)=>'<i style="width:'+(x/tot*100)+'%;background:var('+C[i][1]+')"></i>').join('');
+    q('#c131-ley').innerHTML=parts.map((x,i)=>(i===5&&!q('#c131-per').checked)?'':'<span><i style="background:var('+C[i][1]+')"></i>'+C[i][0]+'<b>'+usd(x)+'</b></span>').join('');
+    let big='<div><small>Costo del bot por conversación</small><b>'+usd(r.bot)+'</b></div><div><small>Mil conversaciones</small><b>US$ '+(r.bot*1000).toFixed(2).replace('.',',')+'</b></div><div><small>Tokens de entrada por conversación</small><b>'+mil(r.tokIn)+'</b></div>';
+    if(r.porRes!==null)big+='<div><small>Costo total por resolución correcta</small><b>'+usd(r.porRes)+'</b></div>';
+    q('#c131-big').innerHTML=big;
+    const L=[];
+    const pf=r.tokFijo/r.tokIn*100;
+    L.push('<span>El prefijo fijo es el '+Math.round(pf)+' % de los tokens de entrada; el mensaje de Laura, menos del 1 %.</span>');
+    if(q('#c131-hist').value==='todo'&&r.T>=8)L.push('<span class="warn">Con el historial completo y '+r.T+' turnos, cada turno arrastra todos los anteriores: prueba la ventana o el resumen.</span>');
+    if(!q('#c131-pc').checked&&pf>50)L.push('<span class="warn">Más de la mitad de lo que envías se repite igual en cada turno. La caché de instrucciones lo cobraría con descuento.</span>');
+    if(r.porRes!==null){const pp=r.pers/(r.bot+r.pers)*100;L.push(pp>80?'<span class="warn">Las personas son el '+Math.round(pp)+' % del costo total: subir la resolución correcta o bajar los traspasos pesa mucho más que cualquier ahorro de tokens.</span>':'<span class="ok">El costo del bot pesa poco frente al de las personas; vigila sobre todo la resolución correcta.</span>');}
+    else if(r.canal>r.fix+r.vari+r.sal)L.push('<span>El canal ya cuesta más que el modelo: revisa cuántos avisos salen fuera de la ventana.</span>');
+    else if(L.length===1)L.push('<span class="ok">Mueve una palanca a la vez y mira cuál baja más el costo sin tocar lo que el cliente ve.</span>');
+    q('#c131-out').innerHTML=L.join('');
+  }
+  document.querySelectorAll('[id^="c131-"]').forEach(e=>{if(/INPUT|SELECT/.test(e.tagName))e.addEventListener('input',pintar);});
+  q('#c131-hist').addEventListener('change',pintar);
+  pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  let dia=30,timer=null;
+  const av=()=>q('#c132-av').getAttribute('aria-pressed')==='true', at=()=>q('#c132-at').getAttribute('aria-pressed')==='true';
+  function simular(){
+    const B=+q('#c132-b').value,modo=q('#c132-modo').value,lim=q('#c132-lim').checked;
+    let acum=0,deg=false,degDia=null,al50=null,al80=null,humanos=0,convDeg=0,falsas=0;const serie=[];
+    for(let d=1;d<=30;d++){
+      const fin=(d%7===6||d%7===0);
+      let conv=fin?1000:1500,cpc=0.065;
+      if(av()&&(d===12||d===13)){conv*=3;cpc*=1.3;}
+      let fake=0;if(at()&&(d===20||d===21)){fake=9000*(lim?0.05:1);falsas+=fake;}
+      let gasto;
+      if(!deg){gasto=conv*cpc+fake*0.03;}
+      else{
+        convDeg+=conv;
+        if(modo==='peq'){gasto=conv*0.015+fake*0.01;humanos+=conv*0.03;}
+        else if(modo==='reglas'){gasto=conv*0.004+fake*0.001;humanos+=conv*0.10;}
+        else{gasto=0;humanos+=conv*0.35;}
+      }
+      acum+=gasto;
+      if(al50===null&&acum>=B*.5)al50=d;
+      if(al80===null&&acum>=B*.8)al80=d;
+      if(!deg&&acum>=B){deg=true;degDia=d;}
+      serie.push({d,acum,deg:deg&&d>degDia});
+    }
+    return {B,serie,al50,al80,degDia,humanos,convDeg,falsas,modo};
+  }
+  function pintar(){
+    q('#c132-b-o').textContent=q('#c132-b').value.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    const r=simular(),S=r.serie.slice(0,dia);
+    const W=640,H=300,x0=48,x1=624,y0=262,y1=16;
+    const ymax=Math.max(r.B*1.35,r.serie[29].acum*1.1);
+    const X=d=>x0+(d)/30*(x1-x0), Y=v=>y0-(v/ymax)*(y0-y1);
+    let g='';
+    for(let k=0;k<=4;k++){const v=ymax*k/4;g+='<line class="eje" x1="'+x0+'" y1="'+Y(v)+'" x2="'+x1+'" y2="'+Y(v)+'"/><text x="'+(x0-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+String(Math.round(v/100)*100).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+'</text>';}
+    for(let d=0;d<=30;d+=5)g+='<text x="'+X(d)+'" y="'+(y0+16)+'" text-anchor="middle">'+(d===0?'día':d)+'</text>';
+    if(av())g+='<rect class="ev" x="'+X(11)+'" y="'+y1+'" width="'+(X(13)-X(11))+'" height="'+(y0-y1)+'"/><text x="'+X(12)+'" y="'+(y1+12)+'" text-anchor="middle">avería</text>';
+    if(at())g+='<rect class="ev" x="'+X(19)+'" y="'+y1+'" width="'+(X(21)-X(19))+'" height="'+(y0-y1)+'"/><text x="'+X(20)+'" y="'+(y1+12)+'" text-anchor="middle">ataque</text>';
+    g+='<line class="pres" x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(30)+'" y2="'+Y(r.B)+'"/>';
+    g+='<line class="tope" x1="'+x0+'" y1="'+Y(r.B)+'" x2="'+x1+'" y2="'+Y(r.B)+'"/><text x="'+(x0+4)+'" y="'+(Y(r.B)-5)+'" class="al-t">tope US$ '+String(r.B).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+'</text>';
+    let pN='M'+X(0)+' '+Y(0),pD='';
+    S.forEach((p,i)=>{if(!p.deg)pN+=' L'+X(p.d)+' '+Y(p.acum);else{if(!pD){const prev=i?S[i-1]:{d:0,acum:0};pD='M'+X(prev.d)+' '+Y(prev.acum);}pD+=' L'+X(p.d)+' '+Y(p.acum);}});
+    g+='<path class="real" d="'+pN+'"/>'+(pD?'<path class="deg" d="'+pD+'"/>':'');
+    [[r.al50,'50 %'],[r.al80,'80 %'],[r.degDia,'100 %']].forEach(([d,t])=>{if(d&&d<=dia){const p=r.serie[d-1];g+='<circle class="al" cx="'+X(d)+'" cy="'+Y(p.acum)+'" r="5"/><text x="'+(X(d)+7)+'" y="'+(Y(p.acum)+14)+'" class="al-t">'+t+'</text>';}});
+    q('#c132-svg').innerHTML=g;
+    q('#c132-dia').textContent='día '+dia+' de 30';
+    const fmt=x=>String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    const ult=S[S.length-1].acum;
+    const L=['<span>Gasto al día '+dia+': <b>US$ '+fmt(ult)+'</b> de US$ '+fmt(r.B)+' · alertas: 50 % '+(r.al50&&r.al50<=dia?'el día '+r.al50:'—')+' · 80 % '+(r.al80&&r.al80<=dia?'el día '+r.al80:'—')+' · tope '+(r.degDia&&r.degDia<=dia?'el día '+r.degDia:'—')+'</span>'];
+    if(dia===30){
+      const hum=r.humanos*3.5;
+      if(!r.degDia)L.push('<span class="ok">El mes cerró dentro del presupuesto.'+(r.falsas?' El ataque costó US$ '+fmt(r.falsas*0.03)+' en conversaciones falsas.':'')+'</span>');
+      else if(r.modo==='apagar')L.push('<span class="warn">Pía se apagó el día '+r.degDia+'. '+fmt(r.convDeg)+' conversaciones quedaron sin bot y unas '+fmt(r.humanos)+' terminaron en el teléfono: US$ '+fmt(hum)+' en agentes, mucho más de lo que se ahorró en el modelo.</span>');
+      else L.push('<span class="ok">Desde el día '+r.degDia+', Pía siguió atendiendo en modo degradado ('+(r.modo==='peq'?'modelo pequeño':'menús con reglas')+'): '+fmt(r.convDeg)+' conversaciones, con unas '+fmt(r.humanos)+' derivadas a personas (US$ '+fmt(hum)+').</span>');
+      if(at()&&!q('#c132-lim').checked)L.push('<span class="warn">Sin límite por cliente, el ataque metió '+fmt(r.falsas)+' conversaciones falsas: se pagan igual que las reales.</span>');
+      if(r.al80&&r.degDia&&r.degDia-r.al80>=2)L.push('<span>Entre la alerta del 80 % y el tope pasaron '+(r.degDia-r.al80)+' días: tiempo para que una persona decida antes que el límite automático.</span>');
+    }
+    q('#c132-out').innerHTML=L.join('');
+  }
+  function parar(){if(timer){clearInterval(timer);timer=null;q('#c132-play').textContent='Reproducir el mes';}}
+  q('#c132-play').addEventListener('click',()=>{
+    if(timer){parar();return;}
+    const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){dia=30;pintar();return;}
+    dia=1;pintar();q('#c132-play').textContent='Pausar';
+    timer=setInterval(()=>{dia++;pintar();if(dia>=30)parar();},220);
+  });
+  q('#c132-sig').addEventListener('click',()=>{parar();dia=dia>=30?1:dia+1;pintar();});
+  q('#c132-fin').addEventListener('click',()=>{parar();dia=30;pintar();});
+  [['#c132-av'],['#c132-at']].forEach(([s])=>q(s).addEventListener('click',()=>{const b=q(s);b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');pintar();}));
+  ['#c132-b','#c132-modo','#c132-lim'].forEach(s=>q(s).addEventListener('input',pintar));
+  q('#c132-modo').addEventListener('change',pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>

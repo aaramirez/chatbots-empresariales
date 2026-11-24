@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flujos y respaldo · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="flujos-y-respaldo">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 04 DE 17</span><h1>Flujos, especificación de casos de uso y manejo de errores</h1><p class="lede">Un bot no se queda trabado por falta de inteligencia: se queda trabado porque nadie escribió qué hacer cuando el cliente responde algo inesperado. Este capítulo convierte un pedido en un flujo especificado, con sus caminos de excepción y un respaldo que termina en una persona.</p></header>
+<section><div class="prose"><p>Laura escribe «no tengo internet». En el capítulo 2, el clasificador reconoció la intención <code>reportar_falla</code>. En el capítulo 3, aprendiste a escribir cada mensaje. Falta lo del medio: <b>qué pasa después, en qué orden y qué hace el bot cuando algo no sale como se esperaba</b>. Eso es un flujo.</p><p>La mayoría de los bots que fracasan no fallan en el camino feliz, el recorrido en que todo sale bien. Fallan en lo que nadie diseñó: el cliente responde «no sé», el sistema de tickets no contesta, la dirección registrada es otra. Este capítulo enseña a diseñar esos caminos antes de construir, no a improvisarlos en producción.</p></div></section>
+<section><h2>Del pedido del usuario al flujo: nodos, ramas, condiciones y salidas</h2><div class="prose"><p>Un <b>flujo conversacional</b> (<i>conversational flow</i>) es la secuencia estructurada de pasos con que el bot resuelve un pedido. Se dibuja como un grafo: <b>nodos</b> (<i>nodes</i>), que son los pasos, unidos por <b>ramas</b> (<i>branches</i>), que son los caminos posibles según lo que pase en cada paso.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en las instrucciones de un electrodoméstico para resolver problemas: «¿La luz está encendida? Si no, revise el enchufe. Si sí, ¿hace ruido? Si hace ruido, llame al servicio técnico». Cada pregunta es un nodo, cada «si» es una rama, y todas terminan en algo: está resuelto o hay que llamar a alguien. Un buen manual no tiene ninguna rama que termine en «...y entonces no sabemos». Un buen flujo tampoco.</p></div><div class="prose"><p>En los flujos de Pía hay seis tipos de nodo:</p><ul><li><b>Mensaje</b>: el bot dice algo y sigue. «Lamento la falla».</li><li><b>Pregunta</b>: el bot pide algo y espera la respuesta. «¿Qué servicio falla? [Internet] [TV]». Cada respuesta posible es una rama.</li><li><b>Condición</b> (<i>condition</i>): el bot decide con un dato, sin preguntar. «¿Hay una avería masiva en la zona?».</li><li><b>Acción</b> (<i>action</i>): el bot llama a un sistema. «Crear el ticket». Toda acción tiene al menos dos ramas: salió bien o falló.</li><li><b>Salida de éxito</b>: el pedido quedó resuelto y el flujo termina.</li><li><b>Salida humana</b>: el caso pasa a una persona con el contexto (el traspaso del capítulo 9).</li></ul></div><figure class="fig fig-esquema" id="04-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" style="min-width:720px" role="img" aria-label="Los seis tipos de nodo de un flujo (mensaje, pregunta, condición, acción con un sistema, salida de éxito y salida humana) y un tramo del flujo reportar una falla armado con ellos, en el que todas las ramas terminan en una salida">
+  <defs>
+    <marker id="d04a-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <text x="14" y="20" class="t t-xs t-b t-m">LAS SEIS PIEZAS</text>
+  <g class="t t-s" text-anchor="middle">
+    <rect x="10" y="30" width="140" height="44" rx="8" class="caja"/><text x="80" y="57" class="t-b">Mensaje</text>
+    <text x="80" y="92" class="t-m">dice algo y sigue</text>
+    <rect x="158" y="30" width="140" height="44" rx="8" class="c-fis"/><text x="228" y="57" class="t-b k-fis">Pregunta</text>
+    <text x="228" y="92" class="t-m">espera una respuesta</text>
+    <polygon points="376,28 446,52 376,76 306,52" class="c-red" style="stroke-dasharray:6 3"/><text x="376" y="57" class="t-b k-red">Condición</text>
+    <text x="376" y="92" class="t-m">decide con un dato</text>
+    <rect x="454" y="30" width="140" height="44" rx="3" class="d-sis"/><text x="524" y="57" class="t-b k-sis">Acción</text>
+    <text x="524" y="92" class="t-m">llama a un sistema</text>
+    <rect x="602" y="30" width="140" height="44" rx="22" class="caja" style="stroke:var(--good);stroke-width:2"/><text x="672" y="57" class="t-b k-enl">Salida de éxito</text>
+    <text x="672" y="92" class="t-m">el pedido quedó resuelto</text>
+    <rect x="750" y="30" width="140" height="44" rx="22" class="caja s-warm" style="stroke-width:2"/><text x="820" y="57" class="t-b k-warm">Salida humana</text>
+    <text x="820" y="92" class="t-m">pasa a una persona</text>
+  </g>
+
+  <line x1="10" y1="112" x2="890" y2="112" class="ln" style="stroke:var(--line)"/>
+  <text x="14" y="134" class="t t-xs t-b t-m">UN TRAMO DE «REPORTAR UNA FALLA»</text>
+
+  <g class="t t-s" text-anchor="middle">
+    <rect x="10" y="150" width="140" height="48" rx="8" class="caja"/><text x="80" y="170" class="t-b">Lamento la falla.</text><text x="80" y="186">Confirmo que eres tú.</text>
+    <rect x="190" y="150" width="150" height="48" rx="3" class="d-sis"/><text x="265" y="170" class="t-b k-sis">Verificar identidad</text><text x="265" y="186">código por SMS</text>
+    <polygon points="460,140 540,174 460,208 380,174" class="c-red" style="stroke-dasharray:6 3"/><text x="460" y="170" class="t-b k-red">¿Avería</text><text x="460" y="184" class="t-b k-red">masiva?</text>
+    <rect x="590" y="150" width="150" height="48" rx="8" class="c-fis"/><text x="665" y="170" class="t-b k-fis">¿Reiniciaste</text><text x="665" y="186" class="t-b k-fis">el equipo?</text>
+
+    <rect x="190" y="282" width="150" height="44" rx="22" class="caja s-warm" style="stroke-width:2"/><text x="265" y="309" class="t-b k-warm">Persona</text>
+    <rect x="385" y="282" width="150" height="44" rx="22" class="caja" style="stroke:var(--good);stroke-width:2"/><text x="460" y="302" class="t-b k-enl">Aviso de avería</text><text x="460" y="317">hora estimada</text>
+    <rect x="590" y="282" width="150" height="44" rx="22" class="caja" style="stroke:var(--good);stroke-width:2"/><text x="665" y="309" class="t-b k-enl">Resuelto</text>
+    <rect x="770" y="150" width="120" height="48" rx="8" class="caja" style="stroke-dasharray:5 4"/><text x="830" y="170">dirección,</text><text x="830" y="186">ticket… (lab 1)</text>
+  </g>
+  <g class="t t-s">
+    <line x1="150" y1="174" x2="187" y2="174" class="ln" marker-end="url(#d04a-m)"/>
+    <line x1="340" y1="174" x2="377" y2="174" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="343" y="164">verificada</text>
+    <line x1="265" y1="198" x2="265" y2="279" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="272" y="246">3 intentos fallidos</text>
+    <line x1="460" y1="208" x2="460" y2="279" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="467" y="246">sí</text>
+    <line x1="540" y1="174" x2="587" y2="174" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="556" y="164">no</text>
+    <line x1="665" y1="198" x2="665" y2="279" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="672" y="246">ya funciona</text>
+    <line x1="740" y1="174" x2="767" y2="174" class="ln" marker-end="url(#d04a-m)"/>
+    <text x="742" y="140">sigue igual</text>
+  </g>
+  <text x="450" y="362" class="t t-s t-m" text-anchor="middle">Toda acción tiene al menos dos ramas, y toda rama termina en otro nodo o en una salida.</text>
+</svg></div><figcaption><b>Las piezas de un flujo.</b> Arriba, los seis tipos de nodo con su forma y su color: mensaje, pregunta, condición, acción con un sistema, salida de éxito y salida humana. Abajo, un tramo del flujo «reportar una falla» armado con esas piezas. Fíjate en que la acción «verificar identidad» tiene dos ramas (verificada y fallida) y en que todas las ramas terminan en una salida: ninguna queda en el aire.</figcaption></figure><div class="prose"><p>La regla que ordena todo el capítulo: <b>cada nodo tiene definido qué pasa con cada respuesta posible, incluida la que no esperabas</b>. Si una pregunta tiene botones [Sí] y [No], el flujo también dice qué hacer si el cliente escribe «no sé» o «mañana te digo».</p></div></section>
+<section><h2>Árboles de decisión: hasta dónde crecen antes de volverse inmanejables</h2><div class="prose"><p>Un flujo con solo preguntas y condiciones, sin vueltas atrás, es un <b>árbol de decisión</b> (<i>decision tree</i>). Los árboles son fáciles de leer y de probar mientras son pequeños. El problema es que crecen multiplicando: si cada pregunta tiene 3 respuestas posibles y el flujo hace 3 preguntas seguidas, hay 3 × 3 × 3 = 27 caminos distintos. Con 5 preguntas, 243. Nadie prueba 243 caminos a mano.</p><p>Tres técnicas mantienen el árbol manejable:</p><ul><li><b>Subflujos reutilizables</b> (<i>subflows</i>). «Verificar identidad» aparece en el pago, en la falla y en el cambio de datos. Se diseña una vez, como un flujo aparte con sus propias salidas (verificada o fallida), y los demás flujos lo llaman. Si mañana cambia la verificación, se cambia en un solo lugar.</li><li><b>Llenar espacios en vez de ramificar</b> (<i>slot filling</i>). Si el bot necesita tres datos que no dependen entre sí (servicio, desde cuándo, si hay luces en el equipo), no hace falta un árbol con todas las combinaciones: el bot pregunta solo los que faltan, en cualquier orden, y sigue cuando están todos. Si Laura escribe «no tengo internet desde ayer», el bot ya tiene dos y solo pregunta el tercero.</li><li><b>Sacar las decisiones de negocio a tablas</b> (<i>decision tables</i>). «Si la cuenta es empresarial y la falla es total, prioridad alta» no se dibuja como diez ramas: se escribe como una tabla de reglas que el flujo consulta, y que el área dueña puede revisar sin leer el árbol.</li></ul><p>Una señal de alarma práctica: si el diagrama de un flujo ya no cabe en una pantalla, o si dos personas del equipo explican distinto qué hace una rama, es hora de partirlo en subflujos.</p></div></section>
+<section><h2>Especificar un caso de uso antes de construirlo</h2><div class="prose"><p>Antes de dibujar el árbol, el flujo se escribe en palabras. La <b>especificación de caso de uso</b> (<i>use case specification</i>) es una plantilla que documenta un flujo antes de construirlo, para que quien lo diseña, quien lo programa y quien lo prueba trabajen sobre lo mismo y no sobre tres interpretaciones del mismo pedido.</p><p>Esta es la de «reportar una falla» de Pía:</p><div class="tbl"><table><thead><tr><th>Campo</th><th>Reportar una falla</th></tr></thead><tbody><tr><td><b>Actor</b></td><td>cliente residencial con servicio de internet o TV</td></tr><tr><td><b>Disparador</b></td><td>intención <code>reportar_falla</code> o botón «Una falla»</td></tr><tr><td><b>Precondiciones</b></td><td>identidad verificada; cuenta activa (si el servicio está suspendido por mora, el caso va al flujo de pago y reconexión)</td></tr><tr><td><b>Flujo principal</b></td><td>1. verificar identidad · 2. revisar avería masiva en la zona: no hay · 3. preguntar qué servicio falla · 4. reinicio guiado: sigue igual · 5. confirmar la dirección · 6. crear el ticket · 7. informar número y plazo</td></tr><tr><td><b>Flujos alternos</b></td><td>hay avería masiva: aviso con hora estimada y oferta de avisar por el chat · ya funciona tras reiniciar: cierre · no sabe reiniciar: guía paso a paso</td></tr><tr><td><b>Flujos de excepción</b></td><td>verificación fallida 3 veces: persona · dirección distinta: persona · la mesa de ayuda no responde: disculpa, caso pendiente y persona · pide una persona: persona</td></tr><tr><td><b>Criterio de éxito</b></td><td>ticket creado con cuenta, servicio, dirección confirmada y reinicio probado; la clienta recibe número y plazo</td></tr><tr><td><b>Canal y riesgo</b></td><td>WhatsApp y web · riesgo medio: un diagnóstico errado cuesta una visita técnica</td></tr></tbody></table></div><p>Los <b>flujos alternos</b> (<i>alternative flows</i>) son variantes válidas del camino principal; los <b>flujos de excepción</b> (<i>exception flows</i>) son lo que pasa cuando algo falla. El error más común es dejar estos dos para después: nunca se escriben y el desarrollador improvisa en el código un comportamiento que nadie revisó.</p><p>El <b>criterio de éxito</b> (<i>success criterion</i>) merece una línea aparte. «El bot ayuda al cliente» no es un criterio: no se puede probar. «Ticket creado con estos cuatro datos y número informado a la clienta» sí lo es, y de él salen directo los casos de prueba del capítulo 15.</p><p>Los equipos que versionan su bot guardan la especificación junto a los flujos, como texto, en el mismo repositorio. Así, un cambio en el flujo y un cambio en la especificación se revisan juntos:</p><div class="code-copia"><pre><code>caso_de_uso: reportar_falla
+actor: cliente residencial
+disparador: [intencion: reportar_falla, boton: "Una falla"]
+precondiciones: [identidad_verificada, cuenta_activa]
+excepciones:
+  verificacion_fallida_3_veces: traspaso_humano
+  direccion_distinta: traspaso_humano
+  mesa_de_ayuda_no_responde: traspaso_humano
+exito: [ticket_creado, numero_informado]
+riesgo: medio</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Dibuja el flujo como texto con Mermaid</h3></div><p>Mermaid es un lenguaje gratuito para dibujar diagramas a partir de texto, muy usado para documentar flujos en repositorios de código. Su editor en línea, <a href="https://mermaid.live/" target="_blank" rel="noopener">mermaid.live</a>, no pide registro. Borra el ejemplo que trae y pega esto:</p><div class="code-copia"><pre><code>flowchart TD
+  A[Lamento la falla] --&gt; B{Verificar identidad}
+  B -- verificada --&gt; C{¿Avería masiva?}
+  B -- 3 intentos fallidos --&gt; P([Persona])
+  C -- sí --&gt; M([Aviso de avería])
+  C -- no --&gt; D[¿Probaste reiniciar?]
+  D -- ya funciona --&gt; R([Resuelto])
+  D -- sigue igual --&gt; E[¿Visita en Calle Ejemplo 123?]
+  E -- sí --&gt; T{Crear ticket}
+  E -- no --&gt; P
+  T -- creado --&gt; K([Ticket 5512])</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Mira el diagrama que aparece a la derecha y cuenta las salidas (las cajas redondeadas).</span></li><li><span>Busca la acción «Crear ticket»: tiene una sola rama. Agrega al final la línea <code>  T -- sistema caído --&gt; P</code> y mira cómo cambia el dibujo.</span></li><li><span>Agrega la rama de la guía de reinicio: <code>  D -- no sé cómo --&gt; G[Guía de reinicio]</code> y decide tú adónde va <code>G</code> después.</span></li></ol><p><b>Qué observar:</b> el diagrama y la especificación son el mismo flujo en dos formas, y escritos como texto se pueden versionar y comparar línea por línea. La acción «Crear ticket» venía sin rama de fallo: es el hueco más común en los flujos reales, y un diagrama lo deja a la vista si te acostumbras a contar las ramas de cada acción.</p></div></section>
+<section><h2>Los tres fallos distintos: no entiende, no puede y el usuario se frustra</h2><div class="prose"><p>Cuando algo sale mal en una conversación, casi siempre es uno de tres fallos, y cada uno pide una respuesta distinta. Tratarlos con el mismo «no entendí» es el error de diseño más visible de los bots.</p><ol class="steps"><li><span><b>No entiende</b> (fallo de comprensión). El clasificador no reconoce la intención o la confianza queda bajo el umbral, o el dato que el cliente dio no tiene el formato esperado («mi cuenta es la de mi mamá»). La respuesta es ayudar a decirlo de otra forma.</span></li><li><span><b>No puede</b> (fallo de capacidad). El bot entendió perfectamente, pero el pedido está fuera de su alcance («quiero cambiar el titular») o el sistema que necesita no responde. Decir «no entendí» aquí es mentira y enfurece: el cliente fue claro. La respuesta es reconocer el pedido, explicar que no lo puede hacer y ofrecer el camino correcto.</span></li><li><span><b>El usuario se frustra</b> (fallo de experiencia). Puede pasar con o sin los anteriores: el cliente repite el mismo mensaje, escribe en mayúsculas, usa groserías o dice «ya te dije». La respuesta es no insistir: reconocer la molestia y pasar a una persona.</span></li></ol></div><figure class="fig fig-comparacion" id="04-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:720px" role="img" aria-label="Tabla de los tres fallos: no entiende, no puede y el usuario se frustra, con qué pasó, la señal que lo detecta, qué hace Pía y un ejemplo de mensaje para cada uno">
+  <g class="t t-xs t-b t-m">
+    <text x="14" y="78">QUÉ PASÓ</text>
+    <text x="14" y="160">LA SEÑAL</text>
+    <text x="14" y="242">QUÉ HACE PÍA</text>
+    <text x="14" y="324">SU MENSAJE</text>
+  </g>
+  <g class="t t-b" text-anchor="middle">
+    <rect x="130" y="12" width="246" height="36" rx="8" class="c-tra"/><text x="253" y="35" class="k-tra">1 · No entiende</text>
+    <rect x="388" y="12" width="246" height="36" rx="8" class="d-sis"/><text x="511" y="35" class="k-sis">2 · No puede</text>
+    <rect x="646" y="12" width="246" height="36" rx="8" class="caja s-warm" style="stroke-width:2"/><text x="769" y="35" class="k-warm">3 · Se frustra</text>
+  </g>
+  <g>
+    <line x1="10" y1="120" x2="890" y2="120" class="ln" style="stroke:var(--line)"/>
+    <line x1="10" y1="202" x2="890" y2="202" class="ln" style="stroke:var(--line)"/>
+    <line x1="10" y1="284" x2="890" y2="284" class="ln" style="stroke:var(--line)"/>
+  </g>
+  <g class="t t-s">
+    <text x="140" y="74">El mensaje no encaja en ninguna</text>
+    <text x="140" y="90">intención, o el dato no tiene</text>
+    <text x="140" y="106">el formato esperado.</text>
+    <text x="398" y="74">Entendió, pero el pedido está fuera</text>
+    <text x="398" y="90">de su alcance o el sistema que</text>
+    <text x="398" y="106">necesita no responde.</text>
+    <text x="656" y="74">Repite, se enoja o ya probó</text>
+    <text x="656" y="90">varias veces. Puede pasar junto</text>
+    <text x="656" y="106">con los otros dos fallos.</text>
+
+    <text x="140" y="156">Confianza bajo el umbral;</text>
+    <text x="140" y="172">el dato no pasa la validación.</text>
+    <text x="140" y="188" class="t-m">lo ve: el clasificador</text>
+    <text x="398" y="156">Intención fuera de alcance; error</text>
+    <text x="398" y="172">o tiempo agotado en la API.</text>
+    <text x="398" y="188" class="t-m">lo ve: el flujo y la integración</text>
+    <text x="656" y="156">Mensaje repetido, MAYÚSCULAS,</text>
+    <text x="656" y="172">«???», «ya te dije», groserías.</text>
+    <text x="656" y="188" class="t-m">lo ve: un detector de frustración</text>
+
+    <text x="140" y="238">Ayuda a decirlo de otra forma:</text>
+    <text x="140" y="254">la escalera del respaldo.</text>
+    <text x="398" y="238">Reconoce el pedido, dice que no</text>
+    <text x="398" y="254">puede y ofrece el camino correcto.</text>
+    <text x="656" y="238">No insiste: reconoce la molestia</text>
+    <text x="656" y="254">y pasa a una persona ya.</text>
+
+    <text x="140" y="320">«Perdón, no te entendí bien.</text>
+    <text x="140" y="336">¿Me cuentas en pocas palabras</text>
+    <text x="140" y="352">qué necesitas?»</text>
+    <text x="398" y="320">«El cambio de titular lo hace una</text>
+    <text x="398" y="336">persona, porque pide documentos.</text>
+    <text x="398" y="352">¿Te paso con ella?»</text>
+    <text x="656" y="320">«Entiendo que esto ya te hizo</text>
+    <text x="656" y="336">perder tiempo. Te paso con una</text>
+    <text x="656" y="352">persona, con todo lo que escribiste.»</text>
+  </g>
+  <text x="450" y="388" class="t t-s t-b k-warm" text-anchor="middle">El error típico: responder «no entendí» a los tres.</text>
+</svg></div><figcaption><b>Tres fallos, tres respuestas.</b> Cada columna es un tipo de fallo. De arriba abajo: qué pasó, con qué señal lo detecta el sistema, qué hace Pía y un ejemplo de su mensaje. Fíjate en la fila de señales: el primero lo detecta el clasificador, el segundo la lógica del flujo o un sistema que no responde, y el tercero, un detector de frustración que mira repeticiones, mayúsculas y palabras de enojo.</figcaption></figure><div class="prose"><p>La detección de frustración se arma con señales simples combinadas: el mismo mensaje repetido, varios respaldos seguidos, mayúsculas sostenidas, signos repetidos («???»), palabras como «inútil» o «ya te dije», y en bots con LLM, un <b>análisis de sentimiento</b> (<i>sentiment analysis</i>) que estima si el mensaje es negativo. Ninguna señal sola es confiable; juntas, funcionan bien.</p></div></section>
+<section><h2>El respaldo progresivo: reformular, ofrecer opciones, acotar y escalar</h2><div class="prose"><p>El <b>respaldo</b> (<i>fallback</i>) es el camino que se activa cuando el bot no entiende. El peor respaldo posible es el más común: repetir «no entendí, intenta de nuevo» hasta que el cliente se rinde. El cliente no sabe qué hizo mal, así que vuelve a escribir lo mismo, y recibe lo mismo.</p><p>El <b>respaldo progresivo</b> (<i>progressive fallback</i>) cambia de estrategia en cada intento, de la más abierta a la más guiada:</p><ol class="steps"><li><span><b>Reformular</b>: pedir lo mismo con otras palabras y con un ejemplo. «Perdón, no te entendí bien. ¿Me cuentas en pocas palabras qué necesitas? Por ejemplo: «no tengo internet»».</span></li><li><span><b>Ofrecer opciones</b>: si escribir no funcionó, botones. «Puedo ayudarte con esto: [Mi factura] [Una falla] [Un ticket] [Otra cosa]».</span></li><li><span><b>Acotar la pregunta</b>: reducir a algo que se responde con sí o no. «Para ir por partes: ¿es sobre algo que te cobramos? [Sí] [No]».</span></li><li><span><b>Escalar</b>: pasar a una persona con todo lo que el cliente escribió, para que no repita nada.</span></li></ol></div><figure class="fig fig-flujo" id="04-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:720px" role="img" aria-label="Escalera del respaldo progresivo de Pía: reformular, ofrecer opciones, acotar y escalar a una persona; si el cliente responde algo que se entiende, vuelve al flujo y el contador se reinicia; la frustración detectada salta directo al último escalón">
+  <defs>
+    <marker id="d04c-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d04c-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-enl"/></marker>
+    <marker id="d04c-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <text x="14" y="20" class="t t-xs t-b t-m">CONTADOR</text>
+  <text x="160" y="20" class="t t-xs t-b t-m">EL BOT NO ENTENDIÓ EL MENSAJE…</text>
+
+  <g class="t t-s t-b t-mono">
+    <rect x="14" y="44" width="80" height="26" rx="13" class="caja"/><text x="54" y="61" text-anchor="middle">1</text>
+    <rect x="14" y="124" width="80" height="26" rx="13" class="caja"/><text x="54" y="141" text-anchor="middle">2</text>
+    <rect x="14" y="204" width="80" height="26" rx="13" class="caja"/><text x="54" y="221" text-anchor="middle">3</text>
+    <rect x="14" y="284" width="80" height="26" rx="13" class="caja s-warm" style="stroke-width:2"/><text x="54" y="301" text-anchor="middle" class="k-warm">límite</text>
+  </g>
+
+  <g class="t t-s">
+    <rect x="120" y="32" width="430" height="56" rx="10" class="c-tra"/>
+    <text x="134" y="52" class="t-b k-tra">1 · Reformular, con un ejemplo</text>
+    <text x="134" y="72">«¿Me cuentas en pocas palabras qué necesitas? Por ejemplo…»</text>
+
+    <rect x="170" y="112" width="430" height="56" rx="10" class="c-fis"/>
+    <text x="184" y="132" class="t-b k-fis">2 · Ofrecer opciones</text>
+    <text x="184" y="152">«Puedo ayudarte con esto: [Mi factura] [Una falla] [Otra cosa]»</text>
+
+    <rect x="220" y="192" width="430" height="56" rx="10" class="c-red"/>
+    <text x="234" y="212" class="t-b k-red">3 · Acotar a sí o no</text>
+    <text x="234" y="232">«Para ir por partes: ¿es sobre algo que te cobramos? [Sí] [No]»</text>
+
+    <rect x="270" y="272" width="430" height="56" rx="10" class="caja s-warm" style="stroke-width:2.4"/>
+    <text x="284" y="292" class="t-b k-warm">4 · Escalar a una persona</text>
+    <text x="284" y="312">con todo lo que el cliente escribió: no repite nada</text>
+  </g>
+  <g>
+    <path d="M335 88 V109" class="ln" marker-end="url(#d04c-m)"/>
+    <path d="M385 168 V189" class="ln" marker-end="url(#d04c-m)"/>
+    <path d="M435 248 V269" class="ln" marker-end="url(#d04c-m)"/>
+  </g>
+  <g class="t t-xs t-m">
+    <text x="342" y="103">tampoco entendió</text>
+    <text x="392" y="183">tampoco</text>
+    <text x="442" y="263">tampoco</text>
+  </g>
+
+  <rect x="740" y="32" width="150" height="216" rx="12" class="caja" style="stroke:var(--good);stroke-width:2"/>
+  <text x="815" y="120" class="t t-s t-b k-enl" text-anchor="middle">Vuelve al flujo</text>
+  <text x="815" y="138" class="t t-s k-enl" text-anchor="middle">donde estaba</text>
+  <text x="815" y="162" class="t t-s t-mono" text-anchor="middle">contador = 0</text>
+  <g>
+    <path d="M550 60 H737" class="ln" style="stroke:var(--good);stroke-width:2" marker-end="url(#d04c-g)"/>
+    <path d="M600 140 H737" class="ln" style="stroke:var(--good);stroke-width:2" marker-end="url(#d04c-g)"/>
+    <path d="M650 220 H737" class="ln" style="stroke:var(--good);stroke-width:2" marker-end="url(#d04c-g)"/>
+  </g>
+  <text x="560" y="52" class="t t-xs k-enl t-b">entendió</text>
+
+  <path d="M110 40 C104 160 104 280 266 316" class="ln s-warm" style="stroke-width:2;stroke-dasharray:6 4" marker-end="url(#d04c-w)"/>
+  <rect x="120" y="348" width="560" height="40" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="400" y="366" class="t t-s t-b k-warm" text-anchor="middle">Atajo punteado: frustración detectada o pedido de una persona</text>
+  <text x="400" y="381" class="t t-s t-m" text-anchor="middle">salta directo al escalón 4, sin pasar por los demás</text>
+</svg></div><figcaption><b>La escalera del respaldo.</b> Cada escalón es un intento, de arriba abajo, con el mensaje que usa Pía. A la izquierda, el contador de intentos que guarda la sesión. Si en cualquier escalón el cliente responde algo que el bot entiende, vuelve al flujo donde estaba (flechas verdes) y el contador se reinicia. Si se detecta frustración, hay un atajo directo al último escalón, sin pasar por los demás.</figcaption></figure><div class="prose"><p>Por dentro, el respaldo es estado: la sesión guarda un <b>contador de respaldos</b> por conversación y el escalón en que va. Cada evento de respaldo se registra con el mensaje que no se entendió, el estado del flujo y el escalón. Ese registro vale oro: los mensajes que caen en respaldo son, literalmente, la lista de lo que el bot todavía no sabe, y de ahí salen los ejemplos de entrenamiento y los flujos nuevos (capítulo 14).</p></div></section>
+<section><h2>Cuántos reintentos antes de pasar a una persona</h2><div class="prose"><p>No hay un número universal, pero la práctica de la industria converge en <b>uno o dos respaldos</b> antes de escalar. La razón es una cuenta simple. Cada respaldo recupera a algunos clientes, pero también pierde a otros que se cansan y se van; y la proporción que se va crece con cada «no entendí». Pocos reintentos mandan demasiados casos a las personas, que cuestan más; muchos reintentos ahorran agentes, pero pierden clientes, que cuestan mucho más.</p><p>Tres reglas completan el diseño:</p><ul><li><b>Nunca repetir el mismo mensaje dos veces.</b> Si el escalón 1 falló, el 2 es distinto.</li><li><b>La frustración corta camino.</b> Un cliente que escribe «¡¡¡QUIERO HABLAR CON ALGUIEN!!!» no pasa por el escalón 2.</li><li><b>El pedido explícito de una persona se respeta de inmediato.</b> No es un fallo: es una opción que el primer mensaje prometió.</li></ul></div><div class="lab" id="04-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Respaldo: reintentos, reformulación y escalamiento</h3></div><p class="hint">Arriba, conversa con un bot que no entiende casi nada: escribe mensajes raros y mira qué escalón usa en cada intento. Prueba también uno enojado, en mayúsculas. Abajo, ajusta cuántos reintentos hay antes de escalar, qué estrategias usa la escalera y si se detecta la frustración, y mira qué pasa con 1.000 conversaciones que empezaron con un «no entendí»: cuántas recupera el bot, cuántas pasan a una persona y cuántas se pierden.</p><style>
+[id="04-lab-2"] .c42-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){[id="04-lab-2"] .c42-grid{grid-template-columns:minmax(0,1fr)}}
+[id="04-lab-2"] .c42-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="04-lab-2"] .c42-chat{height:300px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px}
+[id="04-lab-2"] .c42-m{max-width:90%;padding:7px 10px;border-radius:12px;font:400 .88rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="04-lab-2"] .c42-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="04-lab-2"] .c42-b{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+[id="04-lab-2"] .c42-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="04-lab-2"] .c42-h{align-self:flex-start;background:var(--warm-soft);border:1px solid var(--warm);color:var(--ink)}
+[id="04-lab-2"] .c42-s{align-self:stretch;font:500 .76rem var(--f-mono);color:var(--muted)}
+[id="04-lab-2"] .c42-f{display:flex;gap:6px}
+[id="04-lab-2"] .c42-f input{flex:1;min-width:0;font:400 .92rem var(--f-body);padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+[id="04-lab-2"] .c42-chips button{font-size:.78rem;padding:4px 8px}
+[id="04-lab-2"] ol.c42-esc{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+[id="04-lab-2"] ol.c42-esc li{border:1px solid var(--line);border-left:5px solid var(--cc);border-radius:8px;padding:5px 9px;background:var(--card);font:400 .8rem/1.35 var(--f-body);transition:box-shadow .2s}
+[id="04-lab-2"] ol.c42-esc li b{font:700 .82rem var(--f-display)}
+[id="04-lab-2"] ol.c42-esc li.on{box-shadow:0 0 0 2px var(--cc)}
+[id="04-lab-2"] ol.c42-esc li.off{opacity:.4}
+[id="04-lab-2"] .c42-bar{display:flex;height:30px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+[id="04-lab-2"] .c42-bar i{display:block;height:100%;transition:width .3s}
+[id="04-lab-2"] .c42-chk{display:flex;flex-wrap:wrap;gap:6px 16px;font:500 .86rem var(--f-display)}
+[id="04-lab-2"] .c42-chk label{display:flex;gap:6px;align-items:center}
+@media (prefers-reduced-motion: reduce){[id="04-lab-2"] .c42-bar i,[id="04-lab-2"] ol.c42-esc li{transition:none}}
+</style>
+<div class="ctls">
+  <label class="ctl">Respaldos antes de pasar a una persona <output id="c42-n-o"></output>
+    <input id="c42-n" type="range" min="0" max="4" step="1" value="2"></label>
+</div>
+<div class="c42-chk" role="group" aria-label="Estrategias de la escalera">
+  <label><input type="checkbox" id="c42-ref" checked> Reformular con un ejemplo (si no, repite «no entendí»)</label>
+  <label><input type="checkbox" id="c42-opc" checked> Ofrecer opciones con botones</label>
+  <label><input type="checkbox" id="c42-aco" checked> Acotar a sí o no</label>
+  <label><input type="checkbox" id="c42-fru" checked> Detectar frustración y escalar de inmediato</label>
+</div>
+<div class="c42-grid">
+  <div style="display:grid;gap:8px;min-width:0">
+    <div class="c42-chat" id="c42-chat" aria-live="polite" aria-label="Conversación"></div>
+    <form class="c42-f" id="c42-form" autocomplete="off">
+      <label for="c42-in" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Tu mensaje</label>
+      <input id="c42-in" type="text" maxlength="140" placeholder="Escribe algo que el bot no entienda…">
+      <button type="submit" class="primary">Enviar</button>
+    </form>
+    <div class="btns c42-chips" id="c42-chips" role="group" aria-label="Mensajes de ejemplo"></div>
+  </div>
+  <div style="min-width:0"><p class="c42-tit">La escalera con esta configuración</p><ol class="c42-esc" id="c42-esc"></ol></div>
+</div>
+<p class="c42-tit">1.000 conversaciones que empezaron con un «no entendí»</p>
+<div class="c42-bar" id="c42-bar" role="img" aria-label="Destino de 1.000 conversaciones"></div>
+<div class="legend"><span><i style="background:var(--good)"></i>Recuperadas por el bot</span><span><i style="background:var(--accent)"></i>Pasadas a una persona</span><span><i style="background:var(--muted)"></i>Perdidas: el cliente se fue</span></div>
+<div class="readout texto" id="c42-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Supuestos del ejemplo: en cada escalón, repetir «no entendí» recupera al 12 % de quienes siguen, reformular al 35 %, las opciones al 50 % y acotar al 40 %. Tras cada fallo se va el 15 % (el 30 % si el bot repitió el mismo mensaje), y esa proporción sube con cada intento si nadie detecta la frustración. Cada caso que llega a una persona cuesta US$ 3,50.</p></div><div class="ml"><b>En la práctica</b><p><b>El IVR telefónico como lección.</b> Durante años, los menús telefónicos de «marque 1» atraparon a los clientes en bucles de «opción no válida» sin salida visible. Las buenas prácticas de atención al cliente terminaron por pedir lo que este capítulo recomienda para el chat: una forma clara de llegar a una persona y no repetir indefinidamente el mismo mensaje. El chat heredó la tecnología del IVR; conviene no heredar también sus vicios.</p></div></section>
+<section><h2>El flujo de «reportar una falla» del asistente, de la especificación al árbol</h2><div class="prose"><p>Con todas las piezas, el flujo de Pía queda así. Primero, la vista de secuencia: quién le habla a quién y en qué orden, cuando todo sale bien.</p></div><figure class="fig fig-flujo" id="04-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" style="min-width:720px" role="img" aria-label="Diagrama de secuencia de reportar una falla: Laura escribe, Pía verifica la identidad, consulta el monitoreo de red, guía el reinicio, confirma la dirección y crea el ticket 5512 en la mesa de ayuda; notas con los desvíos de excepción">
+  <defs>
+    <marker id="d04d-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d04d-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d04d-id" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-casa"/></marker>
+    <marker id="d04d-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="170" y="14" width="120" height="52" rx="10" class="c-red"/><text x="230" y="36" class="t t-b" text-anchor="middle">Pía</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">el flujo</text>
+  <rect x="330" y="14" width="120" height="52" rx="10" class="d-casa"/><text x="390" y="36" class="t t-b" text-anchor="middle">Identidad</text><text x="390" y="54" class="t t-s t-m" text-anchor="middle">verificación</text>
+  <rect x="490" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="550" y="36" class="t t-b" text-anchor="middle">Monitoreo</text><text x="550" y="54" class="t t-s t-m" text-anchor="middle">de la red</text>
+  <rect x="650" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="710" y="36" class="t t-b" text-anchor="middle">Mesa de ayuda</text><text x="710" y="54" class="t t-s t-m" text-anchor="middle">tickets</text>
+  <line x1="70" y1="66" x2="70" y2="600" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="600" class="vida"/>
+  <line x1="390" y1="66" x2="390" y2="600" class="vida"/>
+  <line x1="550" y1="66" x2="550" y2="600" class="vida"/>
+  <line x1="710" y1="66" x2="710" y2="600" class="vida"/>
+
+  <g class="t t-s">
+    <line x1="70" y1="100" x2="227" y2="100" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="78" y="93">① «No tengo internet»</text>
+    <line x1="230" y1="140" x2="387" y2="140" class="ln" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d04d-id)"/>
+    <text x="238" y="133">② verificar (código SMS)</text>
+    <line x1="390" y1="176" x2="233" y2="176" class="ln ln-d" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d04d-id)"/>
+    <text x="238" y="169">③ verificada: cuenta 1001</text>
+    <text x="398" y="180" class="k-warm t-xs t-b">si falla 3 veces → persona</text>
+
+    <line x1="230" y1="222" x2="547" y2="222" class="ln s-red" style="stroke-width:2" marker-end="url(#d04d-red)"/>
+    <text x="238" y="215">④ ¿avería en la zona de la cuenta 1001?</text>
+    <line x1="550" y1="258" x2="233" y2="258" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d04d-sis)"/>
+    <text x="238" y="251">⑤ no hay avería masiva</text>
+    <text x="558" y="262" class="k-warm t-xs t-b">si la hay → aviso con hora y fin</text>
+    <line x1="230" y1="300" x2="73" y2="300" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="80" y="293">⑥ «¿Probaste reiniciar?»</text>
+    <line x1="70" y1="336" x2="227" y2="336" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="78" y="329">⑦ «Sí, sigue igual»</text>
+
+    <line x1="230" y1="382" x2="73" y2="382" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="80" y="375">⑧ «¿Visita en Calle Ejemplo 123?»</text>
+    <line x1="70" y1="418" x2="227" y2="418" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="78" y="411">⑨ «Sí»</text>
+    <text x="238" y="434" class="k-warm t-xs t-b">si es otra dirección → persona</text>
+    <line x1="230" y1="466" x2="707" y2="466" class="ln s-red" style="stroke-width:2" marker-end="url(#d04d-red)"/>
+    <text x="238" y="459">⑩ crear ticket: 1001 · internet · dirección confirmada · reinicio probado</text>
+    <line x1="710" y1="502" x2="233" y2="502" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d04d-sis)"/>
+    <text x="238" y="495">⑪ ticket n.º 5512 · plazo 24 h</text>
+    <text x="558" y="518" class="k-warm t-xs t-b">si no responde → persona</text>
+    <line x1="230" y1="548" x2="73" y2="548" class="ln s-fis" style="stroke-width:2" marker-end="url(#d04d-fis)"/>
+    <text x="80" y="541">⑫ «Abrí el ticket n.º 5512; un técnico te contacta en menos de 24 h»</text>
+  </g>
+
+  <g class="t t-xs t-b">
+    <path d="M800 86 v100" class="ln" style="stroke:var(--d-casa);stroke-width:3"/><text x="810" y="132" class="k-casa">VERIFICAR</text><text x="810" y="146" class="t-m">①–③</text>
+    <path d="M800 206 v140" class="ln s-red" style="stroke-width:3"/><text x="810" y="272" class="k-red">DIAGNOSTICAR</text><text x="810" y="286" class="t-m">④–⑦</text>
+    <path d="M800 366 v192" class="ln s-apl" style="stroke-width:3"/><text x="810" y="458" class="k-apl">REGISTRAR</text><text x="810" y="472" class="t-m">⑧–⑫</text>
+  </g>
+  <rect x="10" y="608" width="770" height="34" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="395" y="630" class="t t-s" text-anchor="middle">En naranja, los desvíos de los flujos alternos y de excepción de la especificación. Ninguno deja la conversación colgada.</text>
+</svg></div><figcaption><b>Flujo de «reportar una falla» paso a paso.</b> Los participantes están arriba: Laura, Pía y tres sistemas (identidad, monitoreo de red y mesa de ayuda). El tiempo corre hacia abajo y cada flecha numerada es un mensaje. Las fases de la derecha separan verificar (①–③), diagnosticar (④–⑦) y registrar (⑧–⑫). Las notas en naranja marcan dónde se desvían los flujos de excepción de la especificación: si la mesa de ayuda no responde, el caso pasa a una persona en lugar de quedarse colgado.</figcaption></figure><div class="prose"><p>Después, la vista de árbol, que es la que se construye y se prueba. El laboratorio siguiente trae el flujo completo y un borrador con los huecos típicos de un flujo sin especificar. Recórrelo como cliente y deja que el validador te diga lo que falta.</p></div><div class="lab" id="04-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Editor de flujos: arma «reportar una falla» y recórrelo como cliente</h3></div><p class="hint">Carga el «borrador con huecos» y mira el árbol: los nodos con borde punteado y un «?» debajo tienen ramas sin destino, y la flecha naranja punteada es una vuelta atrás. Corrige cada rama eligiendo su destino en la tabla de abajo, hasta que el validador no marque problemas. Después usa «Recorrer como cliente»: elige respuestas como si fueras Laura (en los nodos de sistema, eliges lo que responde el sistema) y comprueba que todo camino termina en una salida.</p><style>
+[id="04-lab-1"] .c41-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+[id="04-lab-1"] .c41-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="04-lab-1"] .c41-arbol{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+[id="04-lab-1"] .c41-arbol svg{display:block;width:100%;min-width:520px;height:auto;font-family:var(--f-display)}
+[id="04-lab-1"] .c41-chat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px;max-height:300px;overflow-y:auto}
+[id="04-lab-1"] .c41-m{max-width:92%;padding:7px 10px;border-radius:12px;font:400 .88rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="04-lab-1"] .c41-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="04-lab-1"] .c41-b{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+[id="04-lab-1"] .c41-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="04-lab-1"] .c41-s{align-self:stretch;font:500 .76rem var(--f-mono);color:var(--muted);border-left:2px dashed var(--d-sis);padding-left:8px}
+[id="04-lab-1"] .c41-x{align-self:stretch;font:600 .84rem var(--f-body);border-radius:8px;padding:6px 9px;background:var(--warm-soft);border:1px solid var(--warm);color:var(--ink)}
+[id="04-lab-1"] .c41-ok{align-self:stretch;font:600 .84rem var(--f-body);border-radius:8px;padding:6px 9px;background:var(--good-soft);border:1px solid var(--good);color:var(--ink)}
+[id="04-lab-1"] .c41-opc{display:flex;flex-wrap:wrap;gap:6px}
+[id="04-lab-1"] .c41-opc button{font-size:.8rem;padding:5px 9px}
+[id="04-lab-1"] table{width:100%;border-collapse:collapse;font:400 .84rem var(--f-body)}
+[id="04-lab-1"] th,[id="04-lab-1"] td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:middle}
+[id="04-lab-1"] td.nd{font-weight:700;border-left:5px solid var(--cc)}
+[id="04-lab-1"] tr.hueco td{background:var(--warm-soft)}
+[id="04-lab-1"] select{max-width:100%}
+</style>
+<div class="btns" role="group" aria-label="Cargar un flujo">
+  <button type="button" id="c41-borr">Cargar borrador con huecos</button>
+  <button type="button" id="c41-comp">Cargar flujo completo</button>
+  <button type="button" id="c41-rec" class="primary">Recorrer como cliente</button>
+</div>
+<div class="c41-grid">
+  <div style="min-width:0"><p class="c41-tit">El árbol del flujo</p><div class="c41-arbol" id="c41-arbol" role="img" aria-label="Árbol del flujo reportar una falla"></div>
+    <div class="legend" id="c41-ley"></div></div>
+  <div style="min-width:0"><p class="c41-tit">Recorrido como cliente</p><div class="c41-chat" id="c41-chat" aria-live="polite"></div><div class="c41-opc" id="c41-opc" role="group" aria-label="Respuestas posibles"></div></div>
+</div>
+<div class="readout texto" id="c41-out" aria-live="polite"></div>
+<p class="c41-tit">Ramas del flujo: elige adónde va cada una</p>
+<div class="tbl"><table><thead><tr><th>Nodo</th><th>Respuesta o resultado</th><th>Va a</th></tr></thead><tbody id="c41-tb"></tbody></table></div></div><div class="prose"><p>Si recorres el borrador, vas a dar con los tres huecos que aparecen en casi todos los flujos reales: una acción sin rama de fallo (el sistema de tickets caído), una pregunta con una respuesta sin destino (la dirección que no coincide) y una vuelta atrás sin límite (la guía de reinicio que vuelve a preguntar lo mismo una y otra vez). Ninguno es un problema de inteligencia artificial. Todos se ven en una especificación bien hecha antes de escribir una línea de código.</p><p>Lo que te llevas de este capítulo: <b>cada flujo especificado antes de construirse, con sus caminos de excepción y un respaldo que termina en una persona.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Qué seis tipos de nodo tiene un flujo de Pía?</summary><p>Mensaje, pregunta, condición, acción con un sistema, salida de éxito y salida humana.</p></details><details><summary>¿Por qué toda acción con un sistema necesita al menos dos ramas?</summary><p>Porque el sistema puede fallar o no responder. Si solo existe la rama de éxito, el día que el sistema se cae la conversación queda colgada.</p></details><details><summary>Un flujo hace 4 preguntas seguidas de 3 respuestas cada una. ¿Cuántos caminos tiene y qué harías?</summary><p>3 × 3 × 3 × 3 = 81 caminos. Se reduce con subflujos reutilizables, llenando espacios en vez de ramificar cuando los datos no dependen entre sí y sacando las decisiones de negocio a tablas.</p></details><details><summary>¿En qué se diferencian un flujo alterno y uno de excepción?</summary><p>El alterno es una variante válida del camino principal (hay avería masiva, ya funciona tras reiniciar). El de excepción es lo que pasa cuando algo falla (la verificación no pasa, el sistema no responde).</p></details><details><summary>¿Por qué no se responde «no entendí» cuando el cliente pide cambiar el titular y el bot no puede hacerlo?</summary><p>Porque es un fallo de capacidad, no de comprensión: el bot entendió. Hay que reconocer el pedido, decir que no lo puede hacer y ofrecer el camino correcto.</p></details><details><summary>¿Qué cuatro escalones tiene el respaldo progresivo de Pía?</summary><p>Reformular con un ejemplo, ofrecer opciones con botones, acotar a una pregunta de sí o no y escalar a una persona con lo que el cliente escribió.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es BPMN y en qué se diferencia un diagrama BPMN de un diagrama de flujo simple?<small>Pista: busca «BPMN 2.0 notación de procesos».</small></li><li>¿Quién propuso los casos de uso en la ingeniería de software y cómo se dibujan en UML?<small>Pista: busca «Ivar Jacobson casos de uso UML».</small></li><li>¿Qué es la complejidad ciclomática y cómo mide cuántos caminos independientes tiene un programa?<small>Pista: busca «complejidad ciclomática McCabe».</small></li><li>¿Por qué el análisis de sentimiento falla con la ironía y el sarcasmo?<small>Pista: busca «sentiment analysis sarcasm detection».</small></li><li>¿Qué es un autómata finito y qué relación tiene con los grafos de estados y transiciones?<small>Pista: busca «autómata finito determinista».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" rel="noopener">Flowchart syntax, de Mermaid <small>la sintaxis para escribir flujos como texto y versionarlos</small></a><a class="vid" href="https://www.nngroup.com/articles/error-message-guidelines/" target="_blank" rel="noopener">Error-Message Guidelines, de Nielsen Norman Group <small>las reglas clásicas para mensajes de error, que valen igual en un chat</small></a><a class="vid" href="https://developers.google.com/assistant/conversation-design/welcome" target="_blank" rel="noopener">Conversation design, de Google <small>incluye cómo diseñar los errores y los reintentos de una conversación</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const ESC={
+    rep:['Repetir','No entendí. Intenta de nuevo.','--muted',.12,.30],
+    ref:['Reformular','Perdón, no te entendí bien. ¿Me cuentas en pocas palabras qué necesitas? Por ejemplo: «no tengo internet».','--c-tra',.35,.15],
+    opc:['Ofrecer opciones','Puedo ayudarte con esto: [Mi factura] [Una falla] [Un ticket] [Otra cosa]','--c-fis',.50,.15],
+    aco:['Acotar','Para ir por partes: ¿es sobre algo que te cobramos? [Sí] [No]','--c-red',.40,.15]
+  };
+  const ESCALAR='Prefiero no hacerte perder tiempo: te paso con una persona del equipo, que verá todo lo que me escribiste.';
+  const EJ=['mi cosa no anda','lo del otro día','asdfg','tengo una duda con lo de mi tía','NO ME SIRVES PARA NADA!!!','quiero pagar'];
+  const n=()=>+q('#c42-n').value;
+  function escalera(){
+    const L=[q('#c42-ref').checked?'ref':'rep'];
+    if(q('#c42-opc').checked)L.push('opc');
+    if(q('#c42-aco').checked)L.push('aco');
+    return L;
+  }
+  function paso(k){const L=escalera();return L[Math.min(k,L.length-1)];}
+  let fallos=0,cerrado=false;
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  function entiende(t){const m=norm(t);return /(factura|pagar|pago|debo|deuda|falla|internet|tv|ticket|plan|horario)/.test(m)?(/(persona|humano|agente)/.test(m)?'persona':'ok'):(/(persona|humano|agente|asesor)/.test(m)?'persona':null);}
+  function frustrado(t){const letras=t.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'');const may=letras.length>6&&letras===letras.toUpperCase();return may||/[!?]{3,}/.test(t)||/(inutil|no sirves|ya te dije|pesimo|estupid|maldit)/.test(norm(t));}
+  function burbuja(cl,quien,txt){const d=document.createElement('div');d.className='c42-m '+cl;const s=document.createElement('small');s.textContent=quien;d.appendChild(s);d.appendChild(document.createTextNode(txt));q('#c42-chat').appendChild(d);q('#c42-chat').scrollTop=q('#c42-chat').scrollHeight;}
+  function nota(txt){const d=document.createElement('div');d.className='c42-s';d.textContent=txt;q('#c42-chat').appendChild(d);q('#c42-chat').scrollTop=q('#c42-chat').scrollHeight;}
+  function marcar(k){q('#c42-esc').querySelectorAll('li').forEach((li,i)=>li.classList.toggle('on',i===k));}
+  function enviar(t){
+    t=t.trim();if(!t)return;q('#c42-in').value='';
+    if(cerrado){reiniciar();}
+    burbuja('c42-c','Laura',t);
+    const e=entiende(t);
+    if(e==='persona'){nota('pedido explícito de una persona: se respeta de inmediato');escalar();return;}
+    if(e==='ok'){nota('intención reconocida: vuelve al flujo; el contador se reinicia ('+fallos+' → 0)');fallos=0;marcar(-1);burbuja('c42-b','Pía','Entendido. Sigamos con eso.');return;}
+    if(q('#c42-fru').checked&&frustrado(t)){nota('frustración detectada (mayúsculas, signos repetidos o palabras de enojo): atajo al último escalón');escalar();return;}
+    if(fallos>=n()){nota('respaldo n.º '+(fallos+1)+': se agotaron los '+n()+' reintentos');escalar();return;}
+    const s=paso(fallos);fallos++;
+    nota('no entendido · respaldo '+fallos+' de '+n()+' · escalón «'+ESC[s][0]+'»');
+    marcar(fallos-1);
+    burbuja('c42-b','Pía',ESC[s][1]);
+  }
+  function escalar(){marcar(n());burbuja('c42-h','Pía',ESCALAR);nota('traspaso con contexto: '+fallos+' mensaje'+(fallos===1?'':'s')+' no entendido'+(fallos===1?'':'s')+' y la conversación completa');cerrado=true;}
+  function reiniciar(){fallos=0;cerrado=false;q('#c42-chat').innerHTML='';burbuja('c42-b','Pía','Hola, soy Pía, la asistente virtual de Servicios Ejemplo. ¿En qué te ayudo?');marcar(-1);}
+  function pintarEsc(){
+    const N=n(),items=[];
+    for(let k=0;k<N;k++){const s=paso(k);items.push('<li style="--cc:var('+ESC[s][2]+')"><b>'+(k+1)+'. '+ESC[s][0]+'</b><br>'+ESC[s][1]+'</li>');}
+    items.push('<li style="--cc:var(--warm)"><b>'+(N+1)+'. Escalar a una persona</b><br>'+ESCALAR+'</li>');
+    q('#c42-esc').innerHTML=items.join('');
+  }
+  function simular(){
+    const N=n(),det=q('#c42-fru').checked;let cont=1000,rec=0,per=0,esc=0;
+    for(let k=0;k<N;k++){
+      const s=paso(k),p=ESC[s][3];let a=ESC[s][4];
+      if(k>0&&s===paso(k-1))a+=.08;
+      if(!det)a+=.10*k;
+      const r=cont*p;rec+=r;cont-=r;
+      const ab=cont*Math.min(a,.9);per+=ab;cont-=ab;
+      if(det){const f=cont*.2;esc+=f;cont-=f;}
+    }
+    esc+=cont;
+    return {rec,per,esc};
+  }
+  const r0=v=>Math.round(v);
+  const fmt=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  function pintarSim(){
+    const r=simular(),N=n();
+    q('#c42-bar').innerHTML=[[r.rec,'--good'],[r.esc,'--accent'],[r.per,'--muted']].map(([v,c])=>'<i style="width:'+(v/10)+'%;background:var('+c+')"></i>').join('');
+    const costo=r.esc*3.5;
+    let j;
+    if(N===0)j='<span class="warn">Sin reintentos, cada «no entendí» va directo a una persona: nadie se pierde, pero pagas agentes por casos que una reformulación habría resuelto.</span>';
+    else if(r.per>350)j='<span class="warn">Se pierden demasiados clientes: cada «no entendí» extra espanta a más gente de la que recupera.</span>';
+    else if(!q('#c42-ref').checked)j='<span class="warn">Repetir «no entendí» casi no recupera a nadie y es el mensaje que más espanta. El primer escalón debe cambiar algo.</span>';
+    else j='<span class="ok">Escalera progresiva con un límite corto: el bot recupera a la mayoría y el resto llega a una persona antes de rendirse.</span>';
+    q('#c42-out').innerHTML='<span>De 1.000: <b>'+fmt(r.rec)+'</b> recuperadas por el bot · <b>'+fmt(r.esc)+'</b> pasadas a una persona (US$ '+fmt(costo)+' en agentes) · <b>'+fmt(r.per)+'</b> clientes perdidos.</span>'+
+      '<span>En el peor caso, un cliente lee '+N+' respaldo'+(N===1?'':'s')+' antes de hablar con alguien.</span>'+j;
+  }
+  function todo(){q('#c42-n-o').textContent=n();pintarEsc();pintarSim();}
+  ['#c42-n','#c42-ref','#c42-opc','#c42-aco','#c42-fru'].forEach(s=>q(s).addEventListener('input',()=>{todo();reiniciar();}));
+  q('#c42-chips').innerHTML=EJ.map(t=>'<button type="button">'+t+'</button>').join('')+'<button type="button" data-r="1">Empezar de nuevo</button>';
+  q('#c42-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.r){reiniciar();return;}enviar(b.textContent);});
+  q('#c42-form').addEventListener('submit',e=>{e.preventDefault();enviar(q('#c42-in').value);});
+  todo();reiniciar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const TIPO={msg:['Mensaje','--muted','--card'],preg:['Pregunta','--c-fis','--c-fis-s'],cond:['Condición','--c-red','--c-red-s'],acc:['Acción con un sistema','--d-sis','--d-sis-s'],fin:['Salida de éxito','--good','--good-soft'],hum:['Salida humana','--warm','--warm-soft']};
+  const N={
+    inicio:{t:'msg',c:'Inicio',txt:'Lamento la falla. Primero confirmo que eres tú.',r:['continúa']},
+    verif:{t:'acc',c:'Verificar identidad',txt:'[sistema de identidad] Envía un código por SMS y lo valida.',r:['verificada','3 intentos fallidos']},
+    averia:{t:'cond',c:'¿Avería masiva?',txt:'[monitoreo de red] ¿Hay una avería en la zona de la cuenta 1001?',r:['sí','no']},
+    masiva:{t:'fin',c:'Aviso de avería',txt:'Hay una avería en tu zona y ya hay técnicos trabajando. El servicio vuelve hacia las 18:00; te aviso por aquí.'},
+    servicio:{t:'preg',c:'¿Qué servicio?',txt:'¿Qué servicio falla?',r:['Internet','TV','Los dos']},
+    reinicio:{t:'preg',c:'¿Reiniciaste?',txt:'¿Probaste apagar el equipo 30 segundos y volver a encenderlo?',r:['Sí, sigue igual','Ya funciona','¿Cómo se hace?']},
+    guia:{t:'preg',c:'Guía de reinicio',txt:'Desenchufa el módem, cuenta 30 segundos y vuelve a enchufarlo. Espera 2 minutos. ¿Funciona ahora?',r:['Ya funciona','Sigue igual']},
+    direccion:{t:'preg',c:'¿Confirma dirección?',txt:'¿La visita técnica es en Calle Ejemplo 123?',r:['Sí','No']},
+    ticket:{t:'acc',c:'Crear ticket',txt:'[mesa de ayuda] Crea el ticket con cuenta, servicio, dirección y reinicio probado.',r:['creado','el sistema no responde']},
+    creado:{t:'fin',c:'Ticket creado',txt:'Abrí el ticket n.º 5512. Un técnico te contactará en menos de 24 horas.'},
+    resuelto:{t:'fin',c:'Resuelto',txt:'Qué bueno que ya funciona. Si vuelve a fallar, escríbeme.'},
+    persona:{t:'hum',c:'Persona',txt:'Te paso con una persona del equipo, con todo lo que ya me contaste.'}
+  };
+  const IDS=Object.keys(N);
+  const COMPLETO={inicio:['verif'],verif:['averia','persona'],averia:['masiva','servicio'],servicio:['reinicio','reinicio','reinicio'],reinicio:['direccion','resuelto','guia'],guia:['resuelto','direccion'],direccion:['ticket','persona'],ticket:['creado','persona']};
+  const BORRADOR={inicio:['verif'],verif:['averia',''],averia:['masiva','servicio'],servicio:['reinicio','reinicio','reinicio'],reinicio:['direccion','resuelto','guia'],guia:['resuelto','reinicio'],direccion:['ticket',''],ticket:['creado','']};
+  let D={},cur=null,pasos=0;
+  const clon=o=>JSON.parse(JSON.stringify(o));
+  function niveles(){
+    const lv={inicio:0},cola=['inicio'];
+    while(cola.length){const u=cola.shift();(D[u]||[]).forEach(v=>{if(v&&lv[v]===undefined){lv[v]=lv[u]+1;cola.push(v);}});}
+    return lv;
+  }
+  function analizar(){
+    const lv=niveles(),huecos=[],ciclos=[];
+    IDS.forEach(u=>(D[u]||[]).forEach((v,i)=>{if(lv[u]!==undefined&&!v)huecos.push([u,i]);}));
+    const color={};
+    function dfs(u){color[u]=1;(D[u]||[]).forEach(v=>{if(!v)return;if(color[v]===1)ciclos.push([u,v]);else if(!color[v])dfs(v);});color[u]=2;}
+    dfs('inicio');
+    const inal=IDS.filter(u=>lv[u]===undefined);
+    let rutas=0;
+    function cuenta(u,vis){if(N[u].t==='fin'||N[u].t==='hum'){rutas++;return;}(D[u]||[]).forEach(v=>{if(v&&!vis.has(v)){vis.add(v);cuenta(v,vis);vis.delete(v);}});}
+    cuenta('inicio',new Set(['inicio']));
+    return {lv,huecos,ciclos,inal,rutas,persona:lv.persona!==undefined};
+  }
+  function arbol(A){
+    const lv=A.lv,filas={};let maxL=0;
+    IDS.forEach(u=>{const l=lv[u]!==undefined?lv[u]:'x';(filas[l]=filas[l]||[]).push(u);if(l!=='x')maxL=Math.max(maxL,l);});
+    if(filas.x){filas[maxL+1]=filas.x;}
+    const W=640,w=138,h=34,dy=70,pos={};
+    Object.keys(filas).filter(k=>k!=='x').forEach(k=>{const f=filas[k];f.forEach((u,i)=>{pos[u]={x:(i+.5)*W/f.length-w/2,y:14+(+k)*dy};});});
+    const H=14+(Object.keys(pos).length?Math.max(...Object.values(pos).map(p=>p.y)):0)+h+16;
+    const hueco=new Set(A.huecos.map(x=>x[0])),ciclo=new Set(A.ciclos.map(c=>c[0]+'>'+c[1]));
+    let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg"><defs><marker id="c41-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker><marker id="c41-fw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--warm)"/></marker></defs>';
+    const vistos=new Set();
+    IDS.forEach(u=>(D[u]||[]).forEach((v,i)=>{
+      const a=pos[u];if(!a)return;
+      if(!v){const x=a.x+w/2+(i-((D[u].length-1)/2))*30;s+='<line x1="'+x+'" y1="'+(a.y+h)+'" x2="'+x+'" y2="'+(a.y+h+14)+'" style="stroke:var(--warm);stroke-width:2"/><text x="'+x+'" y="'+(a.y+h+25)+'" text-anchor="middle" style="fill:var(--warm);font:700 11px var(--f-display)">?</text>';return;}
+      const k=u+'>'+v;if(vistos.has(k))return;vistos.add(k);
+      const b=pos[v];if(!b)return;
+      if(ciclo.has(k)){const cx=Math.max(4,Math.min(a.x,b.x)-40);s+='<path d="M'+a.x+' '+(a.y+h/2)+' C'+cx+' '+(a.y+h/2)+' '+cx+' '+(b.y+h/2)+' '+(b.x-2)+' '+(b.y+h/2)+'" style="fill:none;stroke:var(--warm);stroke-width:1.8;stroke-dasharray:5 4" marker-end="url(#c41-fw)"/>';}
+      else if(b.y===a.y){const ax=a.x+w/2,bx=b.x+w/2;s+='<path d="M'+ax+' '+(a.y+h)+' Q'+((ax+bx)/2)+' '+(a.y+h+30)+' '+bx+' '+(b.y+h+2)+'" style="fill:none;stroke:var(--muted);stroke-width:1.4" marker-end="url(#c41-fl)"/>';}
+      else if(b.y<a.y){s+='<path d="M'+(a.x+w)+' '+(a.y+h/2)+' C'+(a.x+w+46)+' '+(a.y+h/2)+' '+(b.x+w+46)+' '+(b.y+h/2)+' '+(b.x+w+2)+' '+(b.y+h/2)+'" style="fill:none;stroke:var(--muted);stroke-width:1.4" marker-end="url(#c41-fl)"/>';}
+      else s+='<line x1="'+(a.x+w/2)+'" y1="'+(a.y+h)+'" x2="'+(b.x+w/2)+'" y2="'+(b.y-2)+'" style="stroke:var(--muted);stroke-width:1.4" marker-end="url(#c41-fl)"/>';
+    }));
+    IDS.forEach(u=>{const p=pos[u];if(!p)return;const T=TIPO[N[u].t];const act=u===cur;const inal=lv[u]===undefined;
+      const rx=N[u].t==='fin'||N[u].t==='hum'?17:N[u].t==='cond'?3:7;
+      s+='<g style="opacity:'+(inal?.4:1)+'"><rect x="'+p.x+'" y="'+p.y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" style="fill:var('+T[2]+');stroke:var('+(hueco.has(u)?'--warm':T[1])+');stroke-width:'+(act?3.5:hueco.has(u)?2.6:1.4)+(hueco.has(u)?';stroke-dasharray:4 3':'')+'"/>'+
+        '<text x="'+(p.x+w/2)+'" y="'+(p.y+h/2+4)+'" text-anchor="middle" style="fill:var(--ink);font:'+(act?700:600)+' 12px var(--f-display)">'+N[u].c+(inal?' (sin uso)':'')+'</text></g>';});
+    return s+'</svg>';
+  }
+  function tabla(){
+    const lv=niveles();
+    q('#c41-tb').innerHTML=IDS.filter(u=>N[u].r).map(u=>N[u].r.map((et,i)=>{const v=D[u][i];
+      return '<tr class="'+(!v&&lv[u]!==undefined?'hueco':'')+'">'+(i===0?'<td class="nd" rowspan="'+N[u].r.length+'" style="--cc:var('+TIPO[N[u].t][1]+')">'+N[u].c+'</td>':'')+'<td>'+et+'</td><td><label style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)" for="c41-s-'+u+'-'+i+'">Destino de '+N[u].c+', '+et+'</label><select id="c41-s-'+u+'-'+i+'" data-u="'+u+'" data-i="'+i+'"><option value="">— sin destino —</option>'+IDS.filter(x=>x!=='inicio').map(x=>'<option value="'+x+'"'+(x===v?' selected':'')+'>'+N[x].c+'</option>').join('')+'</select></td></tr>';}).join('')).join('');
+  }
+  function validar(A){
+    const out=[];
+    out.push('<span>Recorridos posibles de punta a punta: <b>'+A.rutas+'</b>. Cada uno es un caso de prueba.</span>');
+    if(A.huecos.length)out.push('<span class="warn">'+A.huecos.length+' rama'+(A.huecos.length>1?'s':'')+' sin destino (callejón sin salida): '+A.huecos.map(([u,i])=>N[u].c+' → «'+N[u].r[i]+'»').join('; ')+'.</span>');
+    if(A.ciclos.length)out.push('<span class="warn">Vuelta atrás sin límite: '+A.ciclos.map(([u,v])=>N[u].c+' → '+N[v].c).join('; ')+'. Un cliente puede dar vueltas para siempre; pon un contador o manda la segunda vuelta a otro nodo.</span>');
+    if(A.inal.length)out.push('<span class="warn">Nodos que ningún camino alcanza: '+A.inal.map(u=>N[u].c).join(', ')+'.</span>');
+    if(!A.persona)out.push('<span class="warn">Ningún camino llega a una persona: el flujo no tiene salida humana.</span>');
+    if(!A.huecos.length&&!A.ciclos.length&&!A.inal.length&&A.persona)out.push('<span class="ok">El validador no encuentra problemas: todas las ramas tienen destino, no hay vueltas sin límite y existe salida humana. Ahora recórrelo como cliente.</span>');
+    q('#c41-out').innerHTML=out.join('');
+  }
+  function pintar(){const A=analizar();q('#c41-arbol').innerHTML=arbol(A);validar(A);}
+  function chat(cl,quien,txt){const d=document.createElement('div');d.className='c41-m '+cl;if(quien){const s=document.createElement('small');s.textContent=quien;d.appendChild(s);}d.appendChild(document.createTextNode(txt));q('#c41-chat').appendChild(d);q('#c41-chat').scrollTop=q('#c41-chat').scrollHeight;}
+  function nota(cl,txt){const d=document.createElement('div');d.className=cl;d.textContent=txt;q('#c41-chat').appendChild(d);q('#c41-chat').scrollTop=q('#c41-chat').scrollHeight;}
+  function ir(u){
+    cur=u;pasos++;const n=N[u];
+    if(n.t==='acc'||n.t==='cond')nota('c41-s',n.txt);else chat('c41-b','Pía',n.txt);
+    if(n.t==='fin'){nota('c41-ok','Salida de éxito en '+pasos+' pasos. El flujo terminó bien.');opciones([]);}
+    else if(n.t==='hum'){nota('c41-ok','Salida humana en '+pasos+' pasos: el caso llega a una persona con el contexto.');opciones([]);}
+    else if(pasos>14){nota('c41-x','Llevas '+pasos+' pasos y el flujo no termina: es una vuelta sin límite. Laura ya se habría ido.');opciones([]);}
+    else opciones(n.r);
+    pintar();
+  }
+  function opciones(rs){
+    const u=cur,sis=N[u]&&(N[u].t==='acc'||N[u].t==='cond');
+    q('#c41-opc').innerHTML=rs.map((r,i)=>'<button type="button" data-i="'+i+'">'+(sis?'Sistema: ':'')+r+'</button>').join('')+(rs.length?'':'<button type="button" data-re="1">Recorrer otra vez</button>');
+  }
+  q('#c41-opc').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.re){empezar();return;}
+    const i=+b.dataset.i,u=cur,n=N[u];
+    if(n.t==='preg')chat('c41-c','Laura',n.r[i]);else if(n.t==='acc'||n.t==='cond')nota('c41-s','→ '+n.r[i]);
+    const v=D[u][i];
+    if(!v){nota('c41-x','Esta rama no tiene destino: el bot se queda callado y la conversación queda colgada. Corrígela en la tabla.');opciones([]);return;}
+    ir(v);});
+  function empezar(){q('#c41-chat').innerHTML='';pasos=0;chat('c41-c','Laura','No tengo internet');nota('c41-s','intención reportar_falla (0,94) → entra al flujo');ir('inicio');}
+  function cargar(P){D=clon(P);cur=null;tabla();pintar();q('#c41-chat').innerHTML='';q('#c41-opc').innerHTML='';nota('c41-s','Flujo cargado. Toca «Recorrer como cliente».');}
+  q('#c41-tb').addEventListener('change',e=>{const s=e.target.closest('select');if(!s)return;D[s.dataset.u][+s.dataset.i]=s.value;tabla();pintar();});
+  q('#c41-borr').addEventListener('click',()=>cargar(BORRADOR));
+  q('#c41-comp').addEventListener('click',()=>cargar(COMPLETO));
+  q('#c41-rec').addEventListener('click',empezar);
+  q('#c41-ley').innerHTML=Object.values(TIPO).map(([n,c,f])=>'<span><i style="background:var('+f+');border:1.5px solid var('+c+')"></i>'+n+'</span>').join('');
+  cargar(BORRADOR);
+})();
+</script>
+</body>
+</html>

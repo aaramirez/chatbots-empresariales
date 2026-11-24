@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El proyecto de implementación · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="el-proyecto-de-implementacion">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 17 DE 17</span><h1>El proyecto: del descubrimiento al bot estable en producción</h1><p class="lede">Ya tienes todas las piezas de Pía: la conversación, la plataforma, los canales, los flujos, la seguridad, el costo, las métricas y las pruebas. Falta el orden. Este capítulo arma el proyecto que las lleva a producción: las fases, el equipo, el piloto, las compuertas y la decisión honesta de escalar, reducir o cerrar.</p></header>
+<section><div class="prose"><p>Durante dieciséis capítulos construiste a Pía pieza por pieza. En la vida real nadie la construye en ese orden. Un lunes, la gerencia de Servicios Ejemplo dice «queremos un asistente en WhatsApp para fin de año», y a partir de ahí hay que decidir qué se hace primero, quién lo hace, cuándo se prueba con clientes y, sobre todo, con qué evidencia se decide seguir. Ese orden es un <b>proyecto de implementación</b> (<i>implementation project</i>), y es lo que separa a los bots que llegan a producción de los que se quedan en una demo bonita.</p><p>Este capítulo cuenta el curso otra vez, pero como proyecto: en qué fase se usa cada capítulo, quién lo hace y qué compuerta hay que pasar antes de seguir. Al final, Pía queda estable en producción, y tú, con un mapa para hacerlo con tu propio bot.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en abrir un restaurante. Antes de cocinar, alguien mira el barrio, cuenta cuánta gente pasa y decide el menú corto con el que abrir. Se arma la cocina y se prueban los platos con amigos. Hay una noche de apertura suave, con pocas mesas y el chef mirando cada plato que sale. Solo después se abre al público, y durante las primeras semanas el dueño está ahí todas las noches. Si a los tres meses el local no cubre sus costos, se cambia el menú o se cierra, aunque la decoración sea preciosa. Un bot de empresa sigue el mismo camino, con los mismos momentos de verdad.</p></div></section>
+<section><h2>Las fases y cómo se solapan</h2><div class="prose"><p>Un proyecto de chatbot pasa por seis <b>fases</b> (<i>phases</i>). Cada una tiene una pregunta que responder y un producto que entregar:</p><div class="tbl"><table><thead><tr><th>Fase</th><th>Pregunta</th><th>Lo que entrega</th><th>Capítulos del curso</th></tr></thead><tbody><tr><td><b>Descubrimiento</b> (<i>discovery</i>)</td><td>¿qué pedidos, con qué sistemas y qué riesgo?</td><td>motivos con volumen, línea base, inventario de sistemas, alcance</td><td>1, 2</td></tr><tr><td><b>Diseño</b> (<i>design</i>)</td><td>¿cómo conversa y qué hace en cada caso?</td><td>guía de voz, especificaciones, flujos, paquete de traspaso</td><td>3, 4, 9, 10</td></tr><tr><td><b>Construcción</b> (<i>build</i>)</td><td>¿cómo se arma y se conecta?</td><td>plataforma, canales, integraciones, conocimiento, guardrails</td><td>5, 6, 7, 8, 11, 12, 16</td></tr><tr><td><b>Piloto</b> (<i>pilot</i>)</td><td>¿funciona con clientes reales acotados?</td><td>resultados contra la línea base</td><td>13, 14, 15</td></tr><tr><td><b>Despliegue</b> (<i>rollout</i>)</td><td>¿aguanta al crecer?</td><td>expansión por tramos con vigilancia</td><td>15</td></tr><tr><td><b>Operación</b> (<i>operations</i>)</td><td>¿sigue funcionando cada semana?</td><td>métricas, mejoras, versiones, comité</td><td>13, 14, 15</td></tr></tbody></table></div><p>En el papel parecen una cadena. En la práctica <b>se solapan</b>, por dos razones. La primera: no se construye todo antes de probar nada; se diseña un flujo, se construye, se prueba y se aprende, y lo aprendido cambia el diseño del siguiente. La segunda: el bot crece por <b>olas</b> (<i>waves</i>). Mientras la primera ola de Pía (deuda, pago, falla y estado del ticket) está en piloto, la segunda (ventas y prospectos, capítulo 10) ya está en diseño, y cuando la primera pasa a operación, nunca sale de ahí.</p></div><figure class="fig fig-esquema" id="17-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" style="min-width:760px" role="img" aria-label="Diagrama de barras en el tiempo con las seis fases del proyecto de Pía para dos olas: descubrimiento, diseño, construcción, piloto, despliegue y operación. Las fases se cruzan, la segunda ola empieza mientras la primera está en piloto y la operación no termina. Rombos marcan las compuertas.">
+<line x1="170" x2="170" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="209" y="30" class="t t-xs t-m" text-anchor="middle">MES 1</text>
+<line x1="249" x2="249" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="288" y="30" class="t t-xs t-m" text-anchor="middle">MES 2</text>
+<line x1="328" x2="328" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="367" y="30" class="t t-xs t-m" text-anchor="middle">MES 3</text>
+<line x1="407" x2="407" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="446" y="30" class="t t-xs t-m" text-anchor="middle">MES 4</text>
+<line x1="486" x2="486" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="525" y="30" class="t t-xs t-m" text-anchor="middle">MES 5</text>
+<line x1="564" x2="564" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="604" y="30" class="t t-xs t-m" text-anchor="middle">MES 6</text>
+<line x1="643" x2="643" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="683" y="30" class="t t-xs t-m" text-anchor="middle">MES 7</text>
+<line x1="722" x2="722" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="762" y="30" class="t t-xs t-m" text-anchor="middle">MES 8</text>
+<line x1="801" x2="801" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="841" y="30" class="t t-xs t-m" text-anchor="middle">MES 9</text>
+<line x1="880" x2="880" y1="40" y2="445" style="stroke:var(--grid)"/>
+<text x="14" y="62" class="t t-b">Primera ola: deuda, pago, falla, ticket</text>
+<text x="14" y="86" class="t t-s">Descubrimiento</text>
+<rect x="170" y="70" width="63" height="22" rx="6" class="d-casa"/>
+<text x="14" y="116" class="t t-s">Diseño</text>
+<rect x="209" y="100" width="118" height="22" rx="6" class="c-red"/>
+<text x="14" y="146" class="t t-s">Construcción</text>
+<rect x="249" y="130" width="158" height="22" rx="6" class="d-sis"/>
+<text x="14" y="176" class="t t-s">Piloto</text>
+<rect x="375" y="160" width="79" height="22" rx="6" class="c-apl"/>
+<text x="14" y="206" class="t t-s">Despliegue</text>
+<rect x="454" y="190" width="79" height="22" rx="6" class="c-enl"/>
+<text x="14" y="236" class="t t-s">Operación</text>
+<rect x="533" y="220" width="347" height="22" rx="6" class="d-inet" style="stroke-dasharray:6 3"/>
+<text x="872" y="235" class="t t-xs" text-anchor="end">NO TERMINA →</text>
+<path d="M233 70L242 81L233 92L224 81Z" style="fill:var(--ink)"/>
+<path d="M375 160L384 171L375 182L366 171Z" style="fill:var(--ink)"/>
+<path d="M454 160L463 171L454 182L445 171Z" style="fill:var(--ink)"/>
+<path d="M533 190L542 201L533 212L524 201Z" style="fill:var(--ink)"/>
+<text x="14" y="262" class="t t-b">Segunda ola: ventas y prospectos</text>
+<text x="14" y="286" class="t t-s">Descubrimiento</text>
+<rect x="375" y="270" width="39" height="22" rx="6" class="d-casa"/>
+<text x="14" y="316" class="t t-s">Diseño</text>
+<rect x="415" y="300" width="87" height="22" rx="6" class="c-red"/>
+<text x="14" y="346" class="t t-s">Construcción</text>
+<rect x="454" y="330" width="126" height="22" rx="6" class="d-sis"/>
+<text x="14" y="376" class="t t-s">Piloto</text>
+<rect x="580" y="360" width="79" height="22" rx="6" class="c-apl"/>
+<text x="14" y="406" class="t t-s">Despliegue</text>
+<rect x="659" y="390" width="79" height="22" rx="6" class="c-enl"/>
+<text x="14" y="436" class="t t-s">Operación</text>
+<rect x="738" y="420" width="142" height="22" rx="6" class="d-inet" style="stroke-dasharray:6 3"/>
+<text x="872" y="435" class="t t-xs" text-anchor="end">NO TERMINA →</text>
+<path d="M415 270L424 281L415 292L406 281Z" style="fill:var(--ink)"/>
+<path d="M580 360L589 371L580 382L571 371Z" style="fill:var(--ink)"/>
+<path d="M659 360L668 371L659 382L650 371Z" style="fill:var(--ink)"/>
+<path d="M738 390L747 401L738 412L729 401Z" style="fill:var(--ink)"/>
+<path d="M840 450L849 459L840 468L831 459Z" style="fill:var(--ink)" transform="translate(-660 -8)"/>
+<text x="196" y="455" class="t t-s">compuerta: alguien con autoridad decide, con evidencia, si se sigue</text>
+</svg></div><figcaption><b>Las fases del proyecto de Pía en el tiempo.</b> El eje horizontal son los meses. Cada barra es una fase con su color; arriba, la primera ola, y abajo, la segunda. Fíjate en tres cosas: el diseño y la construcción se cruzan, porque cada flujo se prueba apenas existe; el diseño de la segunda ola empieza mientras la primera está en piloto; y la operación, en gris de medición, es la única barra que no termina. Los rombos son las compuertas: el momento en que alguien con autoridad decide, con evidencia, si se pasa a la fase siguiente.</figcaption></figure><div class="prose"><p>Una <b>compuerta</b> (<i>gate</i>) es un punto de decisión con criterios escritos de antemano: qué tiene que estar listo y qué métricas tienen que cumplirse para seguir. No es una reunión de avance; es el lugar donde un proyecto puede decir que no. La mayoría de los fracasos públicos del capítulo 1 se saltaron al menos una.</p></div></section>
+<section><h2>Descubrimiento: procesos reales, sistemas a integrar y el alcance del MVP</h2><div class="prose"><p>El descubrimiento es la fase que más se acorta y la que más cuesta después. Su trabajo es mirar cómo se atiende <b>hoy</b>, no cómo dice el manual que se atiende. En Servicios Ejemplo dura tres semanas y tiene tres frentes.</p><p><b>Los procesos reales.</b> El equipo escucha llamadas, se sienta junto a Carla y Andrés una mañana entera y cuenta los motivos de contacto de los últimos tres meses. Descubre lo que viste en el capítulo 1: cuatro motivos (cuánto debo, cómo pago, no tengo servicio y estado de mi caso) se llevan la mayor parte del volumen. Y descubre cosas que ningún documento decía: que los agentes consultan dos sistemas distintos para saber si un pago está aplicado, o que el recargo por atraso se explica de tres maneras según quién atiende.</p><p><b>Los sistemas a integrar.</b> Cada pedido de la primera ola necesita uno o varios sistemas. El inventario dice, para cada uno, qué necesita Pía, si existe una API, quién es el dueño y qué riesgo tiene:</p><div class="tbl"><table><thead><tr><th>Sistema</th><th>Lo que necesita Pía</th><th>¿Hay API?</th><th>Dueño</th><th>Riesgo</th></tr></thead><tbody><tr><td>Identidad</td><td>verificar con un código de un solo uso</td><td>sí</td><td>seguridad</td><td>alto</td></tr><tr><td>Facturación</td><td>saldo, facturas y pagos en proceso</td><td>sí, solo lectura</td><td>finanzas</td><td>alto</td></tr><tr><td>Pasarela de pagos</td><td>enlaces y avisos por webhook</td><td>sí</td><td>finanzas</td><td>alto</td></tr><tr><td>Mesa de ayuda</td><td>crear y consultar tickets</td><td>parcial: no emite eventos</td><td>operaciones</td><td>medio</td></tr><tr><td>Monitoreo de red</td><td>averías masivas por zona</td><td>no: hay que construirla</td><td>red</td><td>medio</td></tr><tr><td>CRM</td><td>datos del cliente y su historia</td><td>sí</td><td>atención</td><td>medio</td></tr></tbody></table></div><p>Dos filas de esa tabla cambian el plan. La mesa de ayuda no avisa cuando un ticket cambia, así que los avisos proactivos del capítulo 11 se mueven a la segunda ola. Y el monitoreo no tiene API: sin ella, Pía no sabe si hay una avería masiva y abriría mil tickets por la misma caída. Esa integración pasa a ser la primera tarea de construcción.</p><p><b>El alcance del MVP.</b> El <b>producto mínimo viable</b> (<i>MVP, Minimum Viable Product</i>) es la versión más pequeña que entrega valor real y permite aprender. Para Pía es la primera ola, en el widget web para clientes ya autenticados y en WhatsApp, con la prueba de idoneidad del capítulo 1 como filtro. Tan importante como lo que entra es lo que queda <b>fuera de alcance</b> por escrito: ventas, reclamos de cobro (siempre a una persona), cambios de plan y traslados. Escribirlo evita que el alcance crezca solo en cada reunión.</p><p>El descubrimiento termina con un documento corto: los motivos con su volumen, la <b>línea base</b> de cada uno (capítulo 14), el inventario de sistemas, el alcance y lo que queda fuera, los riesgos y las <b>condiciones de apagado</b> (<i>stop conditions</i>): qué resultado detiene el proyecto, escrito antes de empezar, cuando todavía nadie está enamorado de él.</p></div></section>
+<section><h2>El equipo del proyecto y los roles que quedan después</h2><div class="prose"><p>Un chatbot de empresa no lo construye «el de sistemas». Lo construye un equipo pequeño y mixto, y una parte de ese equipo se queda para siempre, porque el bot no se termina: se opera.</p><div class="tbl"><table><thead><tr><th>Rol</th><th>Durante el proyecto</th><th>Después, en operación</th></tr></thead><tbody><tr><td><b>Patrocinador</b> (<i>sponsor</i>)</td><td>consigue el presupuesto y destraba decisiones entre áreas</td><td>revisa el caso de negocio cada trimestre</td></tr><tr><td><b>Dueño del bot</b> (<i>product owner</i>)</td><td>decide el alcance, prioriza y preside las compuertas</td><td>preside el comité y responde por Pía de punta a punta</td></tr><tr><td><b>Diseño conversacional</b></td><td>guía de voz, especificaciones y flujos</td><td>mejora flujos con lo que dice la revisión semanal</td></tr><tr><td><b>Integración y plataforma</b></td><td>conecta canales y sistemas, arma los entornos</td><td>guardia técnica, versiones y costo</td></tr><tr><td><b>Ingeniería de IA</b></td><td>instrucciones, modelos, guardrails y evaluación</td><td>vigila la calidad del modelo y los cambios de proveedor</td></tr><tr><td><b>Dueños de contenido</b></td><td>curan la base de conocimiento de su área</td><td>mantienen su contenido vigente en autoservicio</td></tr><tr><td><b>Calidad y equipo rojo</b></td><td>baterías de pruebas y ataques</td><td>corren la regresión en cada cambio</td></tr><tr><td><b>Analítica</b></td><td>instrumentación, línea base y tablero</td><td>el ciclo de mejora del capítulo 14</td></tr><tr><td><b>Seguridad y cumplimiento</b></td><td>revisan datos personales, pagos y riesgos</td><td>aprueban los cambios de riesgo alto</td></tr><tr><td><b>Operación de atención</b></td><td>agentes y supervisores prueban el traspaso</td><td>reciben los casos y avisan primero cuando algo anda mal</td></tr></tbody></table></div></div><figure class="fig fig-esquema" id="17-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" style="min-width:760px" role="img" aria-label="Diez roles del proyecto a la izquierda y el equipo de operación permanente a la derecha. Seis roles pasan completos a la operación y cuatro se quedan con menos dedicación. Abajo, la diferencia entre el presupuesto de construcción y el de operación.">
+<defs><marker id="d172-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker></defs>
+<text x="130" y="24" class="t t-xs t-m" text-anchor="middle">EQUIPO DEL PROYECTO (BUILD)</text>
+<text x="690" y="24" class="t t-xs t-m" text-anchor="middle">EQUIPO DE OPERACIÓN (RUN)</text>
+<rect x="20" y="36" width="220" height="30" rx="7" class="caja"/><text x="32" y="55" class="t t-s t-b">Patrocinador</text>
+<path d="M244 51H486" class="ln" style="stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4" marker-end="url(#d172-m)"/>
+<text x="365" y="46" class="t t-xs t-m" text-anchor="middle">MENOS DEDICACIÓN</text>
+<rect x="490" y="36" width="390" height="30" rx="7" class="caja" style="stroke-dasharray:5 3"/><text x="502" y="55" class="t t-s">revisa el caso cada trimestre</text>
+<rect x="20" y="74" width="220" height="30" rx="7" class="c-red"/><text x="32" y="93" class="t t-s t-b">Dueño del bot</text>
+<path d="M244 89H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="84" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="74" width="390" height="30" rx="7" class="c-red"/><text x="502" y="93" class="t t-s">preside el comité</text>
+<rect x="20" y="112" width="220" height="30" rx="7" class="c-red"/><text x="32" y="131" class="t t-s t-b">Diseño conversacional</text>
+<path d="M244 127H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="122" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="112" width="390" height="30" rx="7" class="c-red"/><text x="502" y="131" class="t t-s">mejora flujos cada semana</text>
+<rect x="20" y="150" width="220" height="30" rx="7" class="d-sis"/><text x="32" y="169" class="t t-s t-b">Integración y plataforma</text>
+<path d="M244 165H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="160" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="150" width="390" height="30" rx="7" class="d-sis"/><text x="502" y="169" class="t t-s">guardia técnica y versiones</text>
+<rect x="20" y="188" width="220" height="30" rx="7" class="c-tra"/><text x="32" y="207" class="t t-s t-b">Ingeniería de IA</text>
+<path d="M244 203H486" class="ln" style="stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4" marker-end="url(#d172-m)"/>
+<text x="365" y="198" class="t t-xs t-m" text-anchor="middle">MENOS DEDICACIÓN</text>
+<rect x="490" y="188" width="390" height="30" rx="7" class="c-tra" style="stroke-dasharray:5 3"/><text x="502" y="207" class="t t-s">calidad del modelo y proveedor</text>
+<rect x="20" y="226" width="220" height="30" rx="7" class="c-enl"/><text x="32" y="245" class="t t-s t-b">Dueños de contenido</text>
+<path d="M244 241H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="236" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="226" width="390" height="30" rx="7" class="c-enl"/><text x="502" y="245" class="t t-s">contenido vigente, en autoservicio</text>
+<rect x="20" y="264" width="220" height="30" rx="7" class="c-apl"/><text x="32" y="283" class="t t-s t-b">Calidad y equipo rojo</text>
+<path d="M244 279H486" class="ln" style="stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4" marker-end="url(#d172-m)"/>
+<text x="365" y="274" class="t t-xs t-m" text-anchor="middle">MENOS DEDICACIÓN</text>
+<rect x="490" y="264" width="390" height="30" rx="7" class="c-apl" style="stroke-dasharray:5 3"/><text x="502" y="283" class="t t-s">regresión en cada cambio</text>
+<rect x="20" y="302" width="220" height="30" rx="7" class="d-inet"/><text x="32" y="321" class="t t-s t-b">Analítica</text>
+<path d="M244 317H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="312" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="302" width="390" height="30" rx="7" class="d-inet"/><text x="502" y="321" class="t t-s">ciclo de mejora semanal</text>
+<rect x="20" y="340" width="220" height="30" rx="7" class="c-apl"/><text x="32" y="359" class="t t-s t-b">Seguridad y cumplimiento</text>
+<path d="M244 355H486" class="ln" style="stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4" marker-end="url(#d172-m)"/>
+<text x="365" y="350" class="t t-xs t-m" text-anchor="middle">MENOS DEDICACIÓN</text>
+<rect x="490" y="340" width="390" height="30" rx="7" class="c-apl" style="stroke-dasharray:5 3"/><text x="502" y="359" class="t t-s">aprueban el riesgo alto</text>
+<rect x="20" y="378" width="220" height="30" rx="7" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="32" y="397" class="t t-s t-b">Operación de atención</text>
+<path d="M244 393H486" class="ln" style="stroke:var(--muted);stroke-width:1.6" marker-end="url(#d172-m)"/>
+<text x="365" y="388" class="t t-xs t-m" text-anchor="middle">COMPLETO</text>
+<rect x="490" y="378" width="390" height="30" rx="7" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="502" y="397" class="t t-s">reciben los casos y alertan</text>
+<line x1="20" y1="432" x2="880" y2="432" class="ln s-warm" style="stroke-width:2;stroke-dasharray:8 5"/>
+<text x="20" y="456" class="t t-s t-b k-warm">Presupuesto de construcción ≠ presupuesto de operación.</text>
+<text x="20" y="476" class="t t-s">Si solo se financia la izquierda, el bot queda sin quien lo mantenga: el contenido envejece y la calidad cae en semanas.</text>
+</svg></div><figcaption><b>El equipo que construye y el equipo que se queda.</b> A la izquierda, los roles del proyecto; a la derecha, el equipo de operación permanente. Las flechas sólidas son los roles que pasan completos a la operación; las punteadas, los que se quedan con menos dedicación. Abajo, en naranja, la línea que separa un presupuesto de construcción (<i>build</i>) de uno de operación (<i>run</i>): un proyecto que solo financia la izquierda deja un bot sin nadie que lo mantenga, y en pocas semanas el contenido envejece y el bot se degrada.</figcaption></figure><div class="prose"><p>La última columna de la tabla es la que más se olvida en el presupuesto. Un bot sin dueños de contenido responde con la promoción del mes pasado; sin analítica, nadie ve la falsa contención; sin guardia técnica, un webhook caído deja pagos sin registrar toda una noche. El costo de esa operación también entra en el costo total por resolución del capítulo 13.</p></div></section>
+<section><h2>MVP y piloto con usuarios reales y acotados</h2><div class="prose"><p>El MVP es <b>qué</b> se construye; el <b>piloto</b> (<i>pilot</i>) es <b>cómo</b> se prueba con clientes reales sin exponer a todos. Un piloto bien hecho es un experimento, y como todo experimento tiene cuatro piezas escritas antes de empezar:</p><ol class="steps"><li><span><b>La cohorte</b> (<i>cohort</i>): quiénes participan. Pía empieza con empleados de Servicios Ejemplo que también son clientes, después con el 5 % de los clientes que escriben por WhatsApp en una región. La asignación es estable, como en la práctica del capítulo 15.</span></li><li><span><b>La salida humana visible.</b> Durante el piloto, «hablar con una persona» está a un toque en cada mensaje. Un piloto que esconde la salida mide lo que el cliente soporta, no lo que el bot resuelve.</span></li><li><span><b>Las métricas y sus umbrales</b>: resolución correcta, recontacto a siete días, escape, CSAT con su tasa de respuesta, costo por resolución y el <b>trabajo humano oculto</b> (<i>hidden human work</i>), las horas que los agentes pasan arreglando lo que el bot dejó a medias, que no aparecen en ningún tablero si nadie las cuenta.</span></li><li><span><b>La decisión al final</b>: escalar, reducir el alcance, mantener como copiloto de los agentes o cerrar. Las cuatro son resultados legítimos de un piloto.</span></li></ol><p>La comparación se hace contra la región que todavía no tiene a Pía, que hace de grupo de control (capítulo 14). Sin ese control, una baja de llamadas en diciembre puede ser Pía o puede ser que en diciembre siempre llaman menos.</p></div></section>
+<section><h2>Despliegue por tramos e <i>hypercare</i></h2><div class="prose"><p>Si el piloto pasa su compuerta, Pía crece. Pero no de golpe: por <b>tramos</b> (<i>stages</i>), y cada tramo cambia solo una cosa a la vez, para saber qué causó lo que pase después:</p><ul><li><b>Por intención</b>: primero las cuatro de la primera ola; ventas solo cuando la primera ola está estable.</li><li><b>Por canal</b>: el widget web autenticado primero, porque la identidad ya viene resuelta; WhatsApp después.</li><li><b>Por segmento</b>: hogares antes que pequeños negocios, cuyas cuentas tienen más servicios y más excepciones.</li><li><b>Por porcentaje</b>: dentro de cada tramo, 5 %, 25 %, 50 % y 100 %, como en el capítulo 15.</li></ul><p>Después de cada expansión viene un período de <b>hypercare</b> (vigilancia intensiva), de una a dos semanas, en que el equipo trabaja como si cada conversación fuera la primera: revisión diaria de una muestra en vez de semanal, guardia técnica extendida, umbrales de alerta más estrictos, una reunión corta cada mañana con atención para recoger lo que vieron los agentes y el interruptor de apagado a mano. El hypercare termina con criterios, no con el calendario: cuando las métricas del tramo se estabilizan y no hay incidentes abiertos de severidad alta, el tramo pasa a operación normal.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que amplía su bot de la web a WhatsApp suele descubrir en la primera semana de hypercare algo que el piloto no mostró: en WhatsApp los clientes mandan audios y fotos de la factura, y el bot solo sabía leer texto. Sin la revisión diaria, esas conversaciones habrían pasado un mes como «abandonos» en el tablero. La práctica que funciona es que el primer día de cada tramo nuevo alguien lea conversaciones al azar cada pocas horas, y que cada sorpresa se vuelva un caso de prueba antes del siguiente tramo.</p></div></section>
+<section><h2>El plan de 90 días en seis tramos y las compuertas antes de producción</h2><div class="prose"><p>Todo lo anterior cabe en un ritmo que se repite en los proyectos que llegan bien a producción: noventa días desde la idea hasta una decisión informada, en seis tramos, cada uno con su compuerta. No es una ley; es un ritmo que obliga a tener evidencia antes de gastar más.</p></div><figure class="fig fig-flujo" id="17-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:780px" role="img" aria-label="Plan de 90 días en seis tramos: elegir, fundamentar, probar e integrar, pilotar, decidir y operar o escalar, cada uno con lo que debe quedar hecho y una compuerta al final con su pregunta. La compuerta de decidir tiene cuatro salidas: escalar, reducir, copiloto o cerrar.">
+<rect x="12" y="16" width="138" height="50" rx="8" class="d-casa"/>
+<text x="81.0" y="38" class="t t-s t-b" text-anchor="middle">Elegir</text><text x="81.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 1 a 15</text>
+<text x="20" y="92" class="t t-s">• una intención</text>
+<text x="20" y="110" class="t t-s">• dueño de negocio</text>
+<text x="30" y="128" class="t t-s">y de riesgo</text>
+<text x="20" y="146" class="t t-s">• línea base</text>
+<text x="20" y="164" class="t t-s">• condición de apagado</text>
+<path d="M81.0 198L95.0 212L81.0 226L67.0 212Z" style="fill:var(--ink)"/>
+<text x="81.0" y="246" class="t t-s" text-anchor="middle">¿dueño, línea base</text><text x="81.0" y="262" class="t t-s" text-anchor="middle">y apagado?</text>
+<rect x="158" y="16" width="138" height="50" rx="8" class="c-enl"/>
+<text x="227.0" y="38" class="t t-s t-b" text-anchor="middle">Fundamentar</text><text x="227.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 16 a 30</text>
+<text x="166" y="92" class="t t-s">• contenido con</text>
+<text x="176" y="110" class="t t-s">vigencia</text>
+<text x="166" y="128" class="t t-s">• respuestas prohibidas</text>
+<text x="166" y="146" class="t t-s">• diseño del traspaso</text>
+<text x="166" y="164" class="t t-s">• conjunto de evaluación</text>
+<path d="M227.0 198L241.0 212L227.0 226L213.0 212Z" style="fill:var(--ink)"/>
+<text x="227.0" y="246" class="t t-s" text-anchor="middle">¿fuente autorizada</text><text x="227.0" y="262" class="t t-s" text-anchor="middle">y traspaso?</text>
+<rect x="304" y="16" width="138" height="50" rx="8" class="c-apl"/>
+<text x="373.0" y="38" class="t t-s t-b" text-anchor="middle">Probar e integrar</text><text x="373.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 31 a 50</text>
+<text x="312" y="92" class="t t-s">• prototipo integrado</text>
+<text x="322" y="110" class="t t-s">en pruebas</text>
+<text x="312" y="128" class="t t-s">• baterías y red team</text>
+<text x="312" y="146" class="t t-s">• ensayo de caída</text>
+<text x="322" y="164" class="t t-s">y de reversión</text>
+<path d="M373.0 198L387.0 212L373.0 226L359.0 212Z" style="fill:var(--ink)"/>
+<text x="373.0" y="246" class="t t-s" text-anchor="middle">¿pasa la batería</text><text x="373.0" y="262" class="t t-s" text-anchor="middle">y la reversión?</text>
+<rect x="450" y="16" width="138" height="50" rx="8" class="c-red"/>
+<text x="519.0" y="38" class="t t-s t-b" text-anchor="middle">Pilotar</text><text x="519.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 51 a 70</text>
+<text x="458" y="92" class="t t-s">• cohorte acotada</text>
+<text x="458" y="110" class="t t-s">• salida humana visible</text>
+<text x="458" y="128" class="t t-s">• resolución y</text>
+<text x="468" y="146" class="t t-s">recontacto</text>
+<text x="458" y="164" class="t t-s">• trabajo oculto</text>
+<path d="M519.0 198L533.0 212L519.0 226L505.0 212Z" style="fill:var(--ink)"/>
+<text x="519.0" y="246" class="t t-s" text-anchor="middle">¿supera la línea</text><text x="519.0" y="262" class="t t-s" text-anchor="middle">base sin daños?</text>
+<rect x="596" y="16" width="138" height="50" rx="8" class="caja" style="stroke:var(--ink)"/>
+<text x="665.0" y="38" class="t t-s t-b" text-anchor="middle">Decidir</text><text x="665.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 71 a 85</text>
+<text x="604" y="92" class="t t-s">• comparar contra</text>
+<text x="614" y="110" class="t t-s">la línea base</text>
+<text x="614" y="128" class="t t-s">y los umbrales</text>
+<text x="614" y="146" class="t t-s">del día 1</text>
+<text x="604" y="164" class="t t-s">• decisión escrita</text>
+<path d="M665.0 198L679.0 212L665.0 226L651.0 212Z" style="fill:var(--ink)"/>
+<text x="665.0" y="246" class="t t-s" text-anchor="middle">escalar · reducir</text><text x="665.0" y="262" class="t t-s" text-anchor="middle">copiloto · cerrar</text>
+<rect x="742" y="16" width="138" height="50" rx="8" class="d-inet"/>
+<text x="811.0" y="38" class="t t-s t-b" text-anchor="middle">Operar o escalar</text><text x="811.0" y="56" class="t t-xs t-m" text-anchor="middle">DÍAS 86 a 90</text>
+<text x="750" y="92" class="t t-s">• despliegue</text>
+<text x="760" y="110" class="t t-s">progresivo</text>
+<text x="750" y="128" class="t t-s">• manual de operación</text>
+<text x="750" y="146" class="t t-s">• guardia y tablero</text>
+<text x="750" y="164" class="t t-s">• auditoría mensual</text>
+<path d="M811.0 198L825.0 212L811.0 226L797.0 212Z" style="fill:var(--ink)"/>
+<text x="811.0" y="246" class="t t-s" text-anchor="middle">¿operación</text><text x="811.0" y="262" class="t t-s" text-anchor="middle">lista?</text>
+<line x1="14" y1="190" x2="886" y2="190" class="ln" style="stroke:var(--line)"/>
+<defs><marker id="d173-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker></defs>
+
+<circle cx="601.0" cy="296" r="5" style="fill:var(--good)"/><text x="613.0" y="300" class="t t-s">escalar → operar</text>
+
+<circle cx="601.0" cy="318" r="5" style="fill:var(--accent)"/><text x="613.0" y="322" class="t t-s">reducir el alcance → vuelve a fundamentar</text>
+
+<circle cx="601.0" cy="340" r="5" style="fill:var(--accent)"/><text x="613.0" y="344" class="t t-s">copiloto de los agentes</text>
+
+<circle cx="601.0" cy="362" r="5" style="fill:var(--warm)"/><text x="613.0" y="366" class="t t-s">cerrar y documentar</text>
+<text x="595.0" y="284" class="t t-xs t-m">LAS CUATRO SALIDAS DE DECIDIR</text>
+<text x="14" y="392" class="t t-s t-m">Solo «escalar» lleva al último tramo. Las otras tres son resultados legítimos de un piloto.</text>
+</svg></div><figcaption><b>El plan de 90 días de Pía.</b> Una línea de tiempo de izquierda a derecha con seis tramos: elegir (días 1 a 15), fundamentar (16 a 30), probar e integrar (31 a 50), pilotar (51 a 70), decidir (71 a 85) y operar o escalar (86 a 90). Debajo de cada tramo, lo que debe quedar hecho; al final de cada uno, un rombo con su compuerta y la pregunta que la abre. La compuerta de «decidir» tiene cuatro salidas: escalar, reducir el alcance, mantener como copiloto o cerrar. Solo la primera lleva al último tramo.</figcaption></figure><div class="prose"><div class="tbl"><table><thead><tr><th>Días</th><th>Tramo</th><th>Lo que debe quedar hecho</th><th>Compuerta</th></tr></thead><tbody><tr><td>1 a 15</td><td><b>Elegir</b></td><td>intención repetible y medible, dueño de negocio y de riesgo, línea base, condiciones de apagado</td><td>¿hay dueño, línea base y condición de apagado?</td></tr><tr><td>16 a 30</td><td><b>Fundamentar</b></td><td>contenido curado con vigencia, respuestas prohibidas, límites de autoridad, diseño del traspaso, conjunto de evaluación con casos normales, límite y ataques</td><td>¿la fuente es autorizada y el traspaso está diseñado?</td></tr><tr><td>31 a 50</td><td><b>Probar e integrar</b></td><td>prototipo integrado en el entorno de pruebas, baterías y red team, ensayo de caída de un sistema y de reversión</td><td>¿pasa la batería y la reversión funciona?</td></tr><tr><td>51 a 70</td><td><b>Pilotar</b></td><td>cohorte acotada con salida humana visible, medición de resolución, recontacto, incidentes y trabajo oculto</td><td>¿los resultados superan la línea base sin daños?</td></tr><tr><td>71 a 85</td><td><b>Decidir</b></td><td>comparación contra la línea base y los umbrales del día 1, decisión documentada con su evidencia</td><td>¿escalar, reducir, copiloto o cerrar?</td></tr><tr><td>86 a 90</td><td><b>Operar o escalar</b></td><td>despliegue progresivo, manual de operación (<i>runbook</i>), guardia, tablero, auditoría mensual</td><td>¿está lista la operación permanente?</td></tr></tbody></table></div></div><div class="lab" id="17-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Plan de 90 días: ubica las actividades y mira qué compuerta queda sin cumplir</h3></div><p class="hint">Cada actividad del proyecto de Pía tiene un selector: ubícala en uno de los seis tramos. Empieza con el «plan apurado», el que suele proponerse en la primera reunión, y mira qué compuertas se caen y por qué. Luego corrígelo actividad por actividad hasta que las seis compuertas queden en verde, o toca «Ver la ubicación sugerida».</p><style>
+[id="17-lab-1"] .c171-act{display:grid;gap:6px}
+[id="17-lab-1"] .c171-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,190px);gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card);font:400 .82rem/1.35 var(--f-body)}
+@media (max-width:560px){[id="17-lab-1"] .c171-row{grid-template-columns:minmax(0,1fr)}}
+[id="17-lab-1"] .c171-row.adel{border-color:var(--warm)}
+[id="17-lab-1"] .c171-row small{display:block;color:var(--warm);font-size:.74rem}
+[id="17-lab-1"] .c171-gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:6px}
+[id="17-lab-1"] .c171-g{border-radius:8px;padding:6px 8px;font:600 .76rem/1.3 var(--f-display);text-align:center;border:1.5px solid var(--good);background:var(--good-soft);color:var(--good)}
+[id="17-lab-1"] .c171-g.ko{border-color:var(--warm);background:var(--warm-soft);color:var(--warm)}
+</style>
+<div class="btns">
+  <button type="button" id="c171-apu" class="primary">Plan apurado</button>
+  <button type="button" id="c171-vac">Vaciar</button>
+  <button type="button" id="c171-sug">Ver la ubicación sugerida</button>
+</div>
+<div class="c171-gates" id="c171-gates" aria-label="Compuertas"></div>
+<div class="c171-act" id="c171-act"></div>
+<div class="readout texto" id="c171-out" aria-live="polite"></div></div><div class="prose"><p>El laboratorio muestra el patrón del plan apurado: casi siempre se cae la primera compuerta, porque nadie midió la línea base ni escribió cuándo se apaga el bot. Sin línea base, el tramo «decidir» no tiene contra qué comparar, y la decisión se toma por entusiasmo.</p></div></section>
+<section><h2>El scorecard de inversión: escalar, reducir o cerrar un piloto</h2><div class="prose"><p>En el tramo «decidir», el comité necesita algo más que un tablero: un <b>scorecard de inversión</b> (<i>investment scorecard</i>), una tabla que puntúa el piloto en diez dimensiones con la evidencia que hay, no con la que se espera. Cada dimensión vale de 0 a 3: <b>0</b> si no existe, <b>1</b> si es un supuesto sin evidencia, <b>2</b> si se probó en el piloto y <b>3</b> si se probó en producción, con clientes reales a escala.</p><div class="tbl"><table><thead><tr><th>Dimensión</th><th>Pregunta de evidencia</th><th>Mínimo para escalar</th></tr></thead><tbody><tr><td>Problema</td><td>¿hay línea base y un resultado que el bot puede mover?</td><td>2</td></tr><tr><td>Repetibilidad</td><td>¿las intenciones y sus excepciones están medidas?</td><td>2</td></tr><tr><td>Autoridad</td><td>¿las fuentes y las reglas tienen dueño, permisos y vigencia?</td><td>3</td></tr><tr><td>Calidad</td><td>¿supera la línea base por intención y por segmento?</td><td>2</td></tr><tr><td>Seguridad</td><td>¿los daños graves están dentro de lo tolerable?</td><td>3</td></tr><tr><td>Traspaso</td><td>¿pasa rápido, con contexto y con agentes disponibles?</td><td>3</td></tr><tr><td>Economía</td><td>¿el costo total por resolución mejora frente al canal actual?</td><td>2</td></tr><tr><td>Adopción</td><td>¿los clientes lo eligen y vuelven sin que los obliguen?</td><td>2</td></tr><tr><td>Operación</td><td>¿hay guardia, monitoreo, reversión y soporte?</td><td>2</td></tr><tr><td>Gobierno</td><td>¿hay dueño, comité y evidencia auditable?</td><td>2</td></tr></tbody></table></div><p>La regla es la del capítulo 1, ahora con dinero: <b>los riesgos no se promedian</b>. Un cero en autoridad, seguridad o traspaso bloquea la decisión, aunque el total sea alto. Y el comité mira, además, cuatro números que resumen todo el curso: la <b>resolución correcta de punta a punta</b> (capítulo 14), el <b>costo total por resolución</b> con los agentes incluidos (capítulo 13), la <b>repetición o escape</b> a otro canal y el <b>daño ponderado</b>, los errores contados por su gravedad y por a cuántos clientes afectaron.</p></div><div class="lab" id="17-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Scorecard de inversión: puntúa el piloto y mira la decisión</h3></div><p class="hint">Puntúa las diez dimensiones de 0 a 3 con los deslizadores, o carga uno de los tres pilotos preparados: Pía después de su piloto, un asistente que promete hacerlo todo y un asistente anunciado antes de estar listo. Las barras muestran cada puntaje contra su mínimo; abajo, la decisión que corresponde y la dimensión que la frena.</p><style>
+[id="17-lab-2"] .c172-d{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:6px 18px}
+[id="17-lab-2"] .c172-d .ctl small{grid-column:1/-1;color:var(--muted);font:400 .74rem var(--f-body)}
+[id="17-lab-2"] .c172-g{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px}
+[id="17-lab-2"] .c172-g svg{display:block;width:100%;height:auto}
+[id="17-lab-2"] .c172-g text{font:500 12px var(--f-display);fill:var(--ink)}
+[id="17-lab-2"] .c172-dec{font:700 1.15rem var(--f-display)}
+</style>
+<div class="btns" role="group" aria-label="Pilotos preparados">
+  <button type="button" data-p="pia">Pía después del piloto</button>
+  <button type="button" data-p="todo">Un asistente para todo</button>
+  <button type="button" data-p="anuncio">Anunciado antes de estar listo</button>
+</div>
+<div class="c172-d" id="c172-d"></div>
+<div class="c172-g"><svg id="c172-svg" viewBox="0 0 600 330" role="img" aria-label="Puntaje de cada dimensión contra su mínimo para escalar"></svg></div>
+<div class="readout texto" id="c172-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">0 = no existe · 1 = supuesto sin evidencia · 2 = probado en el piloto · 3 = probado en producción. Autoridad, seguridad y traspaso son críticas: un cero bloquea y para escalar piden 3.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Puntúa dos casos públicos con el scorecard</h3></div><p>Vas a leer la evidencia pública de un éxito y de un fracaso y a puntuarlos con las diez dimensiones. Solo necesitas el navegador; los textos están en inglés y el traductor del navegador sirve.</p><ol class="steps"><li><span>Abre <a href="https://newsroom.bankofamerica.com/content/newsroom/press-releases/2025/08/a-decade-of-ai-innovation--bofa-s-virtual-assistant-erica-surpas.html" target="_blank" rel="noopener">el comunicado de Bank of America sobre los diez años de Erica</a>. Anota qué cifras da y en qué dimensiones del scorecard cae cada una (adopción, calidad, operación).</span></li><li><span>Abre <a href="https://en.wikipedia.org/wiki/M_(virtual_assistant" target="_blank" rel="noopener">el artículo de Wikipedia sobre M, el asistente de Facebook</a>). Busca cuántos usuarios tuvo, cómo se resolvían los pedidos y por qué se cerró.</span></li><li><span>Puntúa los dos casos de 0 a 3 en las diez dimensiones. Donde no haya evidencia pública, pon 1 (supuesto), no 2.</span></li><li><span>Anota también el nivel de evidencia de cada fuente, con los criterios del capítulo 1.</span></li></ol><p><b>Qué observar:</b> Erica junta evidencia en adopción y en operación sostenida durante años, pero casi toda la publica el propio banco (nivel B, con corroboración de prensa en algunos hitos): por eso tus puntajes de calidad y economía quedan en supuesto. En M, la dimensión que se cae primero es la economía: un asistente que intenta hacerlo todo depende de personas detrás de escena, y su costo crece con cada usuario nuevo. Fíjate en que el scorecard no premia la ambición ni la fama: premia la evidencia.</p></div></section>
+<section><h2>Lo que repiten los éxitos y los anti-patrones de los fracasos</h2><div class="prose"><p>Los casos públicos que recorrieron el curso se parecen mucho entre sí cuando se los ordena. Los que funcionan repiten unas pocas decisiones; los que fracasan, unos pocos errores.</p></div><div class="ml"><b>En la práctica</b><p><b>Tres éxitos con el mismo patrón.</b> <b>Erica, de Bank of America</b>, lanzada en 2018, llevaba en 2025 más de 3.000 millones de interacciones y unos 50 millones de usuarios desde su lanzamiento, según el banco. Funciona dentro de una aplicación donde la identidad ya está resuelta, combina información con acciones reales y creció por capacidades durante años, no en un lanzamiento único. <b>Ceba, de Commonwealth Bank of Australia</b>, nació en 2018 con más de 200 tareas bancarias acotadas, y el banco documentó después cómo compara cada respuesta generada con el contenido recuperado de sus fuentes, dentro de su gestión de riesgo de modelos. <b>El asistente interno de Morgan Stanley</b> no atiende clientes: ayuda a los asesores a buscar en un corpus aprobado de documentos, y el asesor conserva la decisión y la relación; el banco informó que la gran mayoría de sus equipos de asesores lo adoptó. Los tres empezaron angostos, con fuente autorizada, identidad resuelta y una persona responsable de lo que se decide.</p></div><div class="ml"><b>En la práctica</b><p><b>Dos fracasos con causas de proyecto, no de tecnología.</b> <b>M, de Facebook</b> (2015-2018), prometía hacer cualquier cosa desde Messenger: reservar, comprar, organizar. Nunca pasó de unos 10.000 usuarios de prueba y, después de su cierre, la prensa especializada informó que el sistema automático había respondido como mucho el 30 % de los pedidos: el resto lo resolvían personas detrás de escena. Un alcance de «haz cualquier cosa» genera una cola infinita de excepciones, y el costo crece con cada usuario. <b>Nadia</b>, el asistente de la agencia australiana del seguro nacional por discapacidad, se presentó con gran atención y la voz de una actriz famosa; según la prensa, en 2017 ya se habían invertido más de 3,5 millones de dólares australianos sin fecha de lanzamiento, y el proyecto se estancó sin llegar a desplegarse a escala. La interfaz era cuidada; faltaban la integración con los sistemas de la agencia, la calidad de los datos y un dueño con presupuesto para operarlo.</p></div><div class="prose"><div class="tbl"><table><thead><tr><th>Lo que repiten los éxitos</th><th>El anti-patrón de los fracasos</th><th>El capítulo que lo trata</th></tr></thead><tbody><tr><td>empezar angosto, por intención</td><td>prometer «haz cualquier cosa»</td><td>1</td></tr><tr><td>identidad resuelta antes del dato</td><td>conversar sin saber quién escribe</td><td>12</td></tr><tr><td>fuente autorizada con dueño</td><td>responder de memoria</td><td>7</td></tr><tr><td>acción en el sistema, con reglas</td><td>redactar compromisos</td><td>5, 11</td></tr><tr><td>salida humana con contexto</td><td>esconder la salida para «contener»</td><td>9</td></tr><tr><td>medir resolución y costo total</td><td>celebrar volumen y contención</td><td>13, 14</td></tr><tr><td>probar, versionar y liberar por etapas</td><td>lanzar y olvidar</td><td>15</td></tr><tr><td>presupuesto de operación desde el día 1</td><td>presupuesto solo para construir</td><td>17</td></tr><tr><td>anunciar después de la compuerta</td><td>anunciar antes de estar listo</td><td>17</td></tr></tbody></table></div><p>Las dos últimas filas son de este capítulo. Ninguna exige un modelo mejor; exigen un proyecto mejor.</p></div></section>
+<section><h2>Pía de punta a punta</h2><div class="prose"><p>Este es el final del recorrido. Pía nació en el capítulo 1 como una idea con tres ingredientes (contexto real, acción verificable y salida humana) y una regla: empezar por pocos pedidos repetibles. Diecisiete capítulos después tiene todo lo que hace falta para atender a Laura un martes cualquiera: sabe quién le escribe, consulta su deuda en vivo, le cobra sin tocar su tarjeta, abre un ticket con los datos justos, le pasa la conversación a Carla con el contexto completo cuando hay un reclamo, cuesta lo que vale, se mide por lo que resuelve y cambia cada semana sin romperse.</p></div><figure class="fig fig-capas" id="17-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" style="min-width:780px" role="img" aria-label="Matriz de las capas de Pía (canal, identidad, comprensión, orquestación, conocimiento, reglas, integración, persona y medición) por las fases del proyecto (descubrimiento, diseño, construcción, piloto, despliegue y operación), con el capítulo del curso que se usa en cada celda. La columna de operación tiene casi todas las capas activas.">
+<rect x="192" y="14" width="109" height="32" rx="6" class="caja"/><text x="246.5" y="35" class="t t-s t-b" text-anchor="middle">Descubrimiento</text>
+<rect x="305" y="14" width="109" height="32" rx="6" class="caja"/><text x="359.5" y="35" class="t t-s t-b" text-anchor="middle">Diseño</text>
+<rect x="418" y="14" width="109" height="32" rx="6" class="caja"/><text x="472.5" y="35" class="t t-s t-b" text-anchor="middle">Construcción</text>
+<rect x="531" y="14" width="109" height="32" rx="6" class="caja"/><text x="585.5" y="35" class="t t-s t-b" text-anchor="middle">Piloto</text>
+<rect x="644" y="14" width="109" height="32" rx="6" class="caja"/><text x="698.5" y="35" class="t t-s t-b" text-anchor="middle">Despliegue</text>
+<rect x="757" y="14" width="109" height="32" rx="6" class="caja" style="stroke:var(--ink);stroke-width:1.8"/><text x="811.5" y="35" class="t t-s t-b" text-anchor="middle">Operación</text>
+<rect x="10" y="58" width="174" height="34" rx="6" class="c-fis"/><text x="20" y="80.0" class="t t-s t-b">Canal</text>
+<rect x="192" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="246.5" y="80.0" class="t t-s" text-anchor="middle">1</text>
+<rect x="305" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="359.5" y="80.0" class="t t-s" text-anchor="middle">3</text>
+<rect x="418" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="472.5" y="80.0" class="t t-s" text-anchor="middle">8</text>
+<rect x="531" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="585.5" y="80.0" class="t t-s" text-anchor="middle">8</text>
+<rect x="644" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="698.5" y="80.0" class="t t-s" text-anchor="middle">8 · 15</text>
+<rect x="757" y="58" width="109" height="34" rx="6" class="c-fis" opacity="0.85"/><text x="811.5" y="80.0" class="t t-s" text-anchor="middle">8</text>
+<rect x="10" y="96" width="174" height="34" rx="6" class="d-casa"/><text x="20" y="118.0" class="t t-s t-b">Identidad</text>
+<rect x="192" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="246.5" y="118.0" class="t t-s" text-anchor="middle">1</text>
+<rect x="305" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="359.5" y="118.0" class="t t-s" text-anchor="middle">4</text>
+<rect x="418" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="472.5" y="118.0" class="t t-s" text-anchor="middle">12</text>
+<rect x="531" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="585.5" y="118.0" class="t t-s" text-anchor="middle">12</text>
+<rect x="644" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="698.5" y="118.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="96" width="109" height="34" rx="6" class="d-casa" opacity="0.85"/><text x="811.5" y="118.0" class="t t-s" text-anchor="middle">12</text>
+<rect x="10" y="134" width="174" height="34" rx="6" class="c-tra"/><text x="20" y="156.0" class="t t-s t-b">Comprensión</text>
+<rect x="192" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="246.5" y="156.0" class="t t-s" text-anchor="middle">2</text>
+<rect x="305" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="359.5" y="156.0" class="t t-s" text-anchor="middle">2</text>
+<rect x="418" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="472.5" y="156.0" class="t t-s" text-anchor="middle">2 · 5</text>
+<rect x="531" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="585.5" y="156.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="644" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="698.5" y="156.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="134" width="109" height="34" rx="6" class="c-tra" opacity="0.85"/><text x="811.5" y="156.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="10" y="172" width="174" height="34" rx="6" class="c-red"/><text x="20" y="194.0" class="t t-s t-b">Orquestación y diálogo</text>
+<rect x="192" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="246.5" y="194.0" class="t t-s" text-anchor="middle">1</text>
+<rect x="305" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="359.5" y="194.0" class="t t-s" text-anchor="middle">4 · 6</text>
+<rect x="418" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="472.5" y="194.0" class="t t-s" text-anchor="middle">5 · 6 · 16</text>
+<rect x="531" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="585.5" y="194.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="644" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="698.5" y="194.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="172" width="109" height="34" rx="6" class="c-red" opacity="0.85"/><text x="811.5" y="194.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="10" y="210" width="174" height="34" rx="6" class="c-enl"/><text x="20" y="232.0" class="t t-s t-b">Conocimiento</text>
+<rect x="192" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="246.5" y="232.0" class="t t-s" text-anchor="middle">7</text>
+<rect x="305" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="359.5" y="232.0" class="t t-s" text-anchor="middle">7</text>
+<rect x="418" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="472.5" y="232.0" class="t t-s" text-anchor="middle">7</text>
+<rect x="531" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="585.5" y="232.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="644" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="698.5" y="232.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="210" width="109" height="34" rx="6" class="c-enl" opacity="0.85"/><text x="811.5" y="232.0" class="t t-s" text-anchor="middle">7 · 14</text>
+<rect x="10" y="248" width="174" height="34" rx="6" class="c-apl"/><text x="20" y="270.0" class="t t-s t-b">Reglas</text>
+<rect x="192" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="246.5" y="270.0" class="t t-s" text-anchor="middle">1</text>
+<rect x="305" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="359.5" y="270.0" class="t t-s" text-anchor="middle">5</text>
+<rect x="418" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="472.5" y="270.0" class="t t-s" text-anchor="middle">5 · 11 · 12</text>
+<rect x="531" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="585.5" y="270.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="644" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="698.5" y="270.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="248" width="109" height="34" rx="6" class="c-apl" opacity="0.85"/><text x="811.5" y="270.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="10" y="286" width="174" height="34" rx="6" class="d-sis"/><text x="20" y="308.0" class="t t-s t-b">Integración</text>
+<rect x="192" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="246.5" y="308.0" class="t t-s" text-anchor="middle">11</text>
+<rect x="305" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="359.5" y="308.0" class="t t-s" text-anchor="middle">11</text>
+<rect x="418" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="472.5" y="308.0" class="t t-s" text-anchor="middle">11</text>
+<rect x="531" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="585.5" y="308.0" class="t t-s" text-anchor="middle">11 · 13</text>
+<rect x="644" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="698.5" y="308.0" class="t t-s" text-anchor="middle">13 · 15</text>
+<rect x="757" y="286" width="109" height="34" rx="6" class="d-sis" opacity="0.85"/><text x="811.5" y="308.0" class="t t-s" text-anchor="middle">11 · 13</text>
+<rect x="10" y="324" width="174" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="20" y="346.0" class="t t-s t-b">Persona</text>
+<rect x="192" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="246.5" y="346.0" class="t t-s" text-anchor="middle">1</text>
+<rect x="305" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="359.5" y="346.0" class="t t-s" text-anchor="middle">9 · 10</text>
+<rect x="418" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="472.5" y="346.0" class="t t-s" text-anchor="middle">9</text>
+<rect x="531" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="585.5" y="346.0" class="t t-s" text-anchor="middle">9</text>
+<rect x="644" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="698.5" y="346.0" class="t t-s" text-anchor="middle">9</text>
+<rect x="757" y="324" width="109" height="34" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)" opacity="0.85"/><text x="811.5" y="346.0" class="t t-s" text-anchor="middle">9 · 14</text>
+<rect x="10" y="362" width="174" height="34" rx="6" class="d-inet"/><text x="20" y="384.0" class="t t-s t-b">Medición</text>
+<rect x="192" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="246.5" y="384.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="305" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="359.5" y="384.0" class="t t-s" text-anchor="middle">16</text>
+<rect x="418" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="472.5" y="384.0" class="t t-s" text-anchor="middle">14 · 16</text>
+<rect x="531" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="585.5" y="384.0" class="t t-s" text-anchor="middle">14</text>
+<rect x="644" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="698.5" y="384.0" class="t t-s" text-anchor="middle">15</text>
+<rect x="757" y="362" width="109" height="34" rx="6" class="d-inet" opacity="0.85"/><text x="811.5" y="384.0" class="t t-s" text-anchor="middle">13 · 14</text>
+<text x="450" y="422" class="t t-s" text-anchor="middle">Cada número es el capítulo del curso que se usa en esa fase para esa capa.</text>
+<text x="450" y="442" class="t t-s t-b" text-anchor="middle">Un bot de empresa se construye una vez y se opera para siempre.</text>
+</svg></div><figcaption><b>Pía de punta a punta: el curso como proyecto.</b> Cada fila es una capa de Pía, del canal (arriba) a la medición (abajo), con los colores que mantuvo todo el curso. Las columnas son las fases del proyecto: descubrimiento, diseño, construcción, piloto, despliegue y operación. En cada celda, el número del capítulo que se usa en esa fase para esa capa. Mira la columna de operación: casi todas las capas siguen activas ahí. Un bot de empresa se construye una vez y se opera para siempre.</figcaption></figure><div class="prose"><p>Para ver todo junto en movimiento, el último laboratorio del curso recorre un día de Pía en producción. Cada evento enciende las piezas del curso que responden.</p></div><div class="lab" id="17-lab-3"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Un día de Pía en producción</h3></div><p class="hint">Elige un evento del día, de las 7:58 a las 23:00, y mira qué piezas de Pía responden y en qué capítulo se construyó cada una. Los capítulos que intervienen se encienden en el mapa del curso. Recorre los ocho eventos: abajo se cuenta cuántos capítulos del curso trabajaron en un solo día.</p><style>
+[id="17-lab-3"] .c173-ev{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:6px}
+[id="17-lab-3"] .c173-ev button{text-align:left;font-size:.8rem;line-height:1.3}
+[id="17-lab-3"] .c173-ev button b{display:block;font-family:var(--f-mono);font-size:.74rem}
+[id="17-lab-3"] .c173-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:5px}
+[id="17-lab-3"] .c173-c{border:1px solid var(--line);border-radius:7px;padding:5px 7px;font:500 .74rem/1.3 var(--f-display);color:var(--muted);background:var(--card)}
+[id="17-lab-3"] .c173-c b{font-family:var(--f-mono);margin-right:4px}
+[id="17-lab-3"] .c173-c.on{border-color:var(--accent);background:var(--accent);color:var(--card)}
+[id="17-lab-3"] .c173-c.visto{border-color:var(--accent);color:var(--accent)}
+</style>
+<div class="c173-ev" id="c173-ev" role="group" aria-label="Eventos del día"></div>
+<div class="readout texto" id="c173-out" aria-live="polite"></div>
+<div class="c173-map" id="c173-map" aria-label="Mapa del curso"></div>
+<p class="hint" style="margin:0" id="c173-cuenta"></p></div><div class="prose"><p>Lo que te llevas de este capítulo, y del curso: <b>un piloto angosto con compuertas explícitas, que escala por intención y por segmento solo si mantiene calidad y margen.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué las fases de un proyecto de chatbot se solapan en vez de ir una detrás de otra?</summary><p>Porque cada flujo se prueba apenas existe y lo aprendido cambia el diseño del siguiente, y porque el bot crece por olas: mientras una ola está en piloto, la siguiente se diseña, y la operación nunca termina.</p></details><details><summary>¿Qué tres cosas debe dejar escritas el descubrimiento antes de construir?</summary><p>La línea base de cada motivo, el alcance con lo que queda fuera y las condiciones de apagado. Además, el inventario de sistemas con su API, su dueño y su riesgo.</p></details><details><summary>¿Qué diferencia hay entre un MVP y un piloto?</summary><p>El MVP es qué se construye: la versión más pequeña que da valor y permite aprender. El piloto es cómo se prueba con clientes reales acotados, como un experimento con cohorte, salida humana visible, métricas con umbrales y una decisión al final.</p></details><details><summary>¿Qué es el hypercare y cuándo termina?</summary><p>Un período de vigilancia intensiva después de cada expansión: revisión diaria, guardia extendida, umbrales más estrictos y el interruptor a mano. Termina cuando las métricas del tramo se estabilizan y no hay incidentes graves abiertos, no por calendario.</p></details><details><summary>Un piloto tiene 3 en problema, calidad, economía y adopción, pero 0 en traspaso. ¿Qué decide el scorecard?</summary><p>Lo bloquea. Los riesgos no se promedian: un cero en autoridad, seguridad o traspaso impide escalar aunque el total sea alto.</p></details><details><summary>¿Qué tienen en común los fracasos de M y de Nadia, según el capítulo?</summary><p>Que sus causas fueron de proyecto: alcance sin límite y trabajo humano oculto en M; anuncio antes de la compuerta, integración y datos sin resolver y sin dueño con presupuesto de operación en Nadia.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es la matriz RACI y cómo se usa para repartir responsabilidades entre las áreas de un proyecto?<small>Pista: busca «matriz RACI responsable aprobador consultado informado».</small></li><li>¿Qué es un manual de operación (<i>runbook</i>) y qué secciones suele tener?<small>Pista: busca «runbook operaciones plantilla».</small></li><li>¿Qué son los objetivos de nivel de servicio (SLO) y en qué se diferencian de un acuerdo de nivel de servicio (SLA)?<small>Pista: busca «SLO SLI SLA diferencias».</small></li><li>¿Qué es el costo total de propiedad (TCO) y qué costos de un sistema suelen quedar fuera de los presupuestos iniciales?<small>Pista: busca «costo total de propiedad software».</small></li><li>¿Qué es la gestión del cambio organizacional y por qué los agentes de atención la viven distinto que la gerencia cuando llega un bot?<small>Pista: busca «gestión del cambio organizacional modelo ADKAR».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://newsroom.bankofamerica.com/content/newsroom/press-releases/2025/08/a-decade-of-ai-innovation--bofa-s-virtual-assistant-erica-surpas.html" target="_blank" rel="noopener">A decade of AI innovation: BofA's virtual assistant Erica <small>las cifras de Erica según el banco, para leerlas con los niveles de evidencia</small></a><a class="vid" href="https://en.wikipedia.org/wiki/M_(virtual_assistant)" target="_blank" rel="noopener">M (virtual assistant), en Wikipedia <small>el asistente que prometía hacer cualquier cosa</small></a><a class="vid" href="https://www.itnews.com.au/news/no-launch-date-in-sight-for-govts-nadia-virtual-assistant-464164" target="_blank" rel="noopener">No launch date in sight for govt's Nadia virtual assistant (iTnews) <small>el asistente que se anunció antes de estar listo</small></a><a class="vid" href="https://aaramirez.github.io/adopcion-de-ia/temario.html" target="_blank" rel="noopener">IA en la empresa <small>la estrategia de adopción de la IA en toda la empresa, con su portafolio y su gobierno: el siguiente nivel después de un bot</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const TR=['Elegir','Fundamentar','Probar e integrar','Pilotar','Decidir','Operar o escalar'];
+  const A=[
+    ['Nombrar al dueño del bot y al dueño de riesgo',0],
+    ['Medir la línea base de «cuánto debo» en el centro de llamadas',0],
+    ['Escribir las condiciones de apagado',0],
+    ['Curar los artículos de cobranza con su vigencia',1],
+    ['Escribir respuestas prohibidas y límites de autoridad',1],
+    ['Diseñar el traspaso y su paquete',1],
+    ['Armar el conjunto de evaluación: normales, límite y ataques',1],
+    ['Integrar facturación y pasarela en el entorno de pruebas',2],
+    ['Correr la batería de regresión y el red team',2],
+    ['Ensayar una caída de la facturación y la reversión',2],
+    ['Abrir el piloto al 5 % con la salida humana siempre visible',3],
+    ['Medir resolución correcta, recontacto y trabajo humano oculto',3],
+    ['Comparar contra la línea base y documentar la decisión',4],
+    ['Canario, manual de operación, guardia y tablero',5]
+  ];
+  const APURADO=[0,-1,-1,2,-1,4,-1,1,3,-1,2,3,-1,3];
+  let pos=A.map(()=>-1);
+  q('#c171-act').innerHTML=A.map((a,i)=>'<div class="c171-row" id="c171-r'+i+'"><span>'+a[0]+'<small id="c171-w'+i+'"></small></span><select id="c171-s'+i+'" aria-label="Tramo de: '+a[0]+'"><option value="-1">sin ubicar</option>'+TR.map((t,k)=>'<option value="'+k+'">'+(k+1)+'. '+t+'</option>').join('')+'</select></div>').join('');
+  function upd(){
+    const malas=[];
+    const gates=TR.map((t,k)=>{
+      const falt=A.map((a,i)=>({a,i})).filter(x=>x.a[1]===k&&(pos[x.i]===-1||pos[x.i]>k));
+      return falt;
+    });
+    q('#c171-gates').innerHTML=TR.map((t,k)=>'<div class="c171-g'+(gates[k].length?' ko':'')+'">'+(k+1)+'. '+t+'<br>'+(gates[k].length?'compuerta sin cumplir':'compuerta en verde')+'</div>').join('');
+    A.forEach((a,i)=>{
+      q('#c171-s'+i).value=String(pos[i]);
+      const adel=pos[i]>=0&&pos[i]<a[1];
+      q('#c171-r'+i).classList.toggle('adel',adel);
+      q('#c171-w'+i).textContent=adel?'Adelantada: depende de lo que se hace en «'+TR[a[1]-1]+'».':(pos[i]>a[1]?'Tarde: hace falta antes de la compuerta de «'+TR[a[1]]+'».':'');
+      if(adel)malas.push(a[0]);
+    });
+    const prim=gates.findIndex(g=>g.length);
+    let h='';
+    if(prim===-1&&!malas.length)h='<span class="ok">Las seis compuertas están en verde y nada está adelantado: cada decisión se toma con la evidencia que la sostiene.</span>';
+    else{
+      if(prim>=0)h+='<span class="warn">Primera compuerta que se cae: <b>'+TR[prim]+'</b>. Falta a tiempo: '+gates[prim].map(x=>x.a[0].toLowerCase()).join('; ')+'.</span>';
+      if(prim===0)h+='<span>Sin dueño, línea base o condición de apagado, el tramo «Decidir» no tiene contra qué comparar: la decisión se toma por entusiasmo.</span>';
+      if(malas.length)h+='<span class="warn">Adelantadas: '+malas.length+'. Hacer algo antes de su tramo suele significar hacerlo sin lo que necesita (un piloto sin pruebas, una integración sin contenido curado).</span>';
+      const verdes=gates.filter(g=>!g.length).length;
+      h+='<span>Compuertas en verde: <b>'+verdes+' de 6</b>.</span>';
+    }
+    q('#c171-out').innerHTML=h;
+  }
+  A.forEach((a,i)=>q('#c171-s'+i).addEventListener('change',e=>{pos[i]=+e.target.value;upd();}));
+  q('#c171-apu').addEventListener('click',()=>{pos=APURADO.slice();upd();});
+  q('#c171-vac').addEventListener('click',()=>{pos=A.map(()=>-1);upd();});
+  q('#c171-sug').addEventListener('click',()=>{pos=A.map(a=>a[1]);upd();});
+  pos=APURADO.slice();upd();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const D=[['Problema',2,0],['Repetibilidad',2,0],['Autoridad',3,1],['Calidad',2,0],['Seguridad',3,1],['Traspaso',3,1],['Economía',2,0],['Adopción',2,0],['Operación',2,0],['Gobierno',2,0]];
+  const P={pia:[3,3,3,2,3,3,2,2,2,3],todo:[1,0,1,2,2,3,0,2,1,1],anuncio:[2,1,0,1,1,0,1,0,0,1]};
+  const N=['no existe','supuesto','piloto','producción'];
+  q('#c172-d').innerHTML=D.map((d,i)=>'<label class="ctl">'+d[0]+(d[2]?' (crítica)':'')+' <output id="c172-o'+i+'"></output><input id="c172-i'+i+'" type="range" min="0" max="3" step="1" value="2"><small>mínimo para escalar: '+d[1]+'</small></label>').join('');
+  function v(){return D.map((d,i)=>+q('#c172-i'+i).value);}
+  function upd(){
+    const s=v();
+    s.forEach((x,i)=>q('#c172-o'+i).textContent=x+' · '+N[x]);
+    let h='';const X0=120,X1=585,X=t=>X0+t/3*(X1-X0);
+    for(let t=0;t<=3;t++)h+='<line x1="'+X(t)+'" x2="'+X(t)+'" y1="8" y2="312" style="stroke:var(--grid)"/><text x="'+X(t)+'" y="326" text-anchor="middle">'+t+'</text>';
+    D.forEach((d,i)=>{const y=12+i*30,ok=s[i]>=d[1],cero=d[2]&&s[i]===0;
+      const col=cero?'--warm':(ok?'--good':'--accent');
+      h+='<text x="4" y="'+(y+15)+'">'+d[0]+'</text>';
+      h+='<rect x="'+X0+'" y="'+(y+3)+'" width="'+Math.max(3,X(s[i])-X0)+'" height="16" rx="4" style="fill:var('+col+')"/>';
+      h+='<line x1="'+X(d[1])+'" x2="'+X(d[1])+'" y1="'+y+'" y2="'+(y+22)+'" style="stroke:var(--ink);stroke-width:2;stroke-dasharray:3 2"/>';
+    });
+    q('#c172-svg').innerHTML=h;
+    const crit0=D.filter((d,i)=>d[2]&&s[i]===0).map(d=>d[0]);
+    const falt=D.filter((d,i)=>s[i]<d[1]).map(d=>d[0]);
+    const I=n=>s[D.findIndex(d=>d[0]===n)];
+    let dec,why,cls='warn';
+    if(crit0.length){dec='Bloqueado';why='Cero en '+crit0.join(' y ').toLowerCase()+'. Los riesgos no se promedian: no se lanza ni se escala, sin importar el total ('+s.reduce((a,b)=>a+b,0)+' de 30).';}
+    else if((I('Problema')<=1&&I('Economía')<=1)||(I('Calidad')<=1&&I('Economía')<=1)){dec='Cerrar';why='No hay un problema medido o una calidad probada que pague el costo. Se documenta lo aprendido y se cierra: es un resultado legítimo.';}
+    else if(!falt.length){dec='Escalar por intención y segmento';why='Todas las dimensiones alcanzan su mínimo. Se escala por tramos, con hypercare después de cada expansión.';cls='ok';}
+    else if(D.every((d,i)=>!d[2]||s[i]>=2)&&falt.length<=2){dec='Reducir el alcance o seguir en piloto';why='Falta llegar al mínimo en '+falt.join(' y ').toLowerCase()+'. Se ajusta el alcance a lo que sí funciona y se vuelve a medir.';}
+    else{dec='Mantener como copiloto de los agentes';why='Hay valor, pero faltan '+falt.length+' dimensiones ('+falt.join(', ').toLowerCase()+'). Frente al cliente todavía no: como ayuda a una persona que decide, sí.';}
+    q('#c172-out').innerHTML='<span class="c172-dec">'+dec+'</span><span class="'+cls+'">'+why+'</span>';
+  }
+  D.forEach((d,i)=>q('#c172-i'+i).addEventListener('input',()=>{document.querySelectorAll('[id="17-lab-2"] button[data-p]').forEach(x=>x.setAttribute('aria-pressed','false'));upd();}));
+  document.querySelectorAll('[id="17-lab-2"] button[data-p]').forEach(b=>b.addEventListener('click',()=>{
+    P[b.dataset.p].forEach((x,i)=>q('#c172-i'+i).value=x);
+    document.querySelectorAll('[id="17-lab-2"] button[data-p]').forEach(x=>x.setAttribute('aria-pressed',x===b));upd();
+  }));
+  q('[id="17-lab-2"] button[data-p="pia"]').click();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const CAP=['Qué es un chatbot empresarial','Reglas, NLU, LLM y agentes','Principios, tono y primer mensaje','Flujos y respaldo','Capas y patrón híbrido','Diálogo, sesión y memoria','La base de conocimiento','Canales y omnicanalidad','Traspaso a humano','Atención, enrutamiento y ventas','Deuda, pagos y tickets','Seguridad y guardrails','Costo por conversación','Medir y mejorar','Pruebas, versiones y gobierno','Prompts de producción','El proyecto de implementación'];
+  const EV=[
+    {h:'07:58',t:'Pico de mensajes: salieron las facturas del mes',c:[8,13,9,14],x:'El adaptador de WhatsApp absorbe el pico dentro de los límites del canal (8); el presupuesto avisa al 80 % del gasto diario y el modelo pequeño atiende los saludos (13); la cola de cobranza se prepara para más traspasos (9); y el tablero marca la repetición de «la factura nueva» para revisarla (14).'},
+    {h:'09:10',t:'La facturación responde lento',c:[11,5,4,9],x:'Pía escribe «estoy consultando» a los dos segundos y reintenta una vez (11); el gestor sigue por el respaldo determinista (5 y 4); si no hay respuesta, ofrece avisar o pasar a una persona con el paquete (9). Ninguna conversación queda colgada.'},
+    {h:'10:30',t:'Alguien pide el saldo de otra cuenta',c:[12,5,15],x:'La cuenta sale de la sesión verificada, no del texto (12); la herramienta no acepta otra cuenta y la regla decide (5); el intento queda registrado y, si es nuevo, entra como caso a la batería adversarial (15).'},
+    {h:'11:45',t:'Un webhook de pago llega dos veces',c:[11,8],x:'La firma HMAC se verifica como en los webhooks del canal (8); el identificador del evento ya se procesó, así que se responde «recibido» y no se registra un segundo pago (11).'},
+    {h:'14:00',t:'Ventas publica la promoción del plan de 500 Mbps',c:[15,7,3,10,16],x:'La promoción entra como cambio de riesgo medio, con su prompt y sus pruebas (16 y 15); el artículo tiene dueño y vigencia (7); el texto respeta la guía de voz (3); y el enrutamiento manda los prospectos a Andrés sin duplicarlos en el CRM (10). Sale al 5 % con un interruptor propio.'},
+    {h:'16:20',t:'Avería masiva en una zona',c:[4,11,14,6],x:'El flujo de falla consulta el monitoreo y no abre mil tickets (4 y 11); recuerda en la sesión de cada cliente que ya se le avisó (6); y el ciclo de mejora registra el abandono por falta de hora estimada como un cambio de proceso (14).'},
+    {h:'18:05',t:'Laura reclama un recargo y pide a Carla',c:[9,6,12,1],x:'El reclamo de cobro siempre va a una persona (9); el paquete lleva la identidad verificada y el método (12) y lo que Pía ya consultó (6); Carla empieza sabiendo dónde está la diferencia. Es la salida humana del capítulo 1, funcionando.'},
+    {h:'23:00',t:'El reporte diario: sube el recontacto por «recargo»',c:[14,7,15,17,2],x:'La señal sale del almacén de eventos unido por cliente y motivo (14); la muestra revela un artículo viejo (7) y unos ejemplos que la comprensión confunde (2); el cambio sigue el camino del capítulo 15, y el comité lo prioriza el lunes (17).'}
+  ];
+  const vistos=new Set();let act=null;
+  q('#c173-ev').innerHTML=EV.map((e,i)=>'<button type="button" data-e="'+i+'" aria-pressed="false"><b>'+e.h+'</b>'+e.t+'</button>').join('');
+  function upd(){
+    const on=act===null?[]:EV[act].c;
+    q('#c173-map').innerHTML=CAP.map((n,i)=>'<div class="c173-c'+(on.includes(i+1)?' on':(vistos.has(i+1)?' visto':''))+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+n+'</div>').join('');
+    q('#c173-out').innerHTML=act===null?'<span>Elige un evento del día.</span>':'<span><b>'+EV[act].h+' · '+EV[act].t+'.</b></span><span>'+EV[act].x+'</span>';
+    q('#c173-cuenta').textContent='Capítulos que trabajaron hoy: '+vistos.size+' de 17'+(vistos.size===17?'. Todo el curso, en un solo día de operación.':'.');
+  }
+  document.querySelectorAll('[id="17-lab-3"] button[data-e]').forEach(b=>b.addEventListener('click',()=>{
+    act=+b.dataset.e;EV[act].c.forEach(c=>vistos.add(c));
+    document.querySelectorAll('[id="17-lab-3"] button[data-e]').forEach(x=>x.setAttribute('aria-pressed',x===b));upd();
+  }));
+  upd();
+})();
+</script>
+</body>
+</html>

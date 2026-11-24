@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Canales y omnicanalidad · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="canales-y-omnicanalidad">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 08 DE 17</span><h1>WhatsApp, Telegram, Instagram, la web y la omnicanalidad</h1><p class="lede">Pía piensa igual en todas partes, pero no puede hablar igual en todas partes: cada canal tiene sus reglas, sus límites y su reloj. Este capítulo recorre WhatsApp, Telegram, Instagram y el widget web, y muestra cómo hacer que Laura cambie de uno a otro sin empezar de cero.</p></header>
+<section><div class="prose"><p>En el capítulo 5 pusiste un adaptador por canal y un solo cerebro detrás. Ese esquema promete que sumar un canal es «solo» escribir un adaptador. La letra pequeña de ese «solo» es este capítulo. Cada plataforma de mensajería decide cuándo puede escribir la empresa, cuántos botones caben en un mensaje, cómo se demuestra que un mensaje viene de verdad de ella y qué dato de identidad trae el cliente. Si el diseño de Pía ignora esas reglas, el flujo que funcionaba en la demo falla en producción, y a veces la cuenta queda bloqueada.</p><p>Servicios Ejemplo arranca con WhatsApp y el widget de <code>www.ejemplo.com</code>; Telegram e Instagram llegan después. Vamos canal por canal y terminamos con la pregunta que el cliente sí nota: si empiezo en la web y sigo en WhatsApp, ¿Pía se acuerda de mí?</p></div></section>
+<section><h2>WhatsApp Business Platform: la ventana de 24 horas y las plantillas</h2><div class="prose"><p>Hay dos productos con nombre parecido. <b>WhatsApp Business App</b> es la aplicación del celular para el pequeño negocio que contesta a mano. <b>WhatsApp Business Platform</b> (la plataforma empresarial de WhatsApp, de Meta) es la <b>API</b> (<i>Application Programming Interface</i>, interfaz de programación) con la que un sistema envía y recibe mensajes a escala. Un bot empresarial usa la segunda, casi siempre en su versión en la nube (<i>Cloud API</i>), directamente o a través de un <b>BSP</b> (<i>Business Solution Provider</i>, proveedor autorizado que revende el acceso y suele añadir bandeja de agentes y editor de plantillas).</p><p>La regla que más condiciona el diseño es la <b>ventana de servicio al cliente</b> (<i>customer service window</i>): cada vez que el cliente escribe, se abre (o se renueva) una ventana de 24 horas. Dentro de ella, la empresa responde con <b>mensajes de formato libre</b> (<i>free-form messages</i>): texto, imágenes, botones, listas, lo que haga falta. Fuera de ella, la empresa solo puede escribir con una <b>plantilla de mensaje</b> (<i>message template</i>) que Meta aprobó antes.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en la puerta de una casa. Mientras el cliente tiene la puerta abierta, puedes conversar con él como quieras. Cuando la cierra, ya no puedes entrar a conversar: solo puedes deslizar por debajo de la puerta una tarjeta con un formato que el portero del edificio revisó antes, y esperar a que él vuelva a abrir. Cada vez que el cliente escribe, abre la puerta 24 horas más. La plantilla es la tarjeta.</p></div><figure class="fig fig-esquema" id="08-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" style="min-width:720px" role="img" aria-label="Línea de tiempo de tres días con los mensajes de Laura, las ventanas de 24 horas abiertas en verde, las zonas cerradas en gris y las plantillas aprobadas que reabren la conversación">
+  <g class="t t-xs t-b t-m" text-anchor="middle">
+    <text x="190" y="22">DÍA 1</text><text x="450" y="22">DÍA 2</text><text x="710" y="22">DÍA 3</text>
+  </g>
+  <rect x="60" y="40" width="780" height="70" rx="8" class="caja"/>
+  <rect x="60" y="40" width="358" height="70" class="c-enl" style="opacity:.85"/>
+  <rect x="580" y="40" width="260" height="70" class="c-enl" style="opacity:.85"/>
+  <g class="t t-s t-b k-enl" text-anchor="middle">
+    <text x="239" y="68">VENTANA ABIERTA</text><text x="239" y="84" class="t-m" style="font-weight:400">formato libre</text>
+    <text x="710" y="68">VENTANA ABIERTA</text><text x="710" y="84" class="t-m" style="font-weight:400">se reabrió</text>
+  </g>
+  <text x="499" y="70" class="t t-s t-b t-m" text-anchor="middle">CERRADA</text>
+  <text x="499" y="86" class="t t-s t-m" text-anchor="middle">solo plantillas</text>
+  <line x1="60" y1="110" x2="840" y2="110" class="ln"/>
+  <g class="t t-s t-m" text-anchor="middle">
+    <line x1="60" y1="110" x2="60" y2="118" class="ln"/><text x="60" y="132">0 h</text>
+    <line x1="320" y1="110" x2="320" y2="118" class="ln"/><text x="320" y="132">24 h</text>
+    <line x1="580" y1="110" x2="580" y2="118" class="ln"/><text x="580" y="132">48 h</text>
+    <line x1="840" y1="110" x2="840" y2="118" class="ln"/><text x="840" y="132">72 h</text>
+  </g>
+  <g>
+    <circle cx="60" cy="58" r="8" class="c-fis"/>
+    <circle cx="157" cy="58" r="8" class="c-fis"/>
+    <circle cx="580" cy="58" r="8" class="c-fis"/>
+  </g>
+  <g class="t t-s">
+    <text x="60" y="160" text-anchor="start">① primer mensaje</text>
+    <line x1="60" y1="66" x2="60" y2="148" class="ln ln-d s-fis"/>
+    <text x="157" y="182" text-anchor="start">② Laura escribe a las 9 h: la ventana se alarga hasta las 33 h</text>
+    <line x1="157" y1="66" x2="157" y2="170" class="ln ln-d s-fis"/>
+    <line x1="418" y1="40" x2="418" y2="196" class="ln ln-d s-warm"/>
+    <text x="424" y="208" class="k-warm t-b">③ 33 h: se cierra la ventana</text>
+  </g>
+  <rect x="436" y="122" width="102" height="44" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <text x="487" y="140" class="t t-xs t-b k-warm" text-anchor="middle">PLANTILLA</text>
+  <text x="487" y="156" class="t t-s" text-anchor="middle">aviso de factura</text>
+  <path d="M487 122 V 112" class="ln s-warm"/>
+  <text x="586" y="160" class="t t-s">④ 48 h: Laura responde la plantilla</text>
+  <text x="586" y="176" class="t t-s">y se abre una ventana nueva</text>
+  <line x1="580" y1="66" x2="580" y2="148" class="ln ln-d s-fis"/>
+
+  <text x="60" y="244" class="t t-xs t-b t-m">EL MISMO AVISO, EN DOS MOMENTOS</text>
+  <rect x="60" y="254" width="380" height="76" rx="10" class="c-enl"/>
+  <text x="76" y="276" class="t t-b k-enl">Dentro de la ventana (hora 20)</text>
+  <text x="76" y="296" class="t t-s">«Tu factura F-2207 vence el 5. ¿Te envío el enlace?»</text>
+  <text x="76" y="314" class="t t-s t-m">mensaje libre, con botones si hace falta</text>
+  <rect x="460" y="254" width="380" height="76" rx="10" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <text x="476" y="276" class="t t-b k-warm">Fuera de la ventana (hora 40)</text>
+  <text x="476" y="296" class="t t-s">«Hola, {{1}}. Tu factura {{2}} vence el {{3}}.»</text>
+  <text x="476" y="314" class="t t-s t-m">plantilla de utilidad aprobada antes por Meta</text>
+</svg></div><figcaption><b>La ventana de 24 horas de WhatsApp.</b> El tiempo corre de izquierda a derecha durante tres días. Cada punto ámbar, el color del canal, es un mensaje de Laura y abre (o alarga) una franja verde de 24 horas en la que Pía y los agentes escriben libremente. En las zonas grises, la ventana está cerrada: el único mensaje que sale es una plantilla aprobada (las tarjetas naranjas), y si Laura la responde, se abre una ventana nueva. Abajo, el mismo aviso de factura enviado en dos momentos: dentro de la ventana es un mensaje libre; fuera, tiene que ser la plantilla.</figcaption></figure><div class="prose"><p>Las plantillas se escriben con huecos numerados que el sistema llena al enviarlas, se envían a revisión y Meta las aprueba o las rechaza, a veces en minutos y a veces en horas. Cada plantilla pertenece a una <b>categoría</b>, y la categoría decide sus reglas de contenido y su precio:</p><div class="tbl"><table><thead><tr><th>Categoría</th><th>Para qué sirve</th><th>Ejemplo de Pía</th></tr></thead><tbody><tr><td><b>Utilidad</b> (<i>utility</i>)</td><td>avisos sobre algo que el cliente ya tiene o pidió</td><td>«Hola, {{1}}. Tu factura {{2}} por {{3}} vence el {{4}}. [Ver y pagar]»</td></tr><tr><td><b>Marketing</b> (<i>marketing</i>)</td><td>promociones, ofertas, reenganche</td><td>«Este mes, el plan de 500 Mbps con la instalación sin costo. [Me interesa]»</td></tr><tr><td><b>Autenticación</b> (<i>authentication</i>)</td><td>códigos de un solo uso</td><td>«Tu código de verificación es {{1}}. No lo compartas.»</td></tr></tbody></table></div><p>Dos errores se repiten. El primero es esconder una promoción dentro de una plantilla de utilidad para pagar menos: Meta la recategoriza o la rechaza, y si el abuso se repite, castiga la cuenta. El segundo es dejar la aprobación de las plantillas fuera del cronograma: el bot está listo, pero el aviso de vencimiento no tiene plantilla aprobada.</p><p>Desde julio de 2025, Meta cobra <b>por mensaje entregado</b>, con un precio que depende de la categoría de la plantilla y del país del cliente, y con reglas propias para los mensajes de servicio dentro de la ventana. Esas reglas cambian cada pocos trimestres, así que la cuenta fina del costo se hace en el capítulo 13 con la tabla vigente. Para el diseño basta una idea: <b>conversar dentro de la ventana es barato y abrir conversación fuera de ella cuesta</b>, por eso un buen flujo resuelve todo lo posible mientras la ventana está abierta.</p><p>El laboratorio te deja mover el reloj. Prueba en especial el caso que más sorprende: un agente que retoma un caso al día siguiente ya no puede escribirle a Laura con texto libre, porque la ventana se cerró de noche.</p></div><div class="lab" id="08-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>La ventana de 24 horas: mueve el reloj y mira qué mensajes salen</h3></div><p class="hint">Mueve el reloj (horas desde el primer mensaje de Laura). La franja verde es la ventana abierta. Con «Laura escribe ahora» agregas un mensaje suyo en ese instante y ves cómo se renueva la ventana. Abajo, cada mensaje que Pía o un agente quieren enviar dice si sale libre, si necesita una plantilla aprobada y de qué categoría, o si no puede salir.</p><style>
+[id="08-lab-1"] .c81-tl{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:10px}
+[id="08-lab-1"] .c81-tl text{font-family:var(--f-display);font-size:12px;fill:var(--ink)}
+[id="08-lab-1"] .c81-tl .m{fill:var(--muted)}
+[id="08-lab-1"] .c81-tl .b{font-weight:700}
+[id="08-lab-1"] .c81-lista{display:grid;gap:6px}
+[id="08-lab-1"] .c81-it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;border:1px solid var(--line);border-left:5px solid var(--cc);border-radius:8px;padding:7px 10px;background:var(--card);font:400 .86rem/1.35 var(--f-body)}
+[id="08-lab-1"] .c81-it b{font:700 .86rem var(--f-display)}
+[id="08-lab-1"] .c81-it .c81-est{font:700 .74rem var(--f-display);letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:5px;white-space:nowrap}
+[id="08-lab-1"] .c81-libre{background:var(--good-soft);color:var(--good)}
+[id="08-lab-1"] .c81-plant{background:var(--warm-soft);color:var(--warm)}
+[id="08-lab-1"] .c81-no{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+[id="08-lab-1"] .c81-it small{grid-column:1/-1;color:var(--muted);font-size:.8rem}
+@media (max-width:520px){[id="08-lab-1"] .c81-it{grid-template-columns:minmax(0,1fr)}}
+</style>
+<div class="ctls">
+  <label class="ctl">Reloj: horas desde el primer mensaje de Laura <output id="c81-t-o"></output>
+    <input id="c81-t" type="range" min="0" max="72" step="0.5" value="5"></label>
+</div>
+<div class="btns" role="group" aria-label="Acciones">
+  <button type="button" class="primary" id="c81-esc">Laura escribe ahora</button>
+  <button type="button" id="c81-ej">Ejemplo: el agente retoma al día siguiente</button>
+  <button type="button" id="c81-rei">Reiniciar</button>
+</div>
+<svg class="c81-tl" id="c81-svg" viewBox="0 0 720 150" role="img" aria-label="Línea de tiempo de 72 horas con los mensajes de Laura y la ventana de 24 horas"></svg>
+<div class="legend"><span><i style="background:var(--accent)"></i>Mensaje de Laura</span><span><i style="background:var(--good)"></i>Ventana abierta: formato libre</span><span><i style="background:var(--line)"></i>Ventana cerrada: solo plantillas</span><span><i style="background:var(--warm)"></i>Ahora</span></div>
+<div class="readout texto" id="c81-out" aria-live="polite"></div>
+<div class="c81-lista" id="c81-lista" aria-live="polite"></div>
+<p class="hint" style="margin:0">Simplificado: la ventana dura 24 horas desde el último mensaje de Laura. Cada plantilla necesita aprobación previa de Meta y se cobra por mensaje entregado según su categoría y el país; la tabla de precios vigente se usa en el capítulo 13.</p></div></section>
+<section><h2>WhatsApp: verificación, calidad, límites, catálogos y webhooks firmados</h2><div class="prose"><p>Antes del primer mensaje hay un trámite. La empresa crea un <b>portafolio empresarial</b> (<i>business portfolio</i>) en Meta, registra el número que va a usar y pide la <b>verificación del negocio</b> (<i>business verification</i>): demuestra con documentos que es la empresa que dice ser. El nombre que verá el cliente (<i>display name</i>) también pasa por revisión. Sin verificación, la cuenta funciona con límites bajos; con ella, puede crecer.</p><p>Ese crecimiento lo gobiernan dos números que el equipo tiene que mirar como mira la disponibilidad del servidor:</p><ul><li><b>La calificación de calidad</b> (<i>quality rating</i>): alta, media o baja, según cómo reaccionan los clientes a los mensajes de la empresa, en especial cuántos la bloquean o la reportan como <b>spam</b> (<i>spam</i>, mensajes no deseados). Una plantilla con mala calidad puede quedar pausada, y una cuenta con mala calidad deja de subir de nivel.</li><li><b>El límite de mensajería</b> (<i>messaging limit</i>): cuántos clientes distintos puede contactar la empresa <b>fuera de la ventana</b>, es decir, con plantillas, en 24 horas móviles. Los escalones actuales son 250, 2.000, 10.000, 100.000 e ilimitado, y se calculan para todo el portafolio, no por número. Se sube un escalón al verificar el negocio y, después, al usar buena parte del límite con buena calidad.</li></ul><p>La consecuencia de diseño es directa: si cobranza quiere avisar el vencimiento a 40.000 clientes el mismo día, necesita el escalón de 100.000 y avisos que no se sientan como spam. Una campaña masiva y confusa hunde la calidad y arrastra con ella a los avisos de cobranza.</p><p>WhatsApp también ofrece <b>catálogos</b> (<i>catalogs</i>): la empresa carga productos con imagen, precio y descripción, y el bot puede enviar un mensaje con un producto o con varios, organizados por secciones, para que el cliente los vea sin salir del chat. Para Servicios Ejemplo, el catálogo son los planes de internet y televisión, y se usa en el flujo de ventas del capítulo 10. Ojo: el precio del catálogo tiene que ser el de la fuente oficial, con la misma vigencia (capítulo 7).</p><p>Y está la parte técnica que nadie ve hasta que falla. Los mensajes entrantes, y también los <b>estados</b> de los mensajes salientes (enviado, entregado, leído, fallido), llegan al servidor de Pía como <b>webhooks</b> (<i>webhooks</i>, llamadas HTTP que la plataforma le hace al servidor del bot cada vez que pasa algo). Como la dirección del webhook es pública, cualquiera podría llamarla y hacerse pasar por WhatsApp. Por eso cada llamada viene <b>firmada</b> (<i>signed</i>): Meta calcula un <b>HMAC</b> (<i>Hash-based Message Authentication Code</i>, código de autenticación hecho con una función de resumen y una clave secreta) del cuerpo del mensaje con el secreto de la aplicación y lo envía en la cabecera <code>X-Hub-Signature-256</code>. El adaptador repite el cálculo con su copia del secreto y compara.</p></div><figure class="fig fig-flujo" id="08-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" style="min-width:720px" role="img" aria-label="Diagrama de secuencia de un mensaje de WhatsApp: verificación del webhook, mensaje firmado, verificación de la firma, respuesta 200 OK, cola, cerebro, envío por la API y estados entregado y leído">
+  <defs>
+    <marker id="d08b-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d08b-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d08b-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">su WhatsApp</text>
+  <rect x="170" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="230" y="36" class="t t-b" text-anchor="middle">WhatsApp</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">plataforma de Meta</text>
+  <rect x="330" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="390" y="36" class="t t-b" text-anchor="middle">Adaptador</text><text x="390" y="54" class="t t-s t-m" text-anchor="middle">de Pía</text>
+  <rect x="490" y="14" width="120" height="52" rx="10" class="caja"/><text x="550" y="36" class="t t-b" text-anchor="middle">Cola</text><text x="550" y="54" class="t t-s t-m" text-anchor="middle">mensajes canónicos</text>
+  <rect x="650" y="14" width="120" height="52" rx="10" class="c-red"/><text x="710" y="36" class="t t-b" text-anchor="middle">Cerebro</text><text x="710" y="54" class="t t-s t-m" text-anchor="middle">de Pía</text>
+  <line x1="70" y1="66" x2="70" y2="510" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="510" class="vida"/>
+  <line x1="390" y1="66" x2="390" y2="510" class="vida"/>
+  <line x1="550" y1="66" x2="550" y2="510" class="vida"/>
+  <line x1="710" y1="66" x2="710" y2="510" class="vida"/>
+
+  <g class="t t-s">
+    <line x1="230" y1="100" x2="387" y2="100" class="ln ln-d" marker-end="url(#d08b-m)"/>
+    <text x="238" y="93">⓪ GET ?hub.challenge=…</text>
+    <text x="398" y="104" class="t-m">devuelve el desafío (una vez)</text>
+
+    <line x1="70" y1="150" x2="227" y2="150" class="ln s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="78" y="143">① «Hola, ¿cuánto debo?»</text>
+    <line x1="230" y1="190" x2="387" y2="190" class="ln s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="238" y="183">② POST + X-Hub-Signature-256</text>
+    <rect x="398" y="200" width="200" height="40" rx="6" class="caja"/>
+    <text x="408" y="216" class="t-b">recalcula el HMAC con</text>
+    <text x="408" y="232">el secreto y compara</text>
+    <text x="606" y="216" class="k-warm t-b">si no coincide:</text>
+    <text x="606" y="232" class="k-warm t-b">se descarta</text>
+    <line x1="390" y1="262" x2="233" y2="262" class="ln ln-d s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="244" y="255">③ 200 OK, enseguida</text>
+    <line x1="390" y1="298" x2="547" y2="298" class="ln s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="398" y="291">④ mensaje canónico</text>
+
+    <line x1="550" y1="334" x2="707" y2="334" class="ln s-red" style="stroke-width:2" marker-end="url(#d08b-red)"/>
+    <text x="558" y="327">⑤ lo toma y decide</text>
+    <line x1="710" y1="376" x2="233" y2="376" class="ln s-red" style="stroke-width:2" marker-end="url(#d08b-red)"/>
+    <text x="244" y="369">⑥ envía la respuesta por la API (Bearer token)</text>
+    <line x1="230" y1="400" x2="73" y2="400" class="ln s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="80" y="393">«Te pido un código…»</text>
+
+    <line x1="230" y1="440" x2="387" y2="440" class="ln ln-d s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="238" y="433">⑦ estado: entregado</text>
+    <line x1="230" y1="476" x2="387" y2="476" class="ln ln-d s-fis" style="stroke-width:2" marker-end="url(#d08b-fis)"/>
+    <text x="238" y="469">⑧ estado: leído</text>
+    <text x="398" y="480" class="t-m">firmados también, y sin orden garantizado</text>
+  </g>
+
+  <g class="t t-xs t-b">
+    <path d="M800 86 v26" class="ln" style="stroke-width:3"/><text x="810" y="104" class="t-m">REGISTRO</text>
+    <path d="M800 132 v176" class="ln s-fis" style="stroke-width:3"/><text x="810" y="214" class="k-fis">RECIBIR</text><text x="810" y="228" class="t-m">①–④</text>
+    <path d="M800 320 v90" class="ln s-red" style="stroke-width:3"/><text x="810" y="362" class="k-red">RESPONDER</text><text x="810" y="376" class="t-m">⑤–⑥</text>
+    <path d="M800 426 v64" class="ln s-fis" style="stroke-width:3"/><text x="810" y="458" class="k-fis">ESTADOS</text><text x="810" y="472" class="t-m">⑦–⑧</text>
+  </g>
+  <rect x="10" y="518" width="770" height="34" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="395" y="540" class="t t-s" text-anchor="middle">El adaptador confirma en ③ antes de que el cerebro trabaje: si tardara, WhatsApp reintentaría y el mensaje llegaría dos veces.</text>
+</svg></div><figcaption><b>El viaje de un mensaje de WhatsApp, firmado de ida y con estados de vuelta.</b> Los participantes están arriba: Laura, la plataforma de WhatsApp, el adaptador de Pía, la cola y el cerebro. Al registrar el webhook, la plataforma comprueba una sola vez que la dirección es de la empresa (⓪). Laura escribe (①), la plataforma llama al adaptador con el mensaje y su firma (②), el adaptador recalcula la firma y responde «200 OK» enseguida (③), y deja el mensaje en la cola (④). El cerebro lo procesa (⑤) y envía la respuesta por la API (⑥). Después llegan, como webhooks aparte, los estados entregado y leído (⑦ y ⑧). Si la firma no coincide, el adaptador descarta la llamada en ②, sin tocar la cola.</figcaption></figure><div class="prose"><p>Puedes hacer tú mismo la cuenta que hace el adaptador. No necesitas cuenta de WhatsApp: basta un mensaje de ejemplo y un secreto inventado.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Firma y verifica un webhook como lo hace el adaptador</h3></div><p>Vas a calcular la firma HMAC-SHA256 de un mensaje de ejemplo con un secreto inventado, como hace Meta antes de enviarlo, y luego vas a cambiar una sola letra del mensaje para ver qué pasa. Windows trae PowerShell; macOS y Linux traen <code>openssl</code>.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>$secreto = [Text.Encoding]::UTF8.GetBytes("secreto-de-ejemplo")</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>$hmac = New-Object System.Security.Cryptography.HMACSHA256 (,$secreto)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>-join ($hmac.ComputeHash([Text.Encoding]::UTF8.GetBytes('{"from":"15550001001","text":"Hola, cuanto debo?"}')) | ForEach-Object { $_.ToString("x2") })</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>-join ($hmac.ComputeHash([Text.Encoding]::UTF8.GetBytes('{"from":"15550001001","text":"Hola, cuanto debe?"}')) | ForEach-Object { $_.ToString("x2") })</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>printf '%s' '{"from":"15550001001","text":"Hola, cuanto debo?"}' | openssl dgst -sha256 -hmac "secreto-de-ejemplo"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>printf '%s' '{"from":"15550001001","text":"Hola, cuanto debe?"}' | openssl dgst -sha256 -hmac "secreto-de-ejemplo"</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta las líneas en orden y anota la primera firma: 64 caracteres hexadecimales.</span></li><li><span>La segunda firma es del mismo mensaje con «debo» cambiado por «debe». Compárala con la primera.</span></li><li><span>Si quieres, cambia el secreto por otro y vuelve a firmar el primer mensaje.</span></li></ol><p><b>Qué observar:</b> cambiar una sola letra del mensaje, o el secreto, produce una firma completamente distinta. Por eso el adaptador puede confiar en un webhook solo si la firma que llega en la cabecera coincide con la que él calcula: alguien que no conoce el secreto no puede fabricar una firma válida, y alguien que altera el mensaje en el camino la rompe. Fíjate también en que la firma se calcula sobre los bytes exactos del cuerpo: si el adaptador reordena el JSON antes de verificar, la comparación falla aunque el mensaje sea legítimo.</p></div></section>
+<section><h2>Telegram Bot API: comandos, teclados en línea y bots frente a canales</h2><div class="prose"><p>Telegram es el canal más abierto de los cuatro. Un bot se crea conversando con otro bot, <b>BotFather</b>, que entrega un <b>token</b> (<i>token</i>, la credencial secreta del bot). Desde ahí, la <b>Telegram Bot API</b> es una API HTTP sencilla: el bot recibe novedades por webhook, o preguntando cada tanto con <code>getUpdates</code>, y responde con métodos como <code>sendMessage</code>. Al registrar el webhook, la empresa puede fijar un <code>secret_token</code> que Telegram reenvía en la cabecera <code>X-Telegram-Bot-Api-Secret-Token</code> de cada llamada: es la forma de comprobar el origen en este canal.</p><p>Tres piezas de interfaz son propias de Telegram:</p><ul><li><b>Comandos</b> (<i>commands</i>): palabras que empiezan con <code>/</code>, como <code>/start</code>, <code>/factura</code> o <code>/ayuda</code>, que Telegram sugiere al cliente en un menú. Son la versión más predecible del menú principal.</li><li><b>Teclados en línea</b> (<i>inline keyboards</i>): botones pegados a un mensaje. Al tocarlos, el bot recibe un <b>callback</b> (<i>callback query</i>) con un dato oculto de hasta 64 bytes, por ejemplo <code>pago:F-2207</code>, sin que aparezca un mensaje nuevo en el chat. Sirven para menús y confirmaciones.</li><li><b>Teclados de respuesta</b> (<i>reply keyboards</i>): reemplazan el teclado del celular con botones que, al tocarse, sí envían un mensaje de texto visible. Útiles cuando conviene que la elección quede escrita en la conversación.</li></ul><p>Telegram no tiene ventana de 24 horas ni plantillas. Eso simplifica los avisos, pero tiene dos condiciones: el bot <b>nunca puede escribir primero</b> a alguien que no lo inició con <code>/start</code>, y la responsabilidad de no ser intrusivo queda toda del lado de la empresa. También hay límites de ritmo: del orden de un mensaje por segundo en un mismo chat y unos treinta por segundo en total, así que un aviso masivo se envía en tandas.</p><p>La confusión más frecuente es entre un <b>bot</b> y un <b>canal</b> de Telegram. Un bot conversa con cada persona. Un <b>canal</b> (<i>channel</i>) es una cartelera de difusión: la empresa publica y los suscriptores leen, sin conversación de vuelta. Un <b>grupo</b> (<i>group</i>) es una conversación de muchos, donde un bot puede participar con permisos limitados. Servicios Ejemplo podría anunciar mantenimientos en un canal y atender a cada cliente con el bot: dos cosas que se enlazan, no la misma.</p></div></section>
+<section><h2>Instagram Messaging API: mensajes directos, respuestas a comentarios y sus límites</h2><div class="prose"><p>En Instagram la conversación casi nunca empieza con un «hola». Empieza con un comentario en una publicación, una respuesta a una historia o un toque en un anuncio. La <b>Instagram Messaging API</b> (API de mensajería de Instagram, de Meta) permite a una <b>cuenta profesional</b> (<i>professional account</i>) automatizar sus <b>mensajes directos</b> (<i>direct messages</i>, DM) y, por eso, es sobre todo un canal de descubrimiento y de ventas.</p><p>Sus reglas se parecen a las de WhatsApp, con matices:</p><ul><li><b>Ventana estándar de 24 horas</b> desde el último mensaje del cliente, como en WhatsApp, pero <b>sin plantillas</b> para reabrir la conversación. Para respuestas de una persona hay una ventana extendida de 7 días (<i>human agent</i>), que sirve cuando un agente necesita más tiempo, no para que el bot envíe promociones.</li><li><b>Respuesta privada a un comentario</b> (<i>private reply</i>): si alguien comenta «precio» en una publicación del plan de 500 Mbps, la empresa puede enviarle <b>un</b> mensaje directo en los 7 días siguientes al comentario. Si la persona responde, se abre la ventana normal. Es la base de casi todos los flujos de captura de prospectos en este canal (capítulo 10).</li><li><b>Respuestas rápidas</b> (<i>quick replies</i>): hasta 13 botones de hasta 20 caracteres, que hoy no se muestran en la versión de escritorio. Los textos van hasta 1.000 bytes, bastante menos que en los otros canales.</li></ul><p>La recomendación práctica es usar Instagram para lo que hace bien, el primer contacto y la calificación del interés, y llevar los trámites formales (verificar identidad, pagar) a WhatsApp o a la web, con el contexto. Para eso sirve la última sección de este capítulo.</p></div></section>
+<section><h2>El widget web: anónimo o autenticado, persistencia, disparadores y contexto</h2><div class="prose"><p>El <b>widget web</b> (<i>web chat widget</i>) es la burbuja de chat de <code>www.ejemplo.com</code>. Es el único canal sin reglas de terceros: la empresa decide cuántos botones, qué formatos, qué colores. A cambio, tiene que construir lo que las aplicaciones de mensajería traen gratis.</p><ul><li><b>Modo anónimo o autenticado.</b> En una página pública, el widget identifica al visitante solo con un identificador guardado en el navegador. Si el cliente inició sesión en el portal, el portal le entrega al widget un <b>token de identidad firmado</b> (<i>signed identity token</i>, a menudo un <b>JWT</b>, <i>JSON Web Token</i>), y el servidor de Pía lo valida. Con eso, la identidad llega verificada desde el primer mensaje, sin pedir códigos.</li><li><b>Persistencia.</b> WhatsApp guarda el historial en el celular del cliente; el navegador no. Si Laura recarga la página, el widget tiene que recuperar la conversación del servidor con el identificador de sesión. Sin eso, cada recarga es un cliente nuevo.</li><li><b>Disparadores de apertura</b> (<i>triggers</i>): reglas que deciden cuándo se ofrece el chat. Por tiempo en la página, por una página concreta (la de un error de pago), por una acción (abrir la comparación de planes) o al intentar salir. Un disparador útil ayuda; uno agresivo espanta.</li><li><b>Contexto de la página.</b> El widget le dice al cerebro dónde está el cliente: la dirección de la página, el plan que está mirando, la factura abierta. Así Pía abre con «¿Tienes dudas sobre el plan de 500 Mbps?» en vez de «¿En qué te ayudo?».</li></ul><p>Y una obligación que se olvida: el widget se incrusta en el sitio, así que tiene que ser accesible con teclado y lector de pantalla y no puede hacer lenta la página que lo hospeda.</p></div></section>
+<section><h2>Elegir el primer canal y diseñar para el más limitado</h2><div class="prose"><p>Con los cuatro canales a la vista, la comparación cabe en una figura.</p></div><figure class="fig fig-comparacion" id="08-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" style="min-width:760px" role="img" aria-label="Tabla comparativa de WhatsApp, Telegram, Instagram y el widget web: ventana de tiempo, cómo se reabre, botones, identidad que trae, cómo se verifica el origen y para qué es fuerte">
+  <g class="t t-b" text-anchor="middle">
+    <rect x="170" y="10" width="170" height="40" rx="8" class="c-fis"/><text x="255" y="35">WhatsApp</text>
+    <rect x="350" y="10" width="170" height="40" rx="8" class="c-tra"/><text x="435" y="35">Telegram</text>
+    <rect x="530" y="10" width="170" height="40" rx="8" class="c-apl"/><text x="615" y="35">Instagram</text>
+    <rect x="710" y="10" width="180" height="40" rx="8" class="d-sis"/><text x="800" y="35">Widget web</text>
+  </g>
+  <g class="t t-xs t-b t-m">
+    <text x="12" y="84">VENTANA</text>
+    <text x="12" y="144">REABRIR</text>
+    <text x="12" y="204">BOTONES</text>
+    <text x="12" y="264">IDENTIDAD</text>
+    <text x="12" y="324">ORIGEN</text>
+    <text x="12" y="384">FUERTE EN</text>
+  </g>
+  <g class="t t-s">
+    <rect x="10" y="60" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <rect x="170" y="64" width="170" height="46" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="180" y="83">24 h desde el último</text><text x="180" y="99">mensaje del cliente</text>
+    <text x="360" y="83">no tiene; el cliente</text><text x="360" y="99">debe iniciar con /start</text>
+    <text x="540" y="83">24 h; 7 días para</text><text x="540" y="99">respuestas de personas</text>
+    <text x="720" y="83">mientras la página</text><text x="720" y="99">esté abierta</text>
+
+    <rect x="10" y="120" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <rect x="170" y="124" width="170" height="46" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="180" y="143">plantilla aprobada,</text><text x="180" y="159">pagada por mensaje</text>
+    <text x="360" y="143">mensaje libre, si el</text><text x="360" y="159">cliente no bloqueó al bot</text>
+    <text x="540" y="143">sin plantillas; una</text><text x="540" y="159">respuesta a un comentario</text>
+    <text x="720" y="143">correo o notificación</text><text x="720" y="159">del navegador</text>
+
+    <rect x="10" y="180" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <rect x="170" y="184" width="170" height="46" rx="6" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="180" y="203">3 botones de 20 car.</text><text x="180" y="219">o lista de 10 filas</text>
+    <text x="360" y="203">teclado en línea</text><text x="360" y="219">y comandos /</text>
+    <text x="540" y="203">13 respuestas rápidas</text><text x="540" y="219">de 20 car. (no en PC)</text>
+    <text x="720" y="203">los que decida</text><text x="720" y="219">la empresa</text>
+
+    <rect x="10" y="240" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <text x="180" y="263">número de teléfono</text><text x="180" y="279">(cruzable con el CRM)</text>
+    <text x="360" y="263">usuario de Telegram</text><text x="360" y="279">(sin teléfono visible)</text>
+    <text x="540" y="263">usuario de Instagram</text><text x="540" y="279">(rara vez en el CRM)</text>
+    <text x="720" y="263">anónimo, o verificado</text><text x="720" y="279">con token del portal</text>
+
+    <rect x="10" y="300" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <text x="180" y="323" class="t-mono">X-Hub-Signature-256</text><text x="180" y="339">HMAC del cuerpo</text>
+    <text x="360" y="323" class="t-mono">…-Secret-Token</text><text x="360" y="339">secreto en la cabecera</text>
+    <text x="540" y="323" class="t-mono">X-Hub-Signature-256</text><text x="540" y="339">igual que WhatsApp</text>
+    <text x="720" y="323">sesión y token del</text><text x="720" y="339">propio servidor</text>
+
+    <rect x="10" y="360" width="880" height="54" rx="6" class="caja" style="fill:none"/>
+    <text x="180" y="383">atención, cobranza,</text><text x="180" y="399">avisos con plantilla</text>
+    <text x="360" y="383">comunidades, menús</text><text x="360" y="399">guiados, difusión</text>
+    <text x="540" y="383">descubrimiento y</text><text x="540" y="399">primer contacto</text>
+    <text x="720" y="383">clientes con sesión,</text><text x="720" y="399">contexto de la página</text>
+  </g>
+</svg></div><figcaption><b>Los cuatro canales lado a lado.</b> Cada columna es un canal y cada fila, una regla que cambia el diseño: si hay ventana de tiempo, cómo se reabre una conversación, cuántos botones caben, qué identidad trae el cliente, cómo se comprueba que el mensaje es legítimo y para qué es fuerte. Las celdas naranjas son las restricciones que marcan el diseño de todos: los tres botones de 20 caracteres de WhatsApp y su ventana con plantillas.</figcaption></figure><div class="prose"><p>¿Por cuál empezar? Cuatro preguntas ordenan la decisión:</p><ol class="steps"><li><span><b>¿Dónde están tus clientes hoy?</b> Si ya escriben al número de la empresa por WhatsApp, ese es el volumen que hay que atender. Un canal nuevo que nadie usa no reduce ninguna fila.</span></li><li><span><b>¿Qué identidad trae el canal?</b> WhatsApp trae un número de teléfono, que se puede cruzar con el CRM; el widget autenticado trae al cliente verificado; Instagram trae un usuario que casi nunca está en el CRM.</span></li><li><span><b>¿Qué necesita el flujo?</b> Los avisos proactivos (vencimientos, averías) piden un canal donde la empresa pueda escribir primero: WhatsApp con plantillas, o Telegram si el cliente lo inició.</span></li><li><span><b>¿Cuánto cuesta y quién lo opera?</b> Cada canal es un adaptador, un conjunto de pruebas, unas reglas que cambian y alguien que lee sus avisos de calidad.</span></li></ol><p>Una vez elegido, el principio de diseño es el que adelantó el capítulo 3: <b>diseña para el canal más limitado</b>. Si el menú principal de Pía funciona con tres botones de 20 caracteres, funciona en todas partes. Si se diseña para el widget, con ocho botones de texto largo, en WhatsApp habrá que convertirlo en lista, en Instagram se cortarán los textos y en una notificación no cabrá. La respuesta neutra del cerebro («texto + opciones») y el renderizador por canal del capítulo 5 hacen el resto.</p></div><div class="lab" id="08-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>El mismo menú en WhatsApp, Telegram, Instagram y el widget</h3></div><p class="hint">Elige un menú de ejemplo o escribe el tuyo, una opción por línea. Los cuatro teléfonos muestran cómo lo dibuja el renderizador de cada canal: botones, lista, teclado en línea, respuestas rápidas o, si nada cabe, una lista numerada en texto. Debajo, cada canal avisa qué regla se rompe. Busca la versión del menú que se ve bien en los cuatro.</p><style>
+[id="08-lab-2"] .c82-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:start}
+@media (max-width:640px){[id="08-lab-2"] .c82-top{grid-template-columns:minmax(0,1fr)}}
+[id="08-lab-2"] textarea{width:100%;min-height:128px;font:400 .9rem/1.4 var(--f-mono);padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);box-sizing:border-box}
+[id="08-lab-2"] .c82-tels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+[id="08-lab-2"] .c82-tel{border:2px solid var(--line);border-radius:16px;padding:8px;background:var(--paper);display:grid;gap:6px;align-content:start;min-width:0}
+[id="08-lab-2"] .c82-cab{font:700 .74rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--cc);border-bottom:2px solid var(--cc);padding-bottom:4px}
+[id="08-lab-2"] .c82-bur{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:400 .82rem/1.35 var(--f-body);overflow-wrap:anywhere}
+[id="08-lab-2"] .c82-bt{display:block;text-align:center;border:1px solid var(--cc);color:var(--cc);border-radius:8px;padding:4px 6px;font:600 .78rem var(--f-display);background:var(--card);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[id="08-lab-2"] .c82-kb{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+[id="08-lab-2"] .c82-chips{display:flex;flex-wrap:wrap;gap:4px}
+[id="08-lab-2"] .c82-chips>span{border:1px solid var(--cc);color:var(--cc);border-radius:14px;padding:3px 8px;font:600 .74rem var(--f-display);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[id="08-lab-2"] .c82-av{font:400 .76rem/1.35 var(--f-body);border-radius:6px;padding:4px 6px}
+[id="08-lab-2"] .c82-av.w{background:var(--warm-soft);color:var(--ink)}
+[id="08-lab-2"] .c82-av.o{background:var(--good-soft);color:var(--ink)}
+[id="08-lab-2"] .c82-cut{color:var(--warm)}
+</style>
+<div class="c82-top">
+  <div style="display:grid;gap:8px;min-width:0">
+    <div class="btns" id="c82-pre" role="group" aria-label="Menús de ejemplo"></div>
+    <p class="hint" style="margin:0">Toca un menú de ejemplo o edita las opciones a la derecha.</p>
+  </div>
+  <label style="display:grid;gap:4px;font:600 .82rem var(--f-display);color:var(--muted)">Opciones del menú (una por línea)
+    <textarea id="c82-txt" aria-describedby="c82-out"></textarea></label>
+</div>
+<div class="c82-tels" id="c82-tels" aria-live="polite"></div>
+<div class="readout texto" id="c82-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Reglas de cada canal, simplificadas: WhatsApp, hasta 3 botones de 20 caracteres o una lista de hasta 10 filas de 24; Telegram, teclado en línea sin límite práctico para un menú (dato oculto de hasta 64 bytes por botón); Instagram, hasta 13 respuestas rápidas de 20 caracteres, que no se ven en escritorio; widget web, lo que decida la empresa.</p></div></section>
+<section><h2>Omnicanalidad: una identidad del cliente y una conversación que sigue</h2><div class="prose"><p>Tener cuatro canales no es ser omnicanal. <b>Multicanal</b> (<i>multichannel</i>) es estar en varios canales; <b>omnicanal</b> (<i>omnichannel</i>) es que el cliente sienta una sola conversación aunque cambie de canal. La diferencia la nota Laura el día que empieza a cambiar su plan en la web, se va a trabajar y sigue desde WhatsApp en el bus.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en una clínica con historia clínica única. Te atienden en urgencias un martes y en consulta externa el viernes, en otro edificio, con otro médico. El médico del viernes abre tu historia y ve lo que pasó el martes: no te pregunta otra vez a qué eres alérgico. Pero sí te pide el documento en la recepción, porque saber quién eres no es lo mismo que comprobar que eres tú. La omnicanalidad es la historia clínica única del bot, con su recepción.</p></div><div class="prose"><p>Para que eso funcione hacen falta tres piezas:</p><ul><li><b>Una identidad del cliente que une identificadores.</b> Cada canal conoce a Laura por otro nombre: el número <code>wa:15550001001</code>, el usuario de Instagram, la sesión del portal. Un <b>grafo de identidad</b> (<i>identity graph</i>) los une al cliente 1001. La regla de seguridad: un identificador se une al cliente <b>solo después de verificar</b> la identidad en ese canal o con una prueba que venga del canal verificado. Unirlos porque «el nombre coincide» es la puerta de entrada de un fraude.</li><li><b>Un historial central.</b> Los mensajes de todos los canales se guardan en un mismo registro, con el canal de cada uno. El cerebro y la bandeja de agentes (capítulo 9) leen de ahí.</li><li><b>Una regla de continuidad.</b> Cuando llega un mensaje, ¿sigue la conversación anterior o empieza una nueva? Se decide con reglas: cuánto tiempo pasó, si el flujo anterior quedó a medias, si el tema coincide. Muy laxa, mezcla temas; muy estricta, obliga a repetir.</li></ul></div><figure class="fig fig-arquitectura" id="08-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:740px" role="img" aria-label="Grafo de identidad: cuatro identificadores de Laura en distintos canales unidos al cliente 1001, con enlaces verificados y pendientes, y lo que viaja con la conversación al cambiar de canal">
+  <rect x="10" y="30" width="250" height="330" rx="12" class="d-casa" style="opacity:.6"/>
+  <text x="24" y="52" class="t t-xs t-b k-casa">LO QUE TRAE CADA CANAL</text>
+  <rect x="300" y="30" width="250" height="330" rx="12" class="c-red" style="opacity:.35"/>
+  <text x="314" y="52" class="t t-xs t-b k-red">GRAFO DE IDENTIDAD</text>
+  <rect x="590" y="30" width="300" height="330" rx="12" class="d-sis" style="opacity:.45"/>
+  <text x="604" y="52" class="t t-xs t-b k-sis">LA CONVERSACIÓN QUE SIGUE</text>
+
+  <g class="t t-s">
+    <rect x="26" y="70" width="218" height="52" rx="8" class="c-fis"/><text x="38" y="92" class="t-b">WhatsApp</text><text x="38" y="110" class="t-mono">wa:15550001001</text>
+    <rect x="26" y="136" width="218" height="52" rx="8" class="d-sis"/><text x="38" y="158" class="t-b">Widget con sesión</text><text x="38" y="176" class="t-mono">portal: laura.r</text>
+    <rect x="26" y="202" width="218" height="52" rx="8" class="c-tra"/><text x="38" y="224" class="t-b">Telegram</text><text x="38" y="242" class="t-mono">tg:7700123</text>
+    <rect x="26" y="268" width="218" height="52" rx="8" class="c-apl"/><text x="38" y="290" class="t-b">Instagram</text><text x="38" y="308" class="t-mono">ig:@laura.ejemplo</text>
+  </g>
+
+  <rect x="340" y="160" width="170" height="70" rx="12" class="caja" style="stroke-width:2"/>
+  <text x="425" y="188" class="t t-b" text-anchor="middle">Cliente 1001</text>
+  <text x="425" y="208" class="t t-s t-m" text-anchor="middle">Laura · un solo perfil</text>
+  <g>
+    <path d="M244 96 C300 96 300 175 340 180" class="ln s-red" style="stroke-width:2.5"/>
+    <path d="M244 162 C290 162 300 190 340 192" class="ln s-red" style="stroke-width:2.5"/>
+    <path d="M244 228 C290 228 300 205 340 205" class="ln s-red" style="stroke-width:2.5"/>
+    <path d="M244 294 C300 294 300 222 340 218" class="ln ln-d"/>
+  </g>
+  <g class="t t-s">
+    <text x="318" y="96" class="k-red t-b">verificado</text>
+    <text x="318" y="300" class="t-m">pendiente:</text>
+    <text x="318" y="314" class="t-m">no da acceso</text>
+    <text x="318" y="328" class="t-m">a datos</text>
+  </g>
+  <path d="M510 195 H586" class="ln" style="stroke-width:2"/>
+
+  <g class="t t-s">
+    <text x="604" y="80" class="t-b k-enl">VIAJA CON LA CONVERSACIÓN</text>
+    <text x="612" y="102">• tema: cambio de plan</text>
+    <text x="612" y="122">• paso del flujo: 3 de 5</text>
+    <text x="612" y="142">• datos dados: plan de 500 Mbps</text>
+    <text x="612" y="162">• historial de mensajes</text>
+    <text x="612" y="182">• página que estaba viendo</text>
+    <text x="604" y="226" class="t-b k-warm">NO VIAJA SOLA</text>
+    <text x="612" y="248">• la verificación: vence según</text>
+    <text x="624" y="266">la política (capítulo 12)</text>
+    <text x="612" y="288">• un enlace pendiente no abre</text>
+    <text x="624" y="306">datos de la cuenta</text>
+  </g>
+  <text x="450" y="388" class="t t-s t-m" text-anchor="middle">Un identificador se une al cliente solo después de verificarlo en ese canal, o con una referencia de un solo uso desde un canal verificado.</text>
+</svg></div><figcaption><b>Una identidad que cruza canales.</b> A la izquierda, en la franja del cliente, los cuatro identificadores con los que llega Laura. En el centro, el grafo de identidad los une al cliente 1001; la línea continua es un enlace verificado y la punteada, uno pendiente que no da acceso a datos. A la derecha, en la franja de sistemas, lo que viaja con la conversación cuando cambia de canal (tema, paso del flujo, datos ya dados, historial) y lo que no viaja solo: la verificación, que tiene su propio vencimiento.</figcaption></figure><div class="prose"><p>La forma más segura de pasar de un canal a otro es un <b>enlace con referencia</b>. Cuando Laura toca «Seguir en WhatsApp» en el widget, el servidor genera una referencia de un solo uso (por ejemplo, <code>ref 7F3K</code>) y la pone en el texto prellenado de un enlace <code>wa.me</code>. Laura envía ese primer mensaje desde su WhatsApp; el adaptador reconoce la referencia, la marca como usada y une la conversación nueva con la de la web. La referencia prueba que es la misma persona que estaba en el portal; el número de WhatsApp, por sí solo, no lo prueba.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Arma el enlace que pasa una conversación de la web a WhatsApp</h3></div><p>Vas a construir un enlace de «clic para chatear» (<i>click to chat</i>) con un texto prellenado, el mismo mecanismo del botón «Seguir en WhatsApp». Necesitas el navegador y, si quieres verlo completo, WhatsApp en el celular o en el computador. No vas a enviar nada.</p><ol class="steps"><li><span>Abre esta dirección: <code>https://wa.me/?text=Hola%20P%C3%ADa%2C%20sigo%20aqu%C3%AD.%20ref%207F3K</code>. Como no lleva número, WhatsApp te pide elegir un contacto. No elijas ninguno: mira el texto prellenado y cierra.</span></li><li><span>Mira el texto: los <code>%20</code> son espacios y <code>%C3%AD</code> es la «í». Es la <b>codificación de URL</b> (<i>URL encoding</i>).</span></li><li><span>Cambia la referencia por otra (<code>ref 9Q2M</code>) y vuelve a abrir el enlace.</span></li><li><span>Piensa cómo usaría el adaptador ese texto: ¿qué tiene que comprobar antes de unir esta conversación con la de la web?</span></li></ol><p><b>Qué observar:</b> el enlace no lleva datos personales, solo una referencia corta y sin significado. Toda la información (qué plan miraba Laura, en qué paso iba) queda en el servidor, asociada a esa referencia. El adaptador tiene que comprobar que la referencia existe, que no venció (unos minutos bastan) y que no se usó antes. En un botón real, el enlace incluye además el número de la empresa (<code>wa.me/&lt;número&gt;?text=…</code>), para que se abra directo su chat.</p></div><div class="prose"><p>El laboratorio siguiente te deja probar las combinaciones: con o sin sesión en el portal, con o sin referencia, con poco o con mucho tiempo entre canales. Fíjate en qué datos se conservan siempre y en cuál hay que volver a pedir.</p></div><div class="lab" id="08-lab-3"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Cambio de canal: empieza en la web y sigue en WhatsApp</h3></div><p class="hint">Laura empieza a cambiar su plan en el widget de <code>www.ejemplo.com</code> y sigue en WhatsApp. Activa o desactiva cada pieza (sesión del portal, número registrado en el CRM, enlace con referencia, historial central) y mueve el tiempo que pasa entre un canal y otro. La tabla muestra qué se conserva y qué se pierde, y el chat de la derecha, el primer mensaje de Pía en WhatsApp.</p><style>
+[id="08-lab-3"] .c83-chk{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:6px 16px;font:500 .86rem var(--f-display)}
+[id="08-lab-3"] .c83-chk label{display:flex;gap:8px;align-items:flex-start}
+[id="08-lab-3"] .c83-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:720px){[id="08-lab-3"] .c83-grid{grid-template-columns:minmax(0,1fr)}}
+[id="08-lab-3"] table td:first-child{font-weight:600;font-family:var(--f-display);font-size:.86rem}
+[id="08-lab-3"] .c83-e{font:700 .72rem var(--f-display);letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px;white-space:nowrap;display:inline-block;margin-bottom:2px}
+[id="08-lab-3"] .c83-si{background:var(--good-soft);color:var(--good)}
+[id="08-lab-3"] .c83-med{background:var(--accent-soft);color:var(--accent)}
+[id="08-lab-3"] .c83-no{background:var(--warm-soft);color:var(--warm)}
+[id="08-lab-3"] .c83-chat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:7px}
+[id="08-lab-3"] .c83-m{max-width:92%;padding:7px 10px;border-radius:12px;font:400 .86rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="08-lab-3"] .c83-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="08-lab-3"] .c83-c{justify-self:end;background:var(--accent);color:var(--card)}
+[id="08-lab-3"] .c83-b{justify-self:start;background:var(--card);border:1px solid var(--line)}
+[id="08-lab-3"] .c83-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+</style>
+<div class="c83-chk" role="group" aria-label="Piezas de la omnicanalidad">
+  <label><input type="checkbox" id="c83-ses" checked> Laura inició sesión en el portal (widget autenticado)</label>
+  <label><input type="checkbox" id="c83-num" checked> Su número de WhatsApp está en el CRM</label>
+  <label><input type="checkbox" id="c83-ref"> Usa el botón «Seguir en WhatsApp» (enlace con referencia de un solo uso)</label>
+  <label><input type="checkbox" id="c83-his" checked> Historial central de conversaciones</label>
+</div>
+<div class="ctls">
+  <label class="ctl">Tiempo entre la web y WhatsApp <output id="c83-t-o"></output>
+    <input id="c83-t" type="range" min="0" max="9" step="1" value="1"></label>
+</div>
+<div class="c83-grid">
+  <div class="tbl"><table><thead><tr><th>Pieza del contexto</th><th>En WhatsApp</th></tr></thead><tbody id="c83-tb"></tbody></table></div>
+  <div style="display:grid;gap:8px;min-width:0">
+    <p class="c83-tit">En la web, antes de irse</p>
+    <div class="c83-chat"><div class="c83-m c83-b"><small>Pía · widget</small>El plan de 500 Mbps cuesta US$ 35,00 al mes. ¿Agendamos la instalación del cambio?</div><div class="c83-m c83-c"><small>Laura</small>Sí, pero sigo luego por WhatsApp</div></div>
+    <p class="c83-tit">Primer mensaje en WhatsApp</p>
+    <div class="c83-chat" id="c83-wa" aria-live="polite"></div>
+  </div>
+</div>
+<div class="readout texto" id="c83-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Políticas del ejemplo: la referencia del enlace vence a los 15 minutos y sirve una sola vez; una verificación vale 15 minutos para ver datos de pago; una conversación a medias se retoma sola hasta 24 horas después.</p></div><div class="prose"><p>Una aclaración que evita discusiones: lo que viaja entre canales es el <b>contexto</b>, no la autorización para todo. Si Laura se verificó en la web hace dos horas y la política dice que una verificación vale 15 minutos para ver datos de pago, en WhatsApp se le pide de nuevo, aunque Pía ya sepa quién es y en qué iba. Cuánto dura una verificación y con qué método se renueva es el tema del capítulo 12.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que abre WhatsApp después de tener el widget web suele descubrir, al revisar los primeros reclamos, que el número de teléfono del CRM no coincide con el de WhatsApp en un buen porcentaje de clientes: líneas cambiadas, números de un familiar, formatos distintos. La solución habitual no es confiar en el número, sino usarlo solo para el saludo (sin datos sensibles) y unir la identidad cuando el cliente se verifica por primera vez en el canal, guardando el enlace para la próxima vez.</p></div></section>
+<section><h2>Caso Vodafone: crecer canal por canal empezando por facturación</h2><div class="ml"><b>En la práctica</b><p><b>Vodafone y TOBi.</b> El operador de telecomunicaciones lanzó su asistente TOBi en 2017 y lo fue llevando a más países y canales a lo largo de los años, hasta incorporar una versión generativa. El orden importa: empezó por los temas de más volumen y menos ambigüedad, como la facturación y la solución de problemas repetidos, y no intentó cubrir todo el catálogo de soporte desde el primer día. Un caso publicado por Microsoft, el proveedor de la tecnología, habló de decenas de millones de conversaciones al mes y de una baja en la frecuencia de contacto. Con los criterios del capítulo 1, es evidencia de nivel B o C: cifras del proveedor y de la propia empresa, sin verificación independiente. Lo transferible no es la cifra, sino el patrón: un canal y un tema bien resueltos antes del siguiente, y las personas como parte del diseño, no como señal de que el bot falló.</p></div><div class="prose"><p>Servicios Ejemplo sigue la misma lógica: WhatsApp y el widget con la primera ola de pedidos (deuda, enlace de pago, falla y estado del ticket), y Telegram e Instagram después, cada uno con un propósito claro. Lo que te llevas de este capítulo: <b>un adaptador por canal, un solo cerebro y una identidad del cliente que cruza canales.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>Laura escribió a las 9:00 del lunes. El martes a las 11:00 un agente quiere avisarle que su caso quedó resuelto. ¿Cómo lo hace por WhatsApp?</summary><p>Con una plantilla aprobada, probablemente de utilidad, porque la ventana de 24 horas se cerró el martes a las 9:00. Si Laura responde, se abre una ventana nueva y ya se puede conversar libremente.</p></details><details><summary>¿Por qué no conviene poner una promoción en una plantilla de categoría utilidad?</summary><p>Porque Meta revisa el contenido y puede recategorizarla o rechazarla, y el abuso repetido afecta a la cuenta. Además, una promoción disfrazada baja la calidad percibida, y la calidad decide el límite de mensajería del que dependen también los avisos de cobranza.</p></details><details><summary>¿Qué comprueba el adaptador con la cabecera <code>X-Hub-Signature-256</code>?</summary><p>Que el webhook viene de Meta y no fue alterado: recalcula el HMAC-SHA256 del cuerpo con el secreto de la aplicación y lo compara con el que trae la cabecera. Si no coinciden, descarta la llamada.</p></details><details><summary>¿Cuál es la diferencia entre un bot y un canal de Telegram?</summary><p>El bot conversa con cada persona; el canal es una difusión de una vía donde la empresa publica y los suscriptores solo leen.</p></details><details><summary>¿Por qué se dice «diseña para el canal más limitado»?</summary><p>Porque un menú que cabe en tres botones de 20 caracteres funciona en todos los canales, mientras que uno diseñado para el widget se rompe en WhatsApp e Instagram. El renderizador adapta la presentación, pero no puede inventar espacio.</p></details><details><summary>Laura se verificó en la web y sigue en WhatsApp con un enlace con referencia dos horas después. ¿Pía puede mostrarle el detalle de su factura sin pedir nada?</summary><p>Pía conserva el contexto (quién es, qué estaba haciendo), pero si la verificación ya venció según la política, debe pedirla de nuevo antes de mostrar datos sensibles. El contexto viaja; la autorización tiene su propio vencimiento.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué era la versión local de la API de WhatsApp (<i>On-Premises API</i>) y por qué Meta la retiró en favor de la versión en la nube?<small>Pista: busca «WhatsApp On-Premises API sunset».</small></li><li>¿Por qué la verificación de firmas de webhook debe usar una comparación «de tiempo constante» en vez de comparar las cadenas con <code>==</code>?<small>Pista: busca «timing attack HMAC compare_digest».</small></li><li>¿Qué es un JWT, qué partes tiene y por qué el servidor puede confiar en él sin consultar a quien lo emitió?<small>Pista: busca «JSON Web Token header payload signature».</small></li><li>¿Qué son las notificaciones push del navegador y qué permiso tiene que dar el usuario para recibirlas?<small>Pista: busca «Web Push API Notification permission».</small></li><li>¿Qué pide la norma WCAG para que un componente como un widget de chat sea accesible con teclado y lector de pantalla?<small>Pista: busca «WCAG 2.2 ARIA live region chat».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank" rel="noopener">WhatsApp Cloud API, documentación para desarrolladores <small>mensajes, plantillas, webhooks y límites, de la fuente</small></a><a class="vid" href="https://core.telegram.org/bots/api" target="_blank" rel="noopener">Telegram Bot API <small>la referencia completa de métodos, teclados y webhooks</small></a><a class="vid" href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/messaging-api" target="_blank" rel="noopener">Instagram Messaging API <small>mensajes directos, ventanas y tipos de mensaje</small></a><a class="vid" href="https://faq.whatsapp.com/5913398998672934" target="_blank" rel="noopener">Crear enlaces de WhatsApp (clic para chatear) <small>cómo se arma un enlace <code>wa.me</code> con texto prellenado</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const MSJ=[
+    {t:'Respuesta de Pía a una pregunta',d:'«Tu factura F-2207 es de US$ 25,00 y vence el 5 de diciembre.»',tipo:'libre',cc:'--c-fis'},
+    {t:'Agente: «Tu caso quedó resuelto»',d:'Un agente avisa el cierre del ticket n.º 5512.',tipo:'libre',plantilla:'utilidad',cc:'--warm'},
+    {t:'Aviso de vencimiento de la factura',d:'«Hola, Laura. Tu factura F-2207 vence mañana. [Ver y pagar]»',tipo:'libre',plantilla:'utilidad',cc:'--d-sis'},
+    {t:'Promoción del plan de 500 Mbps',d:'Una oferta que Laura no pidió.',tipo:'promo',plantilla:'marketing',cc:'--c-apl'},
+    {t:'Código de verificación',d:'«Tu código es 482913. No lo compartas.»',tipo:'libre',plantilla:'autenticación',cc:'--d-casa'},
+    {t:'«Hola, ¿sigues ahí?» en texto libre',d:'Un mensaje suelto para reabrir la conversación.',tipo:'libre',cc:'--muted'}
+  ];
+  let ent=[0];
+  const T=()=>+q('#c81-t').value;
+  const h=v=>{const d=Math.floor(v/24),r=v-24*d;const hh=Math.floor(r),mm=Math.round((r-hh)*60);return 'día '+(d+1)+', '+String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');};
+  function ultimo(t){let u=-1;ent.forEach(e=>{if(e<=t&&e>u)u=e;});return u;}
+  function abierta(t){const u=ultimo(t);return u>=0&&t<u+24;}
+  function dibujar(){
+    const t=T(),X=v=>30+v*(660/72),s=[];
+    s.push('<rect x="30" y="40" width="660" height="36" rx="6" style="fill:var(--paper);stroke:var(--line)"/>');
+    const ord=[...ent].sort((a,b)=>a-b);
+    ord.forEach(e=>{const fin=Math.min(e+24,72);s.push('<rect x="'+X(e)+'" y="40" width="'+(X(fin)-X(e))+'" height="36" style="fill:var(--good-soft);stroke:var(--good);stroke-width:1" opacity=".9"/>');});
+    for(let d=0;d<=72;d+=12){s.push('<line x1="'+X(d)+'" y1="76" x2="'+X(d)+'" y2="82" style="stroke:var(--muted)"/><text x="'+X(d)+'" y="96" text-anchor="middle" class="m">'+d+' h</text>');}
+    [0,24,48].forEach((d,i)=>s.push('<text x="'+X(d+12)+'" y="30" text-anchor="middle" class="m b">DÍA '+(i+1)+'</text>'));
+    ord.forEach(e=>s.push('<circle cx="'+X(e)+'" cy="58" r="7" style="fill:var(--accent);stroke:var(--card);stroke-width:2"/>'));
+    s.push('<line x1="'+X(t)+'" y1="34" x2="'+X(t)+'" y2="84" style="stroke:var(--warm);stroke-width:3"/>');
+    const ab=abierta(t),u=ultimo(t);
+    const txt=ab?'Ventana abierta: quedan '+(u+24-t).toFixed(1).replace('.',',')+' h':'Ventana cerrada: solo plantillas aprobadas';
+    const tx=Math.min(Math.max(X(t),110),610);
+    s.push('<text x="'+tx+'" y="122" text-anchor="middle" class="b" style="fill:var('+(ab?'--good':'--warm')+')">'+txt+'</text>');
+    s.push('<text x="'+tx+'" y="140" text-anchor="middle" class="m">'+h(t)+'</text>');
+    q('#c81-svg').innerHTML=s.join('');
+  }
+  function lista(){
+    const t=T(),ab=abierta(t);
+    q('#c81-lista').innerHTML=MSJ.map(m=>{
+      let cl,et,nota;
+      if(m.tipo==='promo'){cl='c81-plant';et='Plantilla de marketing';nota=ab?'Aunque la ventana esté abierta, una promoción no pedida es marketing: va como plantilla aprobada y con el consentimiento del cliente para recibir ofertas.':'Solo como plantilla de marketing aprobada y a clientes que aceptaron recibir ofertas.';}
+      else if(ab){cl='c81-libre';et='Sale libre';nota='Dentro de la ventana: texto, botones o listas, sin plantilla.';}
+      else if(m.plantilla){cl='c81-plant';et='Plantilla de '+m.plantilla;nota='Ventana cerrada: necesita una plantilla de '+m.plantilla+' aprobada. Si Laura responde, se abre una ventana nueva.';}
+      else{cl='c81-no';et='No sale';nota='Ventana cerrada y sin plantilla posible: la API rechaza el mensaje. Hay que esperar a que Laura escriba.';}
+      return '<div class="c81-it" style="--cc:var('+m.cc+')"><div><b>'+m.t+'</b><br>'+m.d+'</div><span class="c81-est '+cl+'">'+et+'</span><small>'+nota+'</small></div>';
+    }).join('');
+  }
+  function lectura(){
+    const t=T(),ab=abierta(t),u=ultimo(t),n=ent.filter(e=>e<=t).length;
+    let s='<span>Ahora: <b>'+h(t)+'</b> · mensajes de Laura hasta ahora: <b>'+n+'</b> · último: <b>'+(u>=0?h(u):'ninguno')+'</b></span>';
+    s+=ab?'<span class="ok">Ventana abierta hasta el '+h(u+24)+'. Es el momento barato: resuelve aquí todo lo que puedas.</span>':'<span class="warn">Ventana cerrada desde el '+h(u+24)+'. Para escribirle a Laura hace falta una plantilla aprobada; para conversar, que ella responda.</span>';
+    q('#c81-out').innerHTML=s;
+  }
+  function todo(){q('#c81-t-o').textContent=h(T());dibujar();lista();lectura();}
+  q('#c81-t').addEventListener('input',todo);
+  q('#c81-esc').addEventListener('click',()=>{const t=T();if(!ent.includes(t))ent.push(t);todo();});
+  q('#c81-rei').addEventListener('click',()=>{ent=[0];q('#c81-t').value=5;todo();});
+  q('#c81-ej').addEventListener('click',()=>{ent=[0,9];q('#c81-t').value=35;todo();});
+  todo();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const PRE={
+    'Menú principal':['Mi factura','Reportar una falla','Estado de mi ticket','Hablar con una persona'],
+    'Confirmar pago':['Sí, pagar','No, gracias'],
+    'Menú corto':['Mi factura','Una falla','Otra cosa'],
+    'Agencias de la ciudad':['Centro','Norte','Sur','Este','Oeste','Aeropuerto','Puerto','Universidad'],
+    'Todo el catálogo':['Consultar deuda','Pagar factura','Reportar falla','Estado del ticket','Cambiar de plan','Planes y precios','Agencias y horarios','Mudanza del servicio','Cambiar titular','Actualizar correo','Factura electrónica','Reclamo por cobro','Dar de baja','Hablar con una persona']
+  };
+  q('#c82-pre').innerHTML=Object.keys(PRE).map((k,i)=>'<button type="button" aria-pressed="'+(i===0)+'">'+k+'</button>').join('');
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const bytes=s=>new TextEncoder().encode(s).length;
+  const corta=(s,n)=>s.length>n?esc(s.slice(0,n-1))+'<span class="c82-cut">…</span>':esc(s);
+  function ops(){return q('#c82-txt').value.split('\n').map(s=>s.trim()).filter(Boolean);}
+  function tel(nombre,cc,cuerpo,av){return '<div class="c82-tel" style="--cc:var('+cc+')"><div class="c82-cab">'+nombre+'</div><div class="c82-bur">¿En qué te ayudo?</div>'+cuerpo+av.map(a=>'<div class="c82-av '+a[0]+'">'+a[1]+'</div>').join('')+'</div>';}
+  function numerada(o){return '<div class="c82-bur">'+o.map((s,i)=>(i+1)+'. '+esc(s)).join('<br>')+'<br><i>Responde con el número.</i></div>';}
+  function pintar(){
+    const o=ops(),n=o.length,L=o.reduce((m,s)=>Math.max(m,s.length),0),res=[];
+    // WhatsApp
+    let wa,wav=[];
+    if(n===0){wa='';wav.push(['w','Sin opciones.']);}
+    else if(n<=3&&L<=20){wa=o.map(s=>'<span class="c82-bt">'+esc(s)+'</span>').join('');wav.push(['o','Botones de respuesta: '+n+' de 3, todos de 20 caracteres o menos.']);res.push('WhatsApp: botones');}
+    else if(n<=10&&L<=24){wa='<span class="c82-bt">☰ Ver opciones</span><div class="c82-bur" style="font-size:.76rem">'+o.map(esc).join('<br>')+'</div>';wav.push(['w',(n>3?'Más de 3 opciones':'Una opción pasa de 20 caracteres')+': el renderizador usa una lista (un toque más para el cliente).']);res.push('WhatsApp: lista');}
+    else{wa=numerada(o);wav.push(['w',(n>10?'Más de 10 opciones':'Un título pasa de 24 caracteres')+': no cabe ni en botones ni en lista. Queda un texto numerado, el peor formato para el cliente.']);res.push('WhatsApp: texto numerado');}
+    // Telegram
+    let tg='<div class="c82-kb">'+o.map(s=>'<span class="c82-bt">'+esc(s)+'</span>').join('')+'</div>',tav=[];
+    const largo=o.filter(s=>bytes('menu:'+s.toLowerCase().replace(/\s+/g,'_'))>64);
+    tav.push(n>8?['w','Cabe, pero '+n+' botones son un muro: el cliente tiene que leerlos todos.']:['o','Teclado en línea con '+n+' botones en dos columnas.']);
+    if(largo.length)tav.push(['w','El dato oculto de algún botón pasaría de 64 bytes: usa un código corto, no el texto.']);
+    if(n)res.push('Telegram: teclado en línea');
+    // Instagram
+    let ig,iav=[];
+    if(n<=13){ig='<div class="c82-chips">'+o.map(s=>'<span>'+corta(s,20)+'</span>').join('')+'</div>';const cort=o.filter(s=>s.length>20).length;iav.push(cort?['w',cort+' opción'+(cort>1?'es se cortan':' se corta')+' en 20 caracteres.']:['o','Respuestas rápidas: '+n+' de 13.']);iav.push(['w','En Instagram de escritorio no se ven: el texto tiene que tener sentido sin ellas.']);if(n)res.push('Instagram: respuestas rápidas');}
+    else{ig=numerada(o);iav.push(['w','Más de 13 opciones: solo queda texto numerado.']);res.push('Instagram: texto numerado');}
+    // Web
+    const wb=o.map(s=>'<span class="c82-bt" style="white-space:normal">'+esc(s)+'</span>').join('');
+    const wbav=[n>6?['w','Cabe todo, pero que quepa no significa que convenga: '+n+' opciones cansan.']:['o','Botones a la medida del sitio.']];
+    if(n)res.push('Widget: botones');
+    q('#c82-tels').innerHTML=tel('WhatsApp','--c-fis',wa,wav)+tel('Telegram','--c-tra',tg,tav)+tel('Instagram','--c-apl',ig,iav)+tel('Widget web','--d-sis',wb,wbav);
+    const todos=n>0&&n<=3&&L<=20;
+    q('#c82-out').innerHTML='<span>Opciones: <b>'+n+'</b> · la más larga: <b>'+L+'</b> caracteres</span><span>'+res.join(' · ')+'</span>'+
+      (todos?'<span class="ok">Este menú se ve igual de bien en los cuatro canales: está diseñado para el más limitado.</span>':'<span class="warn">Para que funcione en todos, deja 3 opciones de 20 caracteres o menos y lleva el resto a un segundo paso («Otra cosa»).</span>');
+  }
+  function cargar(k){q('#c82-txt').value=PRE[k].join('\n');q('#c82-pre').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.textContent===k));pintar();}
+  q('#c82-pre').addEventListener('click',e=>{const b=e.target.closest('button');if(b)cargar(b.textContent);});
+  q('#c82-txt').addEventListener('input',()=>{q('#c82-pre').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));pintar();});
+  cargar('Menú principal');
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const MIN=[2,10,30,60,120,240,480,1440,2880,4320];
+  const et=m=>m<60?m+' min':m<1440?(m/60)+' h':(m/1440)+(m===1440?' día':' días');
+  const E={si:['c83-si','Se conserva'],med:['c83-med','A medias'],no:['c83-no','Se pierde']};
+  const fila=(n,k,txt)=>'<tr><td>'+n+'</td><td><span class="c83-e '+E[k][0]+'">'+E[k][1]+'</span><br>'+txt+'</td></tr>';
+  function pintar(){
+    const ses=q('#c83-ses').checked,num=q('#c83-num').checked,ref=q('#c83-ref').checked,his=q('#c83-his').checked,t=MIN[+q('#c83-t').value];
+    q('#c83-t-o').textContent=et(t);
+    const refOk=ref&&t<=15,porCliente=his&&num&&ses,cont=t<=1440;
+    const R=[];let pierde=0,pide=[];
+    // identidad
+    if(refOk&&ses)R.push(fila('Quién es','si','Cliente 1001: la referencia enlaza con la sesión verificada del portal.'));
+    else if(refOk)R.push(fila('Quién es','med','La referencia une las dos conversaciones, pero en la web Laura era anónima: sigue sin identidad verificada.'));
+    else if(num)R.push(fila('Quién es','med','Probable, por el número: sirve para el saludo, no para mostrar datos.'));
+    else{R.push(fila('Quién es','no','Número desconocido: para Pía es una persona nueva.'));pierde++;}
+    // verificacion
+    if(ses&&refOk)R.push(fila('Verificación para datos de pago','si','Vigente: se hizo en el portal hace '+et(t)+' y la referencia prueba que es la misma persona.'));
+    else if(ses){R.push(fila('Verificación para datos de pago','no',t>15?'Vencida: pasaron más de 15 minutos. Se pide de nuevo.':'No se hereda: el número de WhatsApp no prueba que sea la persona del portal. Se pide de nuevo.'));pide.push('verificación');}
+    else{R.push(fila('Verificación para datos de pago','no','No la hubo en la web. Se hace en WhatsApp.'));pide.push('verificación');}
+    // flujo y datos
+    let flujo;
+    if(refOk)flujo='si';else if(porCliente&&cont)flujo='si';else if(porCliente)flujo='med';else flujo='no';
+    const tf={si:refOk?'Cambio de plan, paso 3 de 5: la referencia apunta al estado guardado.':'Cambio de plan, paso 3 de 5: se encuentra por el cliente, dentro de la regla de 24 horas.',med:'Pasaron más de 24 horas: Pía ofrece retomar, como conversación nueva.',no:'No hay cómo saber que es la misma conversación.'};
+    R.push(fila('Tema y paso del flujo',flujo,tf[flujo]));
+    R.push(fila('Datos ya dados (plan de 500 Mbps)',flujo,flujo==='no'?'Laura tiene que repetir qué plan eligió.':flujo==='med'?'Están guardados y se le muestran para confirmar.':'Plan de 500 Mbps, US$ 35,00, sin repetir nada.'));
+    if(flujo==='no'){pierde+=2;pide.push('qué plan eligió');}
+    // historial
+    if(his&&(refOk||porCliente))R.push(fila('Historial de mensajes','si','Pía y los agentes ven lo que se habló en la web.'));
+    else if(his){R.push(fila('Historial de mensajes','no','Está guardado, pero nada lo une a esta conversación.'));pierde++;}
+    else{R.push(fila('Historial de mensajes','no','Sin historial central: cada canal guarda lo suyo.'));pierde++;}
+    // pagina
+    if(refOk)R.push(fila('Página que estaba viendo','si','Comparación de planes: viaja asociada a la referencia.'));
+    else if(his&&porCliente)R.push(fila('Página que estaba viendo','med','Queda en el historial, si el widget la registró.'));
+    else{R.push(fila('Página que estaba viendo','no','Se pierde.'));pierde++;}
+    q('#c83-tb').innerHTML=R.join('');
+    // chat
+    let lau=ref?'Hola Pía, sigo aquí. ref 7F3K':'Hola, quiero seguir con el cambio de plan',pia;
+    if(ref&&!refOk)pia='Hola, soy Pía, la asistente virtual de Servicios Ejemplo. Ese enlace ya venció, pero te ayudo igual. ';
+    else pia='';
+    if(flujo==='si')pia+=(refOk?'':'Hola de nuevo. ')+'Seguimos con tu cambio al plan de 500 Mbps (US$ 35,00 al mes). '+(pide.includes('verificación')?'Antes de agendar, te envío un código para confirmar que eres tú.':'¿Qué día prefieres para la instalación?');
+    else if(flujo==='med')pia+='Hola de nuevo. Hace unos días mirabas el cambio al plan de 500 Mbps. ¿Quieres retomarlo? Primero te envío un código para confirmar que eres tú.';
+    else pia+=(ref&&!refOk?'':'Hola, soy Pía, la asistente virtual de Servicios Ejemplo. ')+'¿Qué plan te interesa? Para ver tu cuenta necesito confirmar tu identidad.';
+    q('#c83-wa').innerHTML='<div class="c83-m c83-c"><small>Laura · WhatsApp</small>'+lau+'</div><div class="c83-m c83-b"><small>Pía · WhatsApp</small>'+pia+'</div>';
+    let j;
+    if(ref&&!refOk)j='<span class="warn">La referencia venció a los 15 minutos. Es a propósito: un enlace que sirviera para siempre sería una llave que cualquiera podría reenviar.</span>';
+    else if(pierde===0)j='<span class="ok">Continuidad completa: Laura no repite nada'+(pide.length?', y solo se le pide lo que la seguridad exige':'')+'.</span>';
+    else if(flujo==='no')j='<span class="warn">Multicanal sin omnicanalidad: Laura empieza de cero en WhatsApp.</span>';
+    else j='<span>Se conserva lo principal; activa la referencia o el historial central para no perder el resto.</span>';
+    q('#c83-out').innerHTML='<span>Piezas perdidas: <b>'+pierde+'</b> · se le vuelve a pedir: <b>'+(pide.length?pide.join(' y '):'nada')+'</b></span>'+j;
+  }
+  ['#c83-ses','#c83-num','#c83-ref','#c83-his','#c83-t'].forEach(s=>q(s).addEventListener('input',pintar));
+  pintar();
+})();
+</script>
+</body>
+</html>

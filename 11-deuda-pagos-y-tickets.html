@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deuda, pagos y tickets · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="deuda-pagos-y-tickets">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 11 DE 17</span><h1>Consultar la deuda, cobrar y abrir tickets: el bot que actúa</h1><p class="lede">«Listo, tu pago quedó registrado» es la frase más cara que puede escribir un bot: solo se dice cuando el sistema de cobranza lo confirma. Este capítulo conecta a Pía con la facturación, la pasarela de pagos y la mesa de ayuda, y diseña qué pasa cuando alguno de ellos tarda, falla o avisa dos veces.</p></header>
+<section><div class="prose"><p>Hasta ahora Pía conversaba, entendía, recordaba y sabía pasar a una persona. En este capítulo empieza a <b>actuar</b>: consulta la deuda de Laura en la facturación, le cobra la factura F-2207 por medio de una pasarela de pagos y abre o consulta tickets en la mesa de ayuda. Son los flujos que más valor dan a la empresa y los que más daño hacen cuando fallan, porque dejan rastro en sistemas que mueven dinero y compromisos.</p><p>La idea que recorre el capítulo es simple de decir y difícil de cumplir: <b>el bot nunca afirma algo que el sistema de origen no confirmó</b>, y ninguna conversación se queda colgada esperando a un sistema que no contesta.</p></div></section>
+<section><h2>El flujo de pago paso a paso</h2><div class="prose"><p>Un pago por chat parece un solo paso («págame»), pero son seis momentos distintos, cada uno con su control. En el capítulo 1 viste la versión corta; aquí va completa, con lo que pasa después de que Laura toca el enlace.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en pagar la cuenta en un restaurante con tarjeta. El mesero confirma la mesa (identidad), trae la cuenta impresa desde la caja (saldo del sistema, no de memoria), te acerca el datáfono para que tú escribas la clave (el cobro lo hace el banco, no el mesero) y no te dice «pagado» hasta que el datáfono imprime el comprobante. Si la máquina dice «transacción pendiente», no te vas con la cuenta saldada: alguien llama al banco. Y en la caja queda la copia del comprobante para el cierre del día. Pía hace lo mismo, en el mismo orden.</p></div><div class="prose"><ol class="steps"><li><span><b>Intención sensible.</b> Laura escribe «quiero pagar lo que debo». La comprensión reconoce <code>pagar_factura</code>, que el catálogo marca como sensible: toca dinero y datos personales.</span></li><li><span><b>Verificación.</b> Antes de mostrar un monto, Pía confirma que quien escribe es la titular de la cuenta 1001 (cómo se elige el factor y cuánto dura está en el capítulo 12).</span></li><li><span><b>Saldo en tiempo real.</b> Pía consulta la facturación en ese momento: factura F-2207, US$ 25,00, vence el 5 de diciembre.</span></li><li><span><b>Cobro.</b> Con el «sí» de Laura, Pía pide a la pasarela un <b>enlace de pago</b> (<i>payment link</i>) por el monto de la factura. Laura paga en la página de la pasarela, nunca dentro del chat.</span></li><li><span><b>Confirmación.</b> La pasarela avisa del resultado al servidor de Pía; la facturación registra el pago, y solo entonces Pía escribe «pago recibido» con el número de comprobante.</span></li><li><span><b>Auditoría.</b> Cada paso queda en el <b>registro de auditoría</b> (<i>audit log</i>): quién pidió, qué se verificó, qué monto, qué respondió cada sistema y a qué hora.</span></li></ol></div><figure class="fig fig-flujo" id="11-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" style="min-width:760px" role="img" aria-label="Diagrama de secuencia del pago de la factura F-2207: Laura pide pagar, Pía verifica su identidad, consulta el saldo en vivo, pide a la pasarela un enlace por el monto de la factura, Laura paga fuera del chat, la pasarela avisa por un webhook firmado, Pía verifica firma, monto y duplicados, la facturación registra el pago y solo entonces Pía confirma con el comprobante; cada paso queda en el registro de auditoría">
+  <defs>
+    <marker id="d11a-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d11a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d11a-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d11a-apl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-apl"/></marker>
+  </defs>
+  
+  <rect x="10" y="14" width="120" height="52" rx="10" class="caja"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="160" y="14" width="120" height="52" rx="10" class="c-red"/><text x="220" y="36" class="t t-b" text-anchor="middle">Pía</text><text x="220" y="54" class="t t-s t-m" text-anchor="middle">orquestación</text>
+  <rect x="310" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="370" y="36" class="t t-b" text-anchor="middle">Facturación</text><text x="370" y="54" class="t t-s t-m" text-anchor="middle">sistema de registro</text>
+  <rect x="460" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="520" y="36" class="t t-b" text-anchor="middle">Pasarela</text><text x="520" y="54" class="t t-s t-m" text-anchor="middle">de pagos</text>
+  <rect x="610" y="14" width="120" height="52" rx="10" class="d-inet"/><text x="670" y="36" class="t t-b" text-anchor="middle">Auditoría</text><text x="670" y="54" class="t t-s t-m" text-anchor="middle">6 · registro</text>
+  <line x1="70" y1="66" x2="70" y2="672" class="vida"/>
+  <line x1="220" y1="66" x2="220" y2="672" class="vida"/>
+  <line x1="370" y1="66" x2="370" y2="672" class="vida"/>
+  <line x1="520" y1="66" x2="520" y2="672" class="vida"/>
+  <line x1="670" y1="66" x2="670" y2="672" class="vida"/>
+
+  <g class="t t-s">
+    
+    <line x1="70" y1="100" x2="217" y2="100" class="ln s-fis" style="stroke-width:2" marker-end="url(#d11a-fis)"/>
+    <text x="78" y="93">① «quiero pagar lo que debo»</text>
+    
+    <rect x="228" y="116" width="250" height="34" rx="7" class="d-casa"/>
+    <text x="238" y="130" class="t-b">② verificar identidad</text>
+    <text x="238" y="144">código de un solo uso (capítulo 12)</text>
+    
+    <line x1="220" y1="182" x2="367" y2="182" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="228" y="175" class="t-mono">③ GET facturas pendientes</text>
+    <line x1="370" y1="214" x2="223" y2="214" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11a-sis)"/>
+    <text x="230" y="207">④ F-2207 · 25,00 · en proceso: 0</text>
+    
+    <line x1="220" y1="252" x2="73" y2="252" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="78" y="245">⑤ «¿Te envío el enlace?»</text>
+    <line x1="70" y1="276" x2="217" y2="276" class="ln s-fis" style="stroke-width:2" marker-end="url(#d11a-fis)"/>
+    <text x="78" y="270">«sí»</text>
+    <line x1="220" y1="314" x2="517" y2="314" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="228" y="307" class="t-mono">⑥ POST /enlaces (F-2207, clave de idempotencia)</text>
+    <line x1="520" y1="346" x2="223" y2="346" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11a-sis)"/>
+    <text x="230" y="339">⑦ url · monto 25,00 tomado de la factura</text>
+    <line x1="220" y1="384" x2="73" y2="384" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="78" y="370">⑧ enlace + «te escribo</text>
+    <text x="78" y="380">cuando se confirme»</text>
+    <line x1="70" y1="424" x2="517" y2="424" class="ln ln-d s-fis" style="stroke-width:2" marker-end="url(#d11a-fis)"/>
+    <text x="78" y="417">Laura paga en la página de la pasarela: la tarjeta nunca entra al chat</text>
+    <rect x="80" y="438" width="420" height="26" rx="7" class="caja s-warm" style="stroke-dasharray:5 4"/>
+    <text x="290" y="455" text-anchor="middle" class="k-warm t-b">espera: segundos u horas · Pía no afirma nada</text>
+    
+    <line x1="520" y1="496" x2="223" y2="496" class="ln s-apl" style="stroke-width:2" marker-end="url(#d11a-apl)"/>
+    <text x="230" y="489" class="t-mono">⑨ webhook pago.aprobado evt_7781 + firma</text>
+    <rect x="228" y="510" width="270" height="34" rx="7" class="c-apl"/>
+    <text x="238" y="524" class="t-b">⑩ firma ✓ · monto = pedido ✓</text>
+    <text x="238" y="538">evento no procesado antes ✓</text>
+    <line x1="220" y1="576" x2="367" y2="576" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="228" y="569" class="t-mono">⑪ POST pago</text>
+    <line x1="370" y1="604" x2="223" y2="604" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11a-sis)"/>
+    <text x="230" y="597">registrado · comprobante 8841</text>
+    <line x1="220" y1="644" x2="73" y2="644" class="ln s-red" style="stroke-width:2" marker-end="url(#d11a-red)"/>
+    <text x="78" y="630">⑫ «Pago recibido:</text>
+    <text x="78" y="640">comprobante 8841»</text>
+  </g>
+  
+  <g class="t t-xs t-m">
+    <circle cx="670" cy="134" r="5" class="d-inet"/><text x="680" y="138">identidad y método</text>
+    <circle cx="670" cy="214" r="5" class="d-inet"/><text x="680" y="218">saldo visto y hora</text>
+    <circle cx="670" cy="276" r="5" class="d-inet"/><text x="680" y="280">confirmación del cliente</text>
+    <circle cx="670" cy="346" r="5" class="d-inet"/><text x="680" y="350">enlace creado</text>
+    <circle cx="670" cy="527" r="5" class="d-inet"/><text x="680" y="531">aviso y comprobaciones</text>
+    <circle cx="670" cy="604" r="5" class="d-inet"/><text x="680" y="608">pago y comprobante</text>
+  </g>
+  
+  <g class="t t-xs t-b">
+    <path d="M790 84v26" class="ln s-fis" style="stroke-width:3"/><text x="798" y="101" class="k-fis">1 INTENCIÓN</text>
+    <path d="M790 116v34" class="ln" style="stroke:var(--d-casa);stroke-width:3"/><text x="798" y="137" class="k-casa">2 VERIFICAR</text>
+    <path d="M790 166v56" class="ln" style="stroke:var(--d-sis);stroke-width:3"/><text x="798" y="198" class="k-sis">3 SALDO</text>
+    <path d="M790 236v232" class="ln s-red" style="stroke-width:3"/><text x="798" y="356" class="k-red">4 COBRO</text>
+    <path d="M790 480v172" class="ln s-apl" style="stroke-width:3"/><text x="798" y="570" class="k-apl">5 CONFIRMAR</text>
+  </g>
+  <rect x="10" y="682" width="880" height="30" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="701" class="t t-s" text-anchor="middle">Si el aviso ⑨ no llega, Pía consulta el estado a la pasarela; si la firma falla, el aviso se descarta y se alerta.</text>
+</svg></div><figcaption><b>El pago de la factura F-2207, de la intención al comprobante.</b> Arriba, los participantes: Laura, Pía, la facturación, la pasarela y el registro de auditoría. El tiempo corre hacia abajo y cada flecha numerada es un mensaje. Las fases de la derecha separan los seis momentos. Fíjate en el salto entre ⑧ y ⑨: Laura paga en la página de la pasarela y la conversación queda en espera, sin afirmar nada. El aviso de la pasarela (⑨) llega por un webhook firmado, se comprueba y solo después de que la facturación registra el pago (⑪) Pía confirma (⑫).</figcaption></figure><div class="prose"><p>El momento más delicado es el quinto. Entre el clic de Laura y el aviso de la pasarela pueden pasar dos segundos o, con una transferencia, dos horas. Durante ese tiempo el bot no sabe si el pago salió, y lo único honesto es decirlo: «Cuando la pasarela me confirme el pago, te escribo por aquí con el comprobante». Un bot que escribe «¡Pagado!» cuando Laura vuelve del enlace está adivinando, y un día va a adivinar mal.</p></div></section>
+<section><h2>Integración con facturación y cobranza: el saldo nunca sale de una caché</h2><div class="prose"><p>La facturación es el <b>sistema de registro</b> (<i>system of record</i>) de la deuda: el único que sabe cuánto debe Laura en este momento. Pía la consulta por su API con tres preguntas: qué facturas están pendientes, cuándo vence cada una y si tiene <b>recargos</b> (<i>late fees</i>) por atraso. La respuesta típica trae más datos de los que el cliente necesita ver:</p><div class="code-copia"><pre><code>GET /cuentas/1001/facturas?estado=pendiente
+
+{
+  "cuenta": "1001",
+  "facturas": [
+    {"numero": "F-2207", "monto": "25.00", "moneda": "USD",
+     "vence": "2026-12-05", "recargo": "0.00",
+     "estado": "pendiente", "pagos_en_proceso": 0}
+  ],
+  "suspension_programada": null,
+  "consultado": "2026-11-24T10:15:05Z"
+}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>Una tentación frecuente es guardar ese saldo en una <b>caché</b> (<i>cache</i>, una copia temporal de un dato para no pedirlo de nuevo) para responder más rápido. Con la deuda, no. Si Laura pagó por la web hace diez minutos y Pía le dice que debe US$ 25,00 porque leyó una copia de las 8:00, Laura paga dos veces o llama furiosa. La regla es: <b>los datos que cambian con una acción del cliente se consultan en vivo, cada vez</b>. La caché sirve para lo que cambia poco y no compromete a nadie: el horario de las agencias o la lista de planes.</p><p>Tres detalles de la integración que se olvidan en la primera versión:</p><ul><li><b>Pagos en proceso.</b> Si hay un pago enviado que la facturación todavía no aplicó, el saldo «pendiente» engaña. Por eso la respuesta trae <code>pagos_en_proceso</code>, y Pía dice «tienes un pago de US$ 25,00 en proceso; no hace falta pagar otra vez».</li><li><b>Fecha de consulta.</b> El campo <code>consultado</code> viaja con el dato hasta la respuesta y hasta el registro: si alguien reclama, se sabe qué vio el bot y cuándo.</li><li><b>Permisos mínimos.</b> El usuario técnico con que Pía llama a la facturación puede leer facturas y registrar pagos de la cuenta verificada, nada más: no puede anular facturas ni aplicar descuentos.</li></ul></div></section>
+<section><h2>Integración con la pasarela: enlace, conciliación por webhook y pagos que no salen</h2><div class="prose"><p>La <b>pasarela de pagos</b> (<i>payment gateway</i>) es el servicio que cobra la tarjeta o la transferencia. Pía no le habla para cobrar, sino para pedir un enlace: «crea una página de cobro por US$ 25,00 para la factura F-2207 de la cuenta 1001, válida por 30 minutos». La pasarela devuelve una dirección como <code>pagos.ejemplo.com/f/F-2207</code> y Pía se la envía a Laura. Cómo se protege ese cobro para que la tarjeta nunca toque el chat es el capítulo 12.</p><p>Cuando Laura paga, la pasarela avisa al servidor de Servicios Ejemplo con un <b>webhook</b> (<i>webhook</i>, una llamada HTTP que un sistema le hace a otro cuando ocurre un evento). Ese aviso es la base de la <b>conciliación</b> (<i>reconciliation</i>): cruzar lo que dice la pasarela con lo que dice la facturación para que los dos cuenten el mismo dinero.</p></div><figure class="fig fig-esquema" id="11-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" style="min-width:740px" role="img" aria-label="Máquina de estados de un pago: creado, pendiente, aprobado y registrado en el camino feliz; vencido si el enlace caduca, rechazado si el banco no aprueba, y aprobado sin registrar si el aviso se pierde, que la consulta a la pasarela o la conciliación nocturna llevan a registrado">
+  <defs>
+    <marker id="d11b-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d11b-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d11b-inet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-inet"/></marker>
+  </defs>
+  <text x="20" y="28" class="t t-xs t-b t-m">CAMINO FELIZ</text>
+  
+  <rect x="20" y="40" width="160" height="58" rx="10" class="caja"/>
+  <text x="100" y="64" class="t t-b" text-anchor="middle">Creado</text><text x="100" y="82" class="t t-s t-m" text-anchor="middle">enlace por 25,00</text>
+  <rect x="250" y="40" width="160" height="58" rx="10" class="caja"/>
+  <text x="330" y="64" class="t t-b" text-anchor="middle">Pendiente</text><text x="330" y="82" class="t t-s t-m" text-anchor="middle">el banco decide</text>
+  <rect x="480" y="40" width="160" height="58" rx="10" class="caja"/>
+  <text x="560" y="64" class="t t-b" text-anchor="middle">Aprobado</text><text x="560" y="82" class="t t-s t-m" text-anchor="middle">en la pasarela</text>
+  <rect x="710" y="40" width="170" height="58" rx="10" class="c-enl"/>
+  <text x="795" y="64" class="t t-b k-enl" text-anchor="middle">Registrado</text><text x="795" y="82" class="t t-s" text-anchor="middle">factura pagada</text>
+
+  <g class="t t-s">
+    <line x1="180" y1="69" x2="247" y2="69" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11b-sis)"/>
+    <text x="186" y="122">Laura paga</text>
+    <line x1="410" y1="69" x2="477" y2="69" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11b-sis)"/>
+    <text x="416" y="122">banco aprueba</text>
+    <line x1="640" y1="69" x2="707" y2="69" class="ln s-red" style="stroke-width:2" marker-end="url(#d11b-red)"/>
+    <text x="646" y="122">webhook ✓ y</text><text x="646" y="136">Pía registra</text>
+  </g>
+
+  
+  <rect x="20" y="250" width="160" height="58" rx="10" class="caja"/>
+  <text x="100" y="274" class="t t-b" text-anchor="middle">Vencido</text><text x="100" y="292" class="t t-s t-m" text-anchor="middle">30 min sin pago</text>
+  <rect x="250" y="250" width="160" height="58" rx="10" class="caja"/>
+  <text x="330" y="274" class="t t-b" text-anchor="middle">Rechazado</text><text x="330" y="292" class="t t-s t-m" text-anchor="middle">con código del banco</text>
+  <rect x="480" y="250" width="180" height="58" rx="10" class="caja s-warm" style="stroke-width:2.4"/>
+  <text x="570" y="274" class="t t-b k-warm" text-anchor="middle">Aprobado sin registrar</text><text x="570" y="292" class="t t-s" text-anchor="middle">el aviso se perdió</text>
+
+  <g class="t t-s">
+    <line x1="130" y1="98" x2="130" y2="247" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11b-sis)"/>
+    <text x="138" y="170">caduca</text>
+    <line x1="70" y1="250" x2="70" y2="101" class="ln s-red" style="stroke-width:2" marker-end="url(#d11b-red)"/>
+    <text x="20" y="328" class="k-red">↑ vuelve: nuevo enlace,</text><text x="32" y="342" class="k-red">saldo en vivo</text>
+    <line x1="360" y1="98" x2="360" y2="247" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11b-sis)"/>
+    <text x="368" y="170">banco rechaza</text>
+    <line x1="300" y1="250" x2="300" y2="101" class="ln s-red" style="stroke-width:2" marker-end="url(#d11b-red)"/>
+    <text x="250" y="328" class="k-red">↑ vuelve: reintenta en</text><text x="262" y="342" class="k-red">el mismo enlace</text>
+    <line x1="560" y1="98" x2="560" y2="247" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11b-sis)"/>
+    <text x="486" y="226">aviso perdido</text>
+    <path d="M660 279 C 760 279, 795 200, 795 101" class="ln" style="stroke:var(--d-inet);stroke-width:2" marker-end="url(#d11b-inet)"/>
+    <text x="772" y="160" class="k-inet" text-anchor="end">consulta a la pasarela</text><text x="772" y="174" class="k-inet" text-anchor="end">o conciliación nocturna</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <line x1="20" y1="372" x2="50" y2="372" class="ln" style="stroke:var(--d-sis);stroke-width:2.4"/><text x="58" y="376">evento de la pasarela o del banco</text>
+    <line x1="280" y1="372" x2="310" y2="372" class="ln s-red" style="stroke-width:2.4"/><text x="318" y="376">acción de Pía (orquestación)</text>
+    <line x1="520" y1="372" x2="550" y2="372" class="ln" style="stroke:var(--d-inet);stroke-width:2.4"/><text x="558" y="376">conciliación (medición)</text>
+  </g>
+  <rect x="20" y="392" width="860" height="56" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="415" class="t t-s" text-anchor="middle">Pía solo dice «pago recibido» en el estado verde. En «pendiente» dice «en proceso» y no ofrece pagar otra vez;</text>
+  <text x="450" y="433" class="t t-s" text-anchor="middle">la caja naranja no debería existir: la conciliación la busca cada noche y la cierra antes de que el cliente reclame.</text>
+</svg></div><figcaption><b>Los estados de un pago y quién los mueve.</b> Cada caja es un estado del pago de la factura F-2207; cada flecha, el evento que lo cambia, con el color de quien lo produce: Pía (orquestación), la pasarela o el banco (sistemas) y la conciliación (medición). El camino feliz va por arriba: creado, pendiente, aprobado, registrado. Debajo, los caminos que el bot tiene que saber contar: rechazado (se puede reintentar), vencido (el enlace caducó) y la caja naranja, «aprobado sin registrar», que no debería existir y que la conciliación busca cada noche.</figcaption></figure><div class="prose"><p>Un webhook es una puerta abierta a Internet, y por eso cada aviso pasa por tres comprobaciones antes de mover un centavo:</p><ol class="steps"><li><span><b>Firma.</b> La pasarela firma cada aviso con un <b>HMAC</b> (<i>Hash-based Message Authentication Code</i>, código de autenticación de mensajes basado en una función resumen), calculado con el contenido del aviso y un secreto que solo conocen la pasarela y Servicios Ejemplo. Si alguien fabrica un aviso de «pago aprobado», no puede calcular la firma correcta sin el secreto. Es el mismo mecanismo de los webhooks de WhatsApp del capítulo 8, con otro secreto y otra cabecera.</span></li><li><span><b>Monto y referencia.</b> El aviso dice que se pagaron US$ 25,00 de la factura F-2207. Se compara con lo que se pidió al crear el enlace. Si no coincide, no se registra: se alerta.</span></li><li><span><b>Duplicados.</b> Las pasarelas reintentan sus avisos cuando no reciben respuesta a tiempo, así que el mismo evento puede llegar dos o tres veces. Cada aviso trae un identificador único (<code>evt_7781</code>); si ya se procesó, se responde «recibido» y no se hace nada más. A esa propiedad, la de que repetir una operación no repite su efecto, se le llama <b>idempotencia</b> (<i>idempotency</i>). Cómo se implementa a fondo está en <a href="https://aaramirez.github.io/backend/temario.html" target="_blank" rel="noopener">Backend y APIs</a>.</span></li></ol></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Los rechazos tienen nombre: tarjetas de prueba de una pasarela</h3></div><p>Las pasarelas publican tarjetas de prueba que simulan cada tipo de rechazo, para que los equipos prueben sus flujos sin cobrar a nadie. Vas a leer las de una pasarela del mercado, Stripe (hay muchas otras con documentación parecida), y a traducir cada rechazo en una respuesta de Pía. Solo necesitas el navegador; la página está en inglés y el traductor sirve.</p><ol class="steps"><li><span>Abre <a href="https://docs.stripe.com/testing" target="_blank" rel="noopener">la página de pruebas de Stripe</a> y busca la sección de tarjetas rechazadas (<i>declined payments</i>).</span></li><li><span>Anota tres códigos de rechazo con su tarjeta de prueba: uno de fondos insuficientes (<code>insufficient_funds</code>), uno de tarjeta vencida (<code>expired_card</code>) y uno de rechazo genérico (<code>card_declined</code> o <code>generic_decline</code>).</span></li><li><span>Abre <a href="https://docs.stripe.com/declines/codes" target="_blank" rel="noopener">la lista de códigos de rechazo</a> y lee, para esos tres, qué se recomienda decirle al cliente.</span></li><li><span>Escribe para cada uno la frase de Pía con la guía de voz del capítulo 3, y decide si Pía ofrece reintentar con el mismo enlace, otro medio de pago o una persona.</span></li></ol><p><b>Qué observar:</b> cada rechazo trae un código que el sistema puede leer, y la respuesta de Pía se elige por ese código, no por lo que el modelo imagine. Fíjate también en lo que la documentación pide <b>no</b> decir: en ciertos rechazos el banco no explica el motivo, y ni la pasarela ni el bot deben adivinarlo («tu tarjeta fue reportada como robada» es una frase que nunca se escribe). Que el aviso de la pasarela venga firmado y cómo se verifica esa firma está en la práctica del capítulo 8: aquí la cuenta es la misma, con otro secreto.</p></div><div class="prose"><p>Falta lo que pasa cuando el pago <b>no</b> sale bien. La pasarela devuelve un código por cada rechazo, y cada código pide una respuesta distinta de Pía:</p><div class="tbl"><table><thead><tr><th>Lo que pasó</th><th>Qué dice la pasarela</th><th>Qué hace Pía</th></tr></thead><tbody><tr><td>Fondos insuficientes</td><td>rechazado, motivo del banco</td><td>«Tu banco no aprobó el pago. Puedes intentar con otra tarjeta o pagar en una agencia». Sin culpas ni detalles del banco</td></tr><tr><td>Tarjeta vencida o datos mal escritos</td><td>rechazado, error de datos</td><td>ofrece el mismo enlace otra vez, si sigue vigente</td></tr><tr><td>Transferencia en proceso</td><td>pendiente</td><td>«Tu pago está en proceso; te aviso cuando se confirme». No ofrece pagar de nuevo</td></tr><tr><td>El enlace caducó sin pago</td><td>vencido</td><td>si Laura vuelve, consulta el saldo otra vez y crea un enlace nuevo</td></tr><tr><td>Pagó, pero el aviso nunca llegó</td><td>(nada)</td><td>la conciliación lo detecta; si Laura pregunta, Pía consulta el estado a la pasarela en vez de esperar</td></tr></tbody></table></div><p>El último caso merece atención. Los webhooks se pierden: un servidor reiniciado, una red caída, un aviso rechazado por error. Por eso, además de escuchar, el sistema <b>pregunta</b>: si un enlace lleva un tiempo en «pendiente», consulta su estado a la pasarela, y cada noche un proceso de conciliación cruza todos los pagos del día. La caja naranja del diagrama, «aprobado sin registrar», es la que ese proceso busca.</p><p>El laboratorio siguiente te pone en el medio. Haces de Laura, pagas, y luego eliges qué le pasa al pago en el camino.</p></div><div class="lab" id="11-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Simulador de conversación de pago</h3></div><p class="hint">Avanza la conversación con los botones de Laura: pide pagar, escribe el código de verificación, confirma y abre el enlace. Luego elige qué responde la pasarela: aprobado, rechazado, pendiente, un webhook duplicado, un aviso falso sin firma válida o un aviso que nunca llega. A la derecha ves cada evento del sistema y, abajo, el estado de la factura y cuántos pagos quedaron registrados. Apaga «Descartar duplicados» o «Verificar firma» y repite: mira qué se rompe.</p><style>
+[id="11-lab-1"] .c111-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){[id="11-lab-1"] .c111-grid{grid-template-columns:minmax(0,1fr)}}
+[id="11-lab-1"] .c111-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="11-lab-1"] .c111-chat{height:330px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px}
+[id="11-lab-1"] .c111-m{max-width:90%;padding:7px 10px;border-radius:12px;font:400 .86rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="11-lab-1"] .c111-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="11-lab-1"] .c111-b{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+[id="11-lab-1"] .c111-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="11-lab-1"] .c111-p{align-self:center;background:var(--warm-soft);border:1px dashed var(--warm);font-size:.8rem}
+[id="11-lab-1"] .c111-log{height:330px;overflow-y:auto;list-style:none;margin:0;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--card);display:grid;gap:5px;align-content:start}
+[id="11-lab-1"] .c111-log li{border-left:4px solid var(--cc);padding:3px 8px;font:400 .78rem/1.35 var(--f-mono);overflow-wrap:anywhere}
+[id="11-lab-1"] .c111-log li b{font:700 .7rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--cc);display:block}
+[id="11-lab-1"] .c111-log li.mal{background:var(--warm-soft)}
+[id="11-lab-1"] .c111-chk{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 .86rem var(--f-display)}
+[id="11-lab-1"] .c111-chk label{display:flex;gap:6px;align-items:center}
+[id="11-lab-1"] .c111-acc button{font-size:.8rem;padding:5px 9px}
+[id="11-lab-1"] .c111-est{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+[id="11-lab-1"] .c111-est div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+[id="11-lab-1"] .c111-est small{display:block;font:600 .66rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+[id="11-lab-1"] .c111-est b{font:700 1rem var(--f-mono)}
+</style>
+<div class="c111-chk" role="group" aria-label="Controles del servidor">
+  <label><input type="checkbox" id="c111-firma" checked> Verificar la firma del webhook</label>
+  <label><input type="checkbox" id="c111-dup" checked> Descartar duplicados (idempotencia)</label>
+  <label><input type="checkbox" id="c111-cons" checked> Consultar a la pasarela si el aviso no llega</label>
+</div>
+<div class="c111-grid">
+  <div style="display:grid;gap:8px;min-width:0">
+    <p class="c111-tit">WhatsApp de Laura</p>
+    <div class="c111-chat" id="c111-chat" aria-live="polite" aria-label="Conversación"></div>
+    <p class="c111-tit" id="c111-acc-t">Lo que hace Laura</p>
+    <div class="btns c111-acc" id="c111-acc" role="group" aria-labelledby="c111-acc-t"></div>
+  </div>
+  <div style="min-width:0">
+    <p class="c111-tit">Eventos del sistema</p>
+    <ol class="c111-log" id="c111-log" aria-label="Eventos del sistema"></ol>
+  </div>
+</div>
+<div class="c111-est" id="c111-est" aria-live="polite"></div>
+<div class="legend"><span><i style="background:var(--d-casa)"></i>Identidad</span><span><i style="background:var(--d-sis)"></i>Facturación</span><span><i style="background:var(--c-apl)"></i>Pasarela y webhook</span><span><i style="background:var(--c-red)"></i>Orquestación</span><span><i style="background:var(--muted)"></i>Auditoría</span></div>
+<div class="readout texto" id="c111-out" aria-live="polite"></div></div></section>
+<section><h2>Tickets: crear uno con los datos justos y consultar el estado</h2><div class="prose"><p>El otro gran flujo transaccional es el <b>ticket</b> (<i>ticket</i>, caso numerado en la mesa de ayuda). El flujo de «reportar una falla» del capítulo 4 termina en un nodo «crear ticket»; aquí se ve qué datos lleva y de dónde salen.</p><p>La regla de diseño es pedir al cliente <b>solo lo que el sistema no sabe</b>. Pía ya conoce la cuenta, la dirección registrada, el servicio contratado y si hay una avería masiva en la zona; no tiene sentido preguntarlos. Lo que sí necesita del cliente es lo que solo él puede decir:</p><div class="tbl"><table><thead><tr><th>Dato del ticket</th><th>De dónde sale</th></tr></thead><tbody><tr><td>Cuenta, dirección y servicio</td><td>del CRM, con la identidad verificada</td></tr><tr><td>Avería masiva en la zona</td><td>del monitoreo de la red; si existe, no se abre un ticket nuevo: se asocia al de la avería</td></tr><tr><td>Síntoma (sin servicio, lento, cortes)</td><td>del cliente, con botones</td></tr><tr><td>Desde cuándo</td><td>del cliente, como entidad de fecha</td></tr><tr><td>Lo que ya probó (reiniciar el equipo)</td><td>del cliente, sí o no</td></tr><tr><td>Disponibilidad para la visita</td><td>del cliente, de las franjas que ofrece la agenda</td></tr><tr><td>Contacto para avisos</td><td>del CRM, confirmado con el cliente</td></tr></tbody></table></div><p>Con eso, Pía crea el ticket por la API de la mesa de ayuda y recibe su número: 5512. Lo que Pía le dice a Laura sale de la respuesta del sistema, no de una plantilla optimista: si la mesa de ayuda devuelve una franja de visita, la menciona; si devuelve un <b>SLA</b> (<i>Service Level Agreement</i>, acuerdo de nivel de servicio: el plazo comprometido para atender) de 24 horas, menciona ese plazo y no otro.</p><p>Consultar el estado es la otra mitad, y suele ser el pedido más frecuente después de «cuánto debo». La respuesta debe traducir el estado interno a algo útil para el cliente: «asignado a la cuadrilla 7» no le sirve a Laura; «un técnico tiene tu caso y la visita es el jueves entre las 9:00 y las 12:00», sí.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que conecta su bot a la mesa de ayuda suele descubrir que los estados internos son demasiados para el cliente: «en diagnóstico», «escalado a nivel 2», «pendiente de material», «en ruta». La práctica que funciona es una tabla de traducción con pocos estados visibles para el cliente (recibido, programado, en camino, resuelto) y, para cada uno, la frase que dice el bot y lo que el cliente puede hacer. La tabla tiene dueño en el área de operaciones y se versiona como cualquier contenido.</p></div></section>
+<section><h2>Integración con la mesa de ayuda y avisos proactivos</h2><div class="prose"><p>Si Laura tiene que preguntar «¿y mi ticket?», el bot ya llegó tarde. Un <b>aviso proactivo</b> (<i>proactive notification</i>) es un mensaje que el bot envía sin que el cliente pregunte, porque algo cambió: se asignó la visita, el técnico va en camino, el caso se resolvió.</p><p>Para lograrlo, la mesa de ayuda emite un evento cada vez que un ticket cambia de estado y lo envía por webhook al servicio de avisos de la plataforma. Ese servicio decide, con reglas, si el cambio merece un mensaje, a quién, por qué canal y con qué texto.</p></div><figure class="fig fig-arquitectura" id="11-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" style="min-width:740px" role="img" aria-label="Arquitectura de los avisos proactivos: la mesa de ayuda emite un evento cuando cambia el ticket 5512; el servicio de avisos aplica cuatro reglas en orden y envía un mensaje libre o una plantilla aprobada por WhatsApp a Laura; su respuesta vuelve a Pía con el contexto del ticket y Pía actualiza la mesa de ayuda">
+  <defs>
+    <marker id="d11c-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d11c-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d11c-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+  </defs>
+  
+  <rect x="10" y="30" width="180" height="340" rx="12" class="d-casa" style="opacity:.55"/>
+  <text x="20" y="22" class="t t-xs t-b k-casa">CLIENTE</text>
+  <rect x="210" y="30" width="470" height="340" rx="12" class="caja"/>
+  <text x="220" y="22" class="t t-xs t-b t-m">PLATAFORMA DEL BOT</text>
+  <rect x="700" y="30" width="190" height="340" rx="12" class="d-sis" style="opacity:.55"/>
+  <text x="710" y="22" class="t t-xs t-b k-sis">SISTEMAS</text>
+
+  
+  <rect x="715" y="60" width="160" height="96" rx="10" class="caja"/>
+  <text x="725" y="84" class="t t-b">Mesa de ayuda</text>
+  <text x="725" y="114" class="t t-s">el técnico cambia el</text>
+  <text x="725" y="128" class="t t-s">ticket 5512 a «visita</text>
+  <text x="725" y="142" class="t t-s">programada»</text>
+
+  
+  <text x="230" y="58" class="t t-b">Servicio de avisos</text>
+  <g class="t t-s">
+    <rect x="300" y="72" width="270" height="30" rx="7" class="c-apl"/><text x="312" y="91">1 · ¿este estado se avisa?</text>
+    <rect x="300" y="110" width="270" height="30" rx="7" class="c-apl"/><text x="312" y="129">2 · ¿el cliente aceptó avisos?</text>
+    <rect x="300" y="148" width="270" height="30" rx="7" class="c-apl"/><text x="312" y="167">3 · ¿es una hora razonable? si no, espera</text>
+    <rect x="300" y="186" width="270" height="30" rx="7" class="c-apl"/><text x="312" y="205">4 · ¿la ventana del canal está abierta?</text>
+  </g>
+  <line x1="712" y1="100" x2="573" y2="88" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d11c-sis)"/>
+  <text x="590" y="78" class="t t-s k-sis">evento</text>
+  <g class="t t-s">
+    <rect x="230" y="236" width="200" height="40" rx="8" class="c-enl"/><text x="240" y="252" class="t-b">sí: mensaje libre</text><text x="240" y="268">texto y botones</text>
+    <rect x="450" y="236" width="210" height="40" rx="8" class="c-fis"/><text x="460" y="252" class="t-b">no: plantilla aprobada</text><text x="460" y="268">categoría utilidad (cap. 8)</text>
+    <line x1="400" y1="216" x2="340" y2="234" class="ln"/>
+    <line x1="470" y1="216" x2="540" y2="234" class="ln"/>
+  </g>
+  
+  <rect x="25" y="60" width="150" height="110" rx="10" class="caja"/>
+  <text x="35" y="86" class="t t-b">Laura</text>
+  <text x="35" y="118" class="t t-s">«Tu visita quedó</text>
+  <text x="35" y="132" class="t t-s">para el jueves de</text>
+  <text x="35" y="146" class="t t-s">9:00 a 12:00»</text>
+  <path d="M230 256 C 200 256, 200 140, 178 140" class="ln s-fis" style="stroke-width:2" marker-end="url(#d11c-fis)"/>
+  <text x="184" y="124" class="t t-xs t-b k-fis">WHATSAPP</text>
+
+  
+  <rect x="25" y="290" width="150" height="60" rx="10" class="caja"/>
+  <text x="35" y="312" class="t t-s">«no puedo el</text>
+  <text x="35" y="326" class="t t-s">jueves»</text>
+  <line x1="175" y1="320" x2="297" y2="320" class="ln s-fis" style="stroke-width:2" marker-end="url(#d11c-fis)"/>
+  <rect x="300" y="300" width="250" height="44" rx="8" class="c-red"/>
+  <text x="312" y="318" class="t t-s t-b">Pía, con el contexto del ticket</text>
+  <text x="312" y="334" class="t t-s">la sesión sabe de qué visita habla</text>
+  <path d="M550 322 C 640 322, 700 260, 760 160" class="ln s-red" style="stroke-width:2" marker-end="url(#d11c-red)"/>
+  <text x="566" y="356" class="t t-s k-red">reprogramar</text>
+
+  <rect x="10" y="386" width="880" height="36" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="409" class="t t-s" text-anchor="middle">«Escalado a nivel 2» no pasa la regla 1: no le cambia nada a Laura. Se avisa lo que le cambia algo: cuándo, en camino, resuelto.</text>
+</svg></div><figcaption><b>Del cambio en la mesa de ayuda al mensaje en el teléfono de Laura.</b> A la derecha, en la franja de sistemas, el técnico o el agente cambia el estado del ticket 5512 en la mesa de ayuda. El cambio sale como evento hacia el servicio de avisos, en el centro, que aplica cuatro reglas en orden: ¿este estado se avisa?, ¿el cliente aceptó avisos?, ¿es una hora razonable?, ¿la ventana del canal está abierta? Según la última, el aviso sale como mensaje libre o como plantilla aprobada. A la izquierda, el mensaje llega a Laura, y su respuesta («gracias» o «no puedo el jueves») vuelve a la misma conversación con el contexto del ticket.</figcaption></figure><div class="prose"><p>Cuatro decisiones de diseño:</p><ul><li><b>No todo cambio se avisa.</b> «Escalado a nivel 2» es ruido para el cliente. Se avisan los cambios que le cambian algo: cuándo viene el técnico, que va en camino, que se resolvió y si hace falta que haga algo.</li><li><b>El aviso abre una conversación.</b> Si Laura responde «no puedo el jueves», Pía tiene que saber de qué ticket habla. Por eso el aviso deja en la sesión el contexto del ticket.</li><li><b>El canal pone sus reglas.</b> En WhatsApp, pasadas 24 horas del último mensaje del cliente, solo se puede escribir con una <b>plantilla</b> (<i>template</i>) aprobada; sus reglas y su costo están en los capítulos 8 y 13.</li><li><b>El cierre se confirma.</b> Cuando el técnico marca «resuelto», Pía pregunta: «¿Ya tienes servicio?». Si Laura dice que no, el ticket se reabre con esa respuesta, en vez de que Laura tenga que reportar todo de nuevo.</li></ul></div><div class="lab" id="11-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Ticket de punta a punta</h3></div><p class="hint">Reporta una falla como Laura con los botones del chat: Pía toma del CRM lo que ya sabe y te pregunta solo lo que falta. Cuando el ticket esté creado, cambia su estado como si fueras el técnico en el panel de la mesa de ayuda y mira qué aviso le llega a Laura, o por qué no le llega. Marca y desmarca qué estados se avisan, mueve las horas desde el último mensaje de Laura y pregunta «¿y mi ticket?» en cualquier momento.</p><style>
+[id="11-lab-2"] .c112-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){[id="11-lab-2"] .c112-grid{grid-template-columns:minmax(0,1fr)}}
+[id="11-lab-2"] .c112-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="11-lab-2"] .c112-chat{height:320px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px}
+[id="11-lab-2"] .c112-m{max-width:90%;padding:7px 10px;border-radius:12px;font:400 .86rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="11-lab-2"] .c112-m small{display:block;font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="11-lab-2"] .c112-b{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+[id="11-lab-2"] .c112-t{align-self:flex-start;background:var(--card);border:1.5px dashed var(--d-sis)}
+[id="11-lab-2"] .c112-c{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="11-lab-2"] .c112-s{align-self:stretch;font:500 .74rem var(--f-mono);color:var(--muted)}
+[id="11-lab-2"] .c112-acc button{font-size:.8rem;padding:5px 9px}
+[id="11-lab-2"] .c112-mesa{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:10px;display:grid;gap:8px}
+[id="11-lab-2"] .c112-campos{list-style:none;margin:0;padding:0;display:grid;gap:3px;font:400 .78rem/1.35 var(--f-body)}
+[id="11-lab-2"] .c112-campos li{display:flex;gap:6px;justify-content:space-between;border-bottom:1px dotted var(--line);padding:2px 0}
+[id="11-lab-2"] .c112-campos em{font:600 .64rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;font-style:normal;padding:1px 5px;border-radius:4px;white-space:nowrap;align-self:center}
+[id="11-lab-2"] .c112-o-crm{background:var(--d-casa-s);color:var(--d-casa)}
+[id="11-lab-2"] .c112-o-red{background:var(--c-red-s);color:var(--c-red)}
+[id="11-lab-2"] .c112-o-cli{background:var(--c-fis-s);color:var(--c-fis)}
+[id="11-lab-2"] .c112-estados button{font-size:.78rem;padding:5px 8px}
+[id="11-lab-2"] .c112-chk{display:flex;flex-wrap:wrap;gap:4px 14px;font:500 .82rem var(--f-display)}
+[id="11-lab-2"] .c112-chk label{display:flex;gap:5px;align-items:center}
+[id="11-lab-2"] .c112-reg{list-style:none;margin:0;padding:0;font:400 .76rem/1.35 var(--f-mono);display:grid;gap:3px;max-height:150px;overflow-y:auto}
+[id="11-lab-2"] .c112-reg li{border-left:3px solid var(--cc,var(--muted));padding-left:6px;overflow-wrap:anywhere}
+</style>
+<div class="ctls">
+  <label class="ctl">Horas desde el último mensaje de Laura <output id="c112-h-o"></output>
+    <input id="c112-h" type="range" min="0" max="48" step="1" value="3"></label>
+  <label class="ctl">Hora del día en que cambia el ticket <output id="c112-r-o"></output>
+    <input id="c112-r" type="range" min="0" max="23" step="1" value="10"></label>
+</div>
+<div class="c112-chk" role="group" aria-label="Qué cambios se avisan">
+  <span style="color:var(--muted)">Se avisa al cliente cuando pasa a:</span>
+  <label><input type="checkbox" data-e="escalado"> Escalado a nivel 2</label>
+  <label><input type="checkbox" data-e="programado" checked> Visita programada</label>
+  <label><input type="checkbox" data-e="camino" checked> Técnico en camino</label>
+  <label><input type="checkbox" data-e="resuelto" checked> Resuelto</label>
+  <label><input type="checkbox" id="c112-cons" checked> Laura aceptó avisos</label>
+</div>
+<div class="c112-grid">
+  <div style="display:grid;gap:8px;min-width:0">
+    <p class="c112-tit">WhatsApp de Laura</p>
+    <div class="c112-chat" id="c112-chat" aria-live="polite" aria-label="Conversación"></div>
+    <div class="btns c112-acc" id="c112-acc" role="group" aria-label="Lo que hace Laura"></div>
+  </div>
+  <div class="c112-mesa" style="min-width:0">
+    <p class="c112-tit" style="margin:0">Mesa de ayuda · <span id="c112-num">sin ticket</span></p>
+    <ul class="c112-campos" id="c112-campos"></ul>
+    <div class="btns c112-estados" id="c112-estados" role="group" aria-label="Cambiar el estado del ticket como técnico"></div>
+    <p class="c112-tit" style="margin:0">Servicio de avisos</p>
+    <ol class="c112-reg" id="c112-reg" aria-live="polite"></ol>
+  </div>
+</div>
+<div class="readout texto" id="c112-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Supuestos del ejemplo: Laura ya está verificada en esta sesión; no hay avería masiva en su zona; los avisos solo salen entre las 8:00 y las 20:00 (si no, esperan a las 8:00); pasadas 24 horas desde su último mensaje, WhatsApp exige una plantilla de utilidad aprobada.</p></div></section>
+<section><h2>Patrones de integración: síncrono, asíncrono, tiempos de espera y reintentos</h2><div class="prose"><p>Cada llamada de Pía a un sistema sigue uno de dos patrones. En el <b>síncrono</b> (<i>synchronous</i>), Pía pregunta y espera la respuesta para seguir: consultar el saldo es síncrono, porque no tiene sentido contestar sin el monto. En el <b>asíncrono</b> (<i>asynchronous</i>), Pía pide algo, responde al cliente que el pedido está en marcha y sigue la conversación; el resultado llega después, por un evento: el pago con transferencia y el cambio de estado del ticket son asíncronos.</p></div><div class="analogia"><b>Imagínalo así</b><p>El síncrono es preguntar en el mostrador de una farmacia si tienen un medicamento: esperas ahí, unos segundos, la respuesta. El asíncrono es encargarlo: te dan un número, te vas a casa y te avisan cuando llega. Ningún farmacéutico te hace esperar parado dos horas frente al mostrador, y ninguno te da un número para decirte si hay aspirinas.</p></div><figure class="fig fig-comparacion" id="11-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" style="min-width:740px" role="img" aria-label="Comparación de tres patrones de espera en una línea de tiempo de segundos: síncrono con tiempo de espera de dos segundos y respaldo, síncrono con aviso de espera a los dos segundos y límite de ocho, y asíncrono que responde enseguida y recibe el resultado por un evento mucho después">
+  
+  <g class="t t-s t-m">
+    <line x1="200" y1="40" x2="860" y2="40" class="ln"/>
+    <line x1="200" y1="36" x2="200" y2="44" class="ln"/><text x="200" y="30" text-anchor="middle">0 s</text>
+    <line x1="332" y1="36" x2="332" y2="44" class="ln"/><text x="332" y="30" text-anchor="middle">2 s</text>
+    <line x1="464" y1="36" x2="464" y2="44" class="ln"/><text x="464" y="30" text-anchor="middle">4 s</text>
+    <line x1="596" y1="36" x2="596" y2="44" class="ln"/><text x="596" y="30" text-anchor="middle">6 s</text>
+    <line x1="728" y1="36" x2="728" y2="44" class="ln"/><text x="728" y="30" text-anchor="middle">8 s</text>
+    <line x1="332" y1="44" x2="332" y2="400" class="vida"/>
+  </g>
+
+  
+  <text x="10" y="74" class="t t-b">Síncrono con</text><text x="10" y="90" class="t t-b">tiempo de espera</text>
+  <rect x="200" y="62" width="40" height="22" rx="4" class="c-enl"/>
+  <text x="246" y="78" class="t t-s k-enl t-b">llega a tiempo</text>
+  <rect x="200" y="92" width="132" height="14" rx="4" class="c-red" style="opacity:.6"/>
+  <rect x="336" y="88" width="250" height="22" rx="5" class="caja s-warm"/>
+  <text x="344" y="103" class="t t-s">vence → respaldo: «No pude consultar ahora…»</text>
+  <text x="200" y="134" class="t t-s t-m">El cliente ve la respuesta en menos de un segundo, o el respaldo a los 2 s. Sirve para: saldo, estado del ticket.</text>
+
+  
+  <text x="10" y="184" class="t t-b">Síncrono con</text><text x="10" y="200" class="t t-b">aviso de espera</text>
+  <rect x="200" y="186" width="528" height="14" rx="4" class="c-red" style="opacity:.6"/>
+  <rect x="300" y="156" width="190" height="24" rx="12" class="caja"/>
+  <text x="312" y="172" class="t t-s">a los 2 s: «Estoy consultando…»</text>
+  <rect x="600" y="208" width="120" height="22" rx="4" class="c-enl"/>
+  <text x="608" y="223" class="t t-s k-enl t-b">respuesta a los 6 s</text>
+  <rect x="732" y="180" width="128" height="26" rx="5" class="caja s-warm"/>
+  <text x="740" y="197" class="t t-s">a los 8 s: respaldo</text>
+  <text x="200" y="254" class="t t-s t-m">El cliente sabe que el bot trabaja y no mira un chat en silencio. Sirve para: crear el enlace, consultas lentas.</text>
+
+  
+  <text x="10" y="304" class="t t-b">Asíncrono</text><text x="10" y="320" class="t t-b">con evento</text>
+  <rect x="200" y="290" width="18" height="22" rx="4" class="c-red"/>
+  <rect x="224" y="290" width="180" height="24" rx="12" class="caja"/>
+  <text x="234" y="306" class="t t-s">«Está en proceso: te aviso»</text>
+  <line x1="218" y1="330" x2="700" y2="330" class="ln ln-d"/>
+  <text x="430" y="324" class="t t-s t-m">minutos u horas: la conversación sigue libre</text>
+  <path d="M706 322l8 16M714 322l8 16" class="ln"/>
+  <rect x="730" y="318" width="130" height="24" rx="4" class="c-apl"/>
+  <text x="738" y="334" class="t t-s t-b">evento: confirmado</text>
+  <text x="200" y="372" class="t t-s t-m">El cliente recibe la respuesta enseguida y el resultado cuando ocurre. Sirve para: transferencias, cambios del ticket.</text>
+
+  <g class="t t-s">
+    <rect x="200" y="392" width="12" height="12" rx="2" class="c-red" style="opacity:.6"/><text x="218" y="402">Pía esperando al sistema</text>
+    <rect x="400" y="392" width="12" height="12" rx="2" class="c-enl"/><text x="418" y="402">respuesta del sistema</text>
+    <rect x="580" y="392" width="12" height="12" rx="2" class="caja s-warm"/><text x="598" y="402">respaldo previsto</text>
+  </g>
+  <rect x="10" y="420" width="880" height="40" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="444" class="t t-s" text-anchor="middle">La línea punteada de los 2 s es el umbral en que el silencio ya se siente: antes de cruzarlo, Pía responde, avisa o pasa al respaldo.</text>
+</svg></div><figcaption><b>Tres maneras de esperar a un sistema.</b> Cada fila es un patrón y el eje horizontal es el tiempo en segundos, igual para las tres. Arriba, el síncrono con tiempo de espera: Pía espera hasta dos segundos y, si no llega la respuesta, sigue por el respaldo. En el medio, el síncrono con aviso de espera: a los dos segundos Pía escribe «Estoy consultando…» y sigue esperando hasta ocho. Abajo, el asíncrono: Pía responde enseguida «te aviso» y el resultado llega por un evento, aunque sea mucho después. Debajo de cada fila, qué ve el cliente y para qué flujos sirve.</figcaption></figure><div class="prose"><p>Dos parámetros gobiernan cada llamada:</p><ul><li><b>El tiempo de espera</b> (<i>timeout</i>). Cuánto espera Pía antes de abandonar. En una conversación, más de dos o tres segundos de silencio ya se sienten; por eso, si una consulta puede tardar más, Pía escribe algo antes («Estoy consultando tu saldo…»).</li><li><b>Los reintentos</b> (<i>retries</i>). Si la llamada falla por una causa pasajera (el sistema está saturado, la red se cortó), conviene intentarlo otra vez, pero con cuidado: esperando cada vez un poco más, lo que se llama <b>espera exponencial</b> (<i>exponential backoff</i>), con un número máximo de intentos y solo para los errores que pueden arreglarse solos. Un «factura no existe» no mejora con un segundo intento.</li></ul><p>El reintento esconde un peligro. Si Pía pide «crear el enlace» y la respuesta se pierde, no sabe si el enlace se creó. Reintentar puede crear dos. Por eso las acciones se envían con una <b>clave de idempotencia</b> (<i>idempotency key</i>): un identificador del pedido que el sistema recuerda, de modo que el segundo intento devuelve el mismo enlace en vez de crear otro.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Reintentos: cuándo sirven y cuándo no</h3></div><p>Vas a llamar dos veces a httpbin.org, un servicio público de pruebas. Primero a una dirección que responde 503 (servicio no disponible, un error pasajero), y luego a una que responde 404 (no existe, un error que no se arregla solo). En las dos le pides a curl que reintente hasta tres veces.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>curl.exe -o NUL --no-progress-meter --retry 3 --retry-delay 1 -w "codigo: %{http_code}\n" https://httpbin.org/status/503</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl.exe -o NUL --no-progress-meter --retry 3 --retry-delay 1 -w "codigo: %{http_code}\n" https://httpbin.org/status/404</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>curl -o /dev/null --no-progress-meter --retry 3 --retry-delay 1 -w "codigo: %{http_code}\n" https://httpbin.org/status/503</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl -o /dev/null --no-progress-meter --retry 3 --retry-delay 1 -w "codigo: %{http_code}\n" https://httpbin.org/status/404</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta la primera línea y cuenta las advertencias que aparecen antes del código final. Fíjate en cuánto tarda en total.</span></li><li><span>Ejecuta la segunda y compara.</span></li><li><span>Piensa qué pasaría si la primera fuera «crear el enlace de pago» y cada intento sí hubiera llegado al sistema.</span></li></ol><p><b>Qué observar:</b> con el 503, curl avisa «3 retries left», «2 retries left» y «1 retry left», espera un segundo entre intentos y al final se rinde con el mismo 503: cuatro llamadas y unos tres segundos en total. Con el 404 no reintenta nada, porque sabe que un «no existe» no cambia. Esa es la regla del buen reintento: solo para errores pasajeros, con un límite y con espera entre intentos. Y si la acción no es idempotente, cuatro intentos pueden ser cuatro enlaces o cuatro cobros.</p></div><div class="prose"><p>Mientras tanto, el cliente necesita saber qué pasa. Las frases para cada situación se escriben de antemano, con la guía de voz del capítulo 3:</p><div class="tbl"><table><thead><tr><th>Situación</th><th>Lo que dice Pía</th></tr></thead><tbody><tr><td>La consulta tarda más de dos segundos</td><td>«Estoy consultando tu saldo, dame un momento».</td></tr><tr><td>Se agotaron los reintentos</td><td>«No pude consultar tu saldo ahora. ¿Te aviso por aquí cuando lo tenga, o prefieres hablar con una persona?»</td></tr><tr><td>El sistema está en mantenimiento programado</td><td>«La consulta de saldos vuelve a las 6:00. Puedo avisarte en cuanto esté disponible».</td></tr><tr><td>La acción quedó en duda</td><td>«Estoy confirmando si tu enlace se creó; no hace falta que lo pidas otra vez».</td></tr></tbody></table></div></div></section>
+<section><h2>El agente de varios pasos: verificar, consultar y generar el enlace con herramientas</h2><div class="prose"><p>El flujo de pago se puede construir como una máquina de estados escrita a mano (capítulo 6) o con un <b>agente</b> (<i>agent</i>): un modelo de lenguaje que recibe un conjunto de <b>herramientas</b> (<i>tools</i>) y decide en qué orden usarlas. Para el pago, Pía-agente tiene tres:</p><div class="code-copia"><pre><code>verificar_identidad(telefono)        -&gt; {cuenta, nivel, vigente_hasta}
+consultar_saldo(cuenta)              -&gt; {facturas[], pagos_en_proceso}
+crear_enlace_pago(cuenta, factura)   -&gt; {url, monto, vence}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>Con el mensaje «quiero pagar lo que debo», el agente razona y llama: primero <code>verificar_identidad</code>, después <code>consultar_saldo</code>, muestra el monto, espera el «sí» y llama a <code>crear_enlace_pago</code>. La traza de una conversación real se ve así:</p><div class="code-copia"><pre><code>turno 1  cliente   "quiero pagar lo que debo"
+         agente    -&gt; verificar_identidad("+1 555 000 1001")
+         sistema   &lt;- {cuenta: 1001, nivel: "otp", vigente_hasta: 10:31}
+         agente    -&gt; consultar_saldo(1001)
+         sistema   &lt;- {F-2207: 25.00 USD, vence 2026-12-05, en_proceso: 0}
+         agente    "Tienes la factura F-2207 por US$ 25,00. ¿Te envío el enlace?"
+turno 2  cliente   "sí"
+         validador confirmación explícita: ok · cuenta = sesión: ok
+         agente    -&gt; crear_enlace_pago(1001, "F-2207")
+         sistema   &lt;- {url: pagos.ejemplo.com/f/F-2207, monto: 25.00, vence: 10:46}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>La ventaja frente a la máquina de estados es la flexibilidad: si Laura pregunta en medio «¿y por qué subió este mes?», el agente puede consultar el detalle y volver al pago sin que nadie haya dibujado esa rama. Lo que no cambia es el patrón del capítulo 5: <b>el agente propone y las reglas disponen</b>. Las herramientas son estrechas (no hay parámetro de monto), el validador exige que la cuenta sea la de la sesión, la acción de cobro pide una confirmación explícita registrada y el agente tiene un <b>límite de pasos</b> (<i>step limit</i>): si en cinco llamadas no llegó a ninguna parte, pasa a una persona. Cómo funciona por dentro la llamada a herramientas, con sus esquemas y su ciclo, está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p></div></section>
+<section><h2>Caso Lemonade: automatizar dentro del proceso transaccional</h2><div class="ml"><b>En la práctica</b><p><b>Lemonade, 2016 en adelante.</b> La aseguradora estadounidense construyó su atención y sus reclamos alrededor de bots desde el primer día: «Maya» vende la póliza y «AI Jim» recibe el reclamo. Según la propia empresa, en uno de sus casos más citados AI Jim revisó el reclamo por un abrigo robado, pasó sus controles contra fraude y ordenó el pago en tres segundos (evidencia de nivel C o B, porque la cifra la publica la empresa). Lo que enseña no es la velocidad, sino dónde está el bot: dentro del sistema de reclamos, con las reglas de la póliza y los controles de fraude, no como un folleto delante de un proceso manual. En 2021, tras una polémica por publicaciones que sugerían que analizaba los videos de los clientes para detectar fraude, la empresa aclaró que su IA no rechaza reclamos por sí sola: puede aprobar los simples y los dudosos van a una persona. Es la misma frontera de este capítulo: el bot ejecuta lo que una regla verificable permite, y lo que perjudica al cliente lo decide un humano.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>datos vivos del sistema de origen, acciones confirmadas por el sistema y nunca una conversación que queda colgada.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué Pía no escribe «pago recibido» cuando Laura vuelve de la página de la pasarela?</summary><p>Porque en ese momento no sabe si el pago salió: puede estar aprobado, rechazado o pendiente. Solo confirma cuando la pasarela avisa por webhook, se verifica el aviso y la facturación registra el pago.</p></details><details><summary>¿Por qué el saldo no se guarda en una caché?</summary><p>Porque cambia con acciones del cliente (un pago por otro canal) y un saldo viejo provoca pagos dobles o reclamos. Los datos que cambian con una acción del cliente se consultan en vivo cada vez.</p></details><details><summary>¿Qué tres comprobaciones pasa un webhook de la pasarela antes de registrar un pago?</summary><p>La firma HMAC con el secreto compartido, que el monto y la referencia coincidan con lo que se pidió y que el identificador del evento no se haya procesado antes (idempotencia).</p></details><details><summary>Un webhook de pago aprobado nunca llegó. ¿Cómo se entera la empresa?</summary><p>Consultando el estado a la pasarela cuando un pago lleva tiempo pendiente o el cliente pregunta, y con la conciliación que cruza cada día los pagos de la pasarela con los de la facturación.</p></details><details><summary>¿Qué datos le pide Pía al cliente al abrir un ticket de falla?</summary><p>Solo los que el sistema no sabe: el síntoma, desde cuándo, qué probó y su disponibilidad. La cuenta, la dirección, el servicio y si hay avería en la zona salen del CRM y del monitoreo.</p></details><details><summary>¿Por qué reintentar «crear el enlace de pago» puede ser peligroso y cómo se evita?</summary><p>Porque si la primera llamada sí llegó y solo se perdió la respuesta, el reintento crea un segundo enlace o cobro. Se evita con una clave de idempotencia: el sistema reconoce el pedido repetido y devuelve el mismo resultado.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es SHA-256 y por qué una función resumen cambia por completo su resultado cuando cambia un solo carácter?<small>Pista: busca «efecto avalancha función hash».</small></li><li>¿Qué es la fluctuación aleatoria (<i>jitter</i>) que se agrega a la espera exponencial y qué problema evita cuando miles de clientes reintentan a la vez?<small>Pista: busca «exponential backoff and jitter».</small></li><li>¿Qué es un contracargo (<i>chargeback</i>) y por qué una empresa puede perder un pago que ya había recibido?<small>Pista: busca «contracargo tarjeta de crédito disputa».</small></li><li>¿Qué diferencia hay entre una transferencia inmediata y una que se liquida por lotes, y por qué cambia cuándo se confirma un pago?<small>Pista: busca «liquidación bruta en tiempo real» y «cámara de compensación».</small></li><li>¿Qué es ITIL y cómo distingue un incidente de un problema en la gestión de servicios?<small>Pista: busca «ITIL incidente frente a problema».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://docs.stripe.com/webhooks" target="_blank" rel="noopener">Webhooks de Stripe: verificar la firma <small>una pasarela del mercado explica cómo firma y reintenta sus avisos</small></a><a class="vid" href="https://docs.stripe.com/api/idempotent_requests" target="_blank" rel="noopener">Idempotent requests, de Stripe <small>la clave de idempotencia en una API pública</small></a><a class="vid" href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" target="_blank" rel="noopener">Timeouts, retries and backoff with jitter (Amazon Builders' Library) <small>cómo se diseñan tiempos de espera y reintentos en sistemas grandes</small></a><a class="vid" href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener">RFC 2104: HMAC <small>la norma del código de autenticación con el que se firman los avisos</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const COL={id:'--d-casa',fac:'--d-sis',pas:'--c-apl',orq:'--c-red',aud:'--muted'};
+  const NOM={id:'identidad',fac:'facturación',pas:'pasarela / webhook',orq:'orquestación',aud:'auditoría'};
+  let st;
+  function nuevo(){st={paso:0,estado:'pendiente',pagos:0,comprob:0,pasarela:0,eventos:{},alerta:null,falso:false,enlace:0};}
+  function chat(cl,quien,txt){const d=document.createElement('div');d.className='c111-m '+cl;if(quien){const s=document.createElement('small');s.textContent=quien;d.appendChild(s);}d.appendChild(document.createTextNode(txt));q('#c111-chat').appendChild(d);q('#c111-chat').scrollTop=q('#c111-chat').scrollHeight;}
+  function ev(k,txt,mal){const li=document.createElement('li');li.style.setProperty('--cc','var('+COL[k]+')');if(mal)li.className='mal';li.innerHTML='<b>'+NOM[k]+'</b>';li.appendChild(document.createTextNode(txt));q('#c111-log').appendChild(li);q('#c111-log').scrollTop=q('#c111-log').scrollHeight;}
+  const pia=t=>chat('c111-b','Pía',t), laura=t=>chat('c111-c','Laura',t), pag=t=>chat('c111-p','Página de la pasarela',t);
+  function registrar(evt,real){
+    if(st.eventos[evt]){
+      if(q('#c111-dup').checked){ev('pas','POST /webhooks/pasarela '+evt+' → ya procesado: 200 OK sin efecto');ev('aud','duplicado descartado: '+evt);return;}
+      ev('pas','POST /webhooks/pasarela '+evt+' (repetido) → se procesa otra vez',true);
+    }
+    st.eventos[evt]=(st.eventos[evt]||0)+1;
+    ev('fac','POST /cuentas/1001/pagos {factura: F-2207, monto: 25.00, ref: '+evt+'} → registrado',!real||st.pagos>=1);
+    st.pagos++;st.comprob++;
+    st.estado=st.pagos>1?'saldo a favor':'pagada';
+    const n=8840+st.comprob;
+    ev('aud','pago registrado ref '+evt+' · comprobante '+n);
+    pia('Pago recibido: US$ 25,00 de la factura F-2207. Tu comprobante es el n.º '+n+'. ¡Gracias, Laura!');
+  }
+  function webhook(evt,tipo,firmaOk){
+    const f=q('#c111-firma').checked;
+    if(!firmaOk){
+      if(f){ev('pas','POST /webhooks/pasarela '+evt+' '+tipo+' · firma HMAC no coincide → 401 rechazado');ev('aud','ALERTA: aviso con firma inválida descartado',true);return false;}
+      ev('pas','POST /webhooks/pasarela '+evt+' '+tipo+' · firma sin verificar → aceptado',true);return true;
+    }
+    ev('pas','POST /webhooks/pasarela '+evt+' '+tipo+' · '+(f?'firma HMAC válida':'firma sin verificar')+' · monto 25.00 = pedido');
+    return true;
+  }
+  const ACC={
+    0:[['Quiero pagar lo que debo',()=>{
+      laura('Quiero pagar lo que debo');
+      ev('orq','intención pagar_factura (0,95) · sensible: requiere identidad');
+      ev('id','POST /verificaciones {tel: +1 555 000 1001} → código de un solo uso enviado por SMS');
+      pia('Claro. Para cuidar tus datos, te envié un código por SMS. Escríbelo aquí, por favor.');st.paso=1;}]],
+    1:[['Escribir el código 482913',()=>{
+      laura('482913');
+      ev('id','código correcto → titular de la cuenta 1001 · vigente 15 min');
+      ev('fac','GET /cuentas/1001/facturas?estado=pendiente → F-2207 · 25.00 USD · vence 2026-12-05 · en proceso: '+(st.estado==='en proceso'?1:0));
+      ev('aud','identidad verificada (OTP) · saldo consultado en vivo');
+      pia('Gracias, Laura. Tienes la factura F-2207 por US$ 25,00, que vence el 5 de diciembre. ¿Te envío el enlace para pagarla?');st.paso=2;}]],
+    2:[['Sí, envíame el enlace',()=>{
+      laura('Sí, envíame el enlace');
+      ev('orq','confirmación explícita registrada');
+      st.enlace++;
+      ev('pas','POST /enlaces {cuenta: 1001, factura: F-2207, clave_idem: pago-1001-F-2207-'+st.enlace+'} → monto 25.00 tomado de la factura · vence en 30 min');
+      ev('aud','enlace creado para F-2207');
+      pia('Aquí está tu enlace seguro por US$ 25,00: pagos.ejemplo.com/f/F-2207. Los datos de la tarjeta se escriben en esa página, nunca en este chat. Cuando la pasarela me confirme el pago, te escribo por aquí.');st.paso=3;}]],
+    3:[['Abrir el enlace y pagar',()=>{pag('Laura está en la página de la pasarela. Elige qué pasa con su pago.');st.paso=4;}]],
+    4:[
+      ['Aprobado',()=>{st.pasarela++;pag('Pago aprobado por el banco.');if(webhook('evt_7781','pago.aprobado',true))registrar('evt_7781',true);st.paso=9;}],
+      ['Rechazado: fondos insuficientes',()=>{pag('El banco no aprobó el pago.');webhook('evt_7782','pago.rechazado (fondos_insuficientes)',true);ev('orq','rechazo → mensaje sin culpas; el enlace sigue vigente');pia('Tu banco no aprobó el pago. Puedes intentar con otra tarjeta en el mismo enlace o pagar en una agencia. Si prefieres, te paso con una persona.');st.paso=5;}],
+      ['Pendiente: transferencia',()=>{pag('Transferencia enviada; el banco la confirma más tarde.');webhook('evt_7783','pago.pendiente',true);st.estado='en proceso';ev('fac','pago en proceso marcado en F-2207 (no se ofrece pagar otra vez)');pia('Tu transferencia está en proceso. No hace falta pagar otra vez: te aviso por aquí en cuanto se confirme.');st.paso=6;}],
+      ['Aprobado y el webhook llega dos veces',()=>{st.pasarela++;pag('Pago aprobado por el banco.');if(webhook('evt_7781','pago.aprobado',true))registrar('evt_7781',true);ev('pas','la pasarela no recibió el 200 a tiempo y reintenta el mismo aviso');if(webhook('evt_7781','pago.aprobado',true))registrar('evt_7781',true);st.paso=9;}],
+      ['Laura cierra sin pagar y llega un aviso falso',()=>{pag('Laura cerró la página sin pagar.');st.falso=true;ev('pas','alguien envía desde Internet un aviso «pago.aprobado» fabricado, sin el secreto');if(webhook('evt_9999','pago.aprobado',false))registrar('evt_9999',false);st.paso=9;}],
+      ['Aprobado, pero el aviso nunca llega',()=>{st.pasarela++;pag('Pago aprobado por el banco.');ev('pas','webhook evt_7784 enviado · el servidor se reiniciaba: aviso perdido',true);st.paso=7;}]
+    ],
+    5:[['Intentar con otra tarjeta',()=>{laura('Voy a intentar con otra tarjeta');st.paso=4;pag('Laura vuelve a la página de la pasarela. Elige qué pasa ahora.');}]],
+    6:[['La transferencia se confirma',()=>{st.pasarela++;st.estado='pendiente';if(webhook('evt_7790','pago.aprobado',true))registrar('evt_7790',true);st.paso=9;}]],
+    7:[['Laura: ¿ya se registró mi pago?',()=>{
+      laura('Ya pagué hace un rato, ¿ya se registró?');
+      if(q('#c111-cons').checked){
+        ev('orq','enlace en «pendiente» más de 10 min → consultar a la pasarela');
+        ev('pas','GET /enlaces/F-2207 → aprobado · evento evt_7784');
+        registrar('evt_7784',true);
+      }else{
+        ev('fac','GET /cuentas/1001/facturas → F-2207 sigue pendiente (el aviso se perdió)',true);
+        pia('No veo tu pago registrado todavía. ¿Quieres que te envíe el enlace otra vez?');
+        st.alerta='Pía solo miró la facturación y le ofreció pagar otra vez a alguien que ya pagó. Si Laura acepta, paga dos veces.';
+      }
+      st.paso=9;}]]
+  };
+  function botones(){
+    const L=(ACC[st.paso]||[]).slice();
+    q('#c111-acc').innerHTML='';
+    L.forEach(([t,f])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>{f();pintar();});q('#c111-acc').appendChild(b);});
+    const r=document.createElement('button');r.type='button';r.textContent='Empezar de nuevo';r.addEventListener('click',reiniciar);q('#c111-acc').appendChild(r);
+  }
+  function pintar(){
+    botones();
+    const reg=st.pagos*25, cob=st.pasarela*25;
+    q('#c111-est').innerHTML='<div><small>Factura F-2207</small><b>'+st.estado+'</b></div><div><small>Registrado en facturación</small><b>US$ '+reg.toFixed(2).replace('.',',')+'</b></div><div><small>Cobrado por la pasarela</small><b>US$ '+cob.toFixed(2).replace('.',',')+'</b></div><div><small>Comprobantes enviados</small><b>'+st.comprob+'</b></div>';
+    let j;
+    if(st.paso<9&&!st.alerta){j=st.paso===7?'<span class="warn">El banco cobró, pero el aviso se perdió: la facturación sigue diciendo «pendiente». Haz que Laura pregunte.</span>':'<span>Sigue la conversación con los botones de Laura.</span>';}
+    else if(st.alerta)j='<span class="warn">'+st.alerta+'</span>';
+    else if(reg!==cob&&st.falso)j='<span class="warn">Se registró un pago que nunca ocurrió: un aviso falso marcó la factura como pagada. La conciliación nocturna encontrará US$ 25,00 en facturación que la pasarela no tiene. Activa «Verificar la firma».</span>';
+    else if(reg>cob)j='<span class="warn">Se registró dos veces el mismo pago: la facturación muestra un saldo a favor que no existe y Laura recibió dos comprobantes. Activa «Descartar duplicados».</span>';
+    else if(st.falso)j='<span class="ok">El aviso falso no pasó la firma: la factura sigue pendiente, como debe, y quedó una alerta de seguridad.</span>';
+    else j='<span class="ok">Lo registrado en la facturación coincide con lo cobrado por la pasarela. Pía solo confirmó después de que el sistema registró el pago.</span>';
+    q('#c111-out').innerHTML=j;
+  }
+  function reiniciar(){
+    nuevo();q('#c111-chat').innerHTML='';q('#c111-log').innerHTML='';
+    pia('Hola, Laura. Soy Pía, la asistente virtual de Servicios Ejemplo. ¿En qué te ayudo?');
+    pintar();
+  }
+  ['#c111-firma','#c111-dup','#c111-cons'].forEach(s=>q(s).addEventListener('change',reiniciar));
+  reiniciar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const EST={
+    recibido:['Recibido','Recibimos tu reporte (ticket n.º 5512). Un técnico lo revisará en menos de 24 horas.'],
+    escalado:['Escalado a nivel 2','(interno) Un especialista está revisando tu caso.'],
+    programado:['Visita programada','Tu visita quedó para el jueves entre las 9:00 y las 12:00. Si no puedes, respóndeme y la cambiamos.'],
+    camino:['Técnico en camino','El técnico va en camino a tu casa y llega en unos 30 minutos.'],
+    resuelto:['Resuelto','El técnico marcó tu caso como resuelto. ¿Ya tienes servicio?']
+  };
+  const VIS={recibido:'recibido',escalado:'recibido',programado:'programado',camino:'en camino',resuelto:'resuelto'};
+  let st;
+  function nuevo(){st={paso:0,campos:[],preg:0,ticket:false,estado:null,avisados:{},pregTicket:0,sinAviso:[],avisos:0,plantillas:0,reabierto:false};}
+  function chat(cl,quien,txt){const d=document.createElement('div');d.className='c112-m '+cl;if(quien){const s=document.createElement('small');s.textContent=quien;d.appendChild(s);}d.appendChild(document.createTextNode(txt));q('#c112-chat').appendChild(d);q('#c112-chat').scrollTop=q('#c112-chat').scrollHeight;}
+  const pia=(t,pl)=>chat(pl?'c112-t':'c112-b',pl?'Pía · plantilla aprobada':'Pía',t), laura=t=>chat('c112-c','Laura',t), nota=t=>chat('c112-s','',t);
+  function reg(t,c){const li=document.createElement('li');if(c)li.style.setProperty('--cc','var('+c+')');li.textContent=t;q('#c112-reg').appendChild(li);q('#c112-reg').scrollTop=q('#c112-reg').scrollHeight;}
+  function campo(n,v,o){st.campos.push([n,v,o]);}
+  const PASOS={
+    0:[['No tengo internet',()=>{laura('No tengo internet');
+        campo('Cuenta','1001','crm');campo('Dirección','Calle 10 n.º 20, apto 3','crm');campo('Servicio','Internet hogar','crm');campo('Avería en la zona','no hay','red');
+        nota('CRM: cuenta 1001, dirección y servicio · monitoreo: sin avería en la zona');
+        pia('Lo siento, Laura. Revisé tu zona y no hay averías reportadas. ¿Qué te pasa exactamente?');st.preg++;st.paso=1;}]],
+    1:[['Sin servicio',()=>sint('Sin servicio')],['Va lento',()=>sint('Va lento')],['Se corta a ratos',()=>sint('Se corta a ratos')]],
+    2:[['Desde ayer',()=>desde('Desde ayer')],['Desde hoy en la mañana',()=>desde('Desde hoy en la mañana')]],
+    3:[['Sí, y sigue igual',()=>{laura('Sí, y sigue igual');campo('Ya reinició el equipo','sí','cli');franja();}],['No',()=>{laura('No');pia('Prueba apagar el equipo 30 segundos y encenderlo. Si sigue igual, me dices y abro el caso.');st.paso=4;}]],
+    4:[['Ya lo reinicié y sigue igual',()=>{laura('Ya lo reinicié y sigue igual');campo('Ya reinició el equipo','sí (guiado por Pía)','cli');franja();}],['Ahora funciona, gracias',()=>{laura('Ahora funciona, gracias');pia('¡Qué bueno! No abrí ningún caso. Si vuelve a fallar, escríbeme.');nota('resuelto sin ticket: el diagnóstico guiado evitó una visita');st.paso=9;}]],
+    5:[['Jueves 9:00-12:00',()=>crear('Jueves 9:00-12:00')],['Viernes 14:00-17:00',()=>crear('Viernes 14:00-17:00')]],
+    8:[['No, sigue igual',()=>{laura('No, sigue igual');st.reabierto=true;st.estado='recibido';reg('ticket.reabierto · motivo: la clienta confirma que sigue sin servicio','--warm');pia('Lo siento. Reabrí tu ticket n.º 5512 con esta respuesta; no tienes que contarme todo de nuevo.');st.paso=7;}],['Sí, ya funciona',()=>{laura('Sí, ya funciona');reg('ticket.cerrado · confirmado por la clienta','--good');pia('¡Perfecto! Cerré tu caso. Gracias por avisarme.');st.estado='cerrado';st.paso=9;}]]
+  };
+  function sint(t){laura(t);campo('Síntoma',t.toLowerCase(),'cli');pia('Entiendo. ¿Desde cuándo?');st.preg++;st.paso=2;}
+  function desde(t){laura(t);campo('Desde',t.replace('Desde ','').toLowerCase(),'cli');pia('¿Ya probaste reiniciar el equipo de internet?');st.preg++;st.paso=3;}
+  function franja(){pia('Voy a abrir tu caso. ¿Qué franja te sirve para la visita?');st.preg++;st.paso=5;}
+  function crear(f){laura(f);campo('Franja de visita',f,'cli');campo('Contacto para avisos','WhatsApp +1 555 000 1001','crm');
+    st.ticket=true;st.estado='recibido';
+    reg('POST /tickets → n.º 5512 · SLA 24 h · estado: recibido','--d-sis');
+    pia('Listo, Laura. Abrí el ticket n.º 5512. El plazo de atención es de 24 horas y pedí la visita para el '+f.toLowerCase()+'. Te aviso por aquí cuando cambie.');st.paso=7;}
+  function cambiar(e){
+    if(!st.ticket||st.estado==='cerrado')return;
+    st.estado=e;
+    reg('evento ticket.estado_cambiado → '+EST[e][0],'--d-sis');
+    const h=+q('#c112-h').value, hr=+q('#c112-r').value;
+    const marcado=q('.c112-chk [data-e="'+e+'"]').checked;
+    if(!marcado){reg('  regla 1 ✗ este estado no se avisa','--muted');if(e!=='escalado')st.sinAviso.push(e);return;}
+    if(!q('#c112-cons').checked){reg('  regla 2 ✗ la clienta no aceptó avisos: no sale nada','--warm');st.sinAviso.push(e);return;}
+    let pre='';
+    if(hr<8||hr>=20){reg('  regla 3 ✗ '+hr+':00 no es hora razonable: el aviso espera a las 8:00','--warm');pre='(enviado a las 8:00) ';}
+    const pl=h>=24;
+    reg('  regla 4 → ventana '+(pl?'cerrada ('+h+' h): plantilla de utilidad «estado_ticket»':'abierta ('+h+' h): mensaje libre'),pl?'--c-fis':'--good');
+    st.avisos++;if(pl)st.plantillas++;st.avisados[e]=true;
+    if(e==='escalado')st.ruido=true;
+    pia(pre+EST[e][1],pl);
+    if(e==='resuelto')st.paso=8;
+  }
+  function miTicket(){
+    laura('¿Y mi ticket?');st.pregTicket++;
+    if(!st.ticket){pia('No tienes tickets abiertos. ¿Quieres reportar una falla?');return;}
+    const v=st.estado==='cerrado'?'cerrado':VIS[st.estado];
+    nota('GET /tickets/5512 → estado interno «'+(st.estado==='cerrado'?'cerrado':EST[st.estado][0])+'» → visible para el cliente: «'+v+'»');
+    const R={recibido:'Tu ticket n.º 5512 está recibido; un técnico lo revisa dentro del plazo de 24 horas.',programado:'Tu visita está programada para el jueves entre las 9:00 y las 12:00.','en camino':'El técnico va en camino a tu casa.',resuelto:'El técnico marcó tu caso como resuelto. ¿Ya tienes servicio?',cerrado:'Tu ticket n.º 5512 está cerrado.'};
+    pia(R[v]);
+  }
+  function pintar(){
+    q('#c112-h-o').textContent=q('#c112-h').value+' h';q('#c112-r-o').textContent=q('#c112-r').value+':00';
+    q('#c112-num').textContent=st.ticket?'ticket n.º 5512 · '+(st.estado==='cerrado'?'cerrado':EST[st.estado][0]):'sin ticket';
+    const O={crm:['CRM','c112-o-crm'],red:['monitoreo','c112-o-red'],cli:['clienta','c112-o-cli']};
+    q('#c112-campos').innerHTML=st.campos.length?st.campos.map(([n,v,o])=>'<li><span><b>'+n+':</b> '+v+'</span><em class="'+O[o][1]+'">'+O[o][0]+'</em></li>').join(''):'<li><span style="color:var(--muted)">El ticket se llena mientras Laura conversa.</span></li>';
+    const eb=q('#c112-estados');eb.innerHTML='';
+    if(st.ticket&&st.estado!=='cerrado'){Object.keys(EST).filter(k=>k!=='recibido').forEach(k=>{const b=document.createElement('button');b.type='button';b.textContent=EST[k][0];b.setAttribute('aria-pressed',st.estado===k?'true':'false');b.addEventListener('click',()=>{cambiar(k);pintar();});eb.appendChild(b);});}
+    const ac=q('#c112-acc');ac.innerHTML='';
+    (PASOS[st.paso]||[]).forEach(([t,f])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>{f();pintar();});ac.appendChild(b);});
+    if(st.paso>=7){const b=document.createElement('button');b.type='button';b.textContent='¿Y mi ticket?';b.addEventListener('click',()=>{miTicket();pintar();});ac.appendChild(b);}
+    const r=document.createElement('button');r.type='button';r.textContent='Empezar de nuevo';r.addEventListener('click',reiniciar);ac.appendChild(r);
+    const deCli=st.campos.filter(c=>c[2]==='cli').length, deSis=st.campos.length-deCli;
+    let L=['<span>Datos del ticket: <b>'+deSis+'</b> salieron de los sistemas y <b>'+deCli+'</b> de Laura, con <b>'+st.preg+'</b> preguntas. Avisos enviados: <b>'+st.avisos+'</b> ('+st.plantillas+' con plantilla) · veces que Laura preguntó «¿y mi ticket?»: <b>'+st.pregTicket+'</b>.</span>'];
+    if(st.sinAviso.length&&st.pregTicket)L.push('<span class="warn">Laura tuvo que preguntar porque no le avisaste de: '+st.sinAviso.map(e=>EST[e][0].toLowerCase()).join(', ')+'. Cada pregunta así es un contacto que el aviso habría evitado.</span>');
+    else if(st.sinAviso.length)L.push('<span class="warn">Hubo cambios importantes sin aviso ('+st.sinAviso.map(e=>EST[e][0].toLowerCase()).join(', ')+'). Haz que Laura pregunte «¿y mi ticket?» y mira cuántos contactos genera.</span>');
+    if(st.ruido)L.push('<span class="warn">«Escalado a nivel 2» no le cambia nada a Laura: avisarlo es ruido y, fuera de la ventana, una plantilla pagada.</span>');
+    if(st.reabierto)L.push('<span class="ok">El cierre se confirmó con Laura y el ticket se reabrió con su respuesta, sin un reporte nuevo.</span>');
+    if(st.paso<7&&st.ticket===false&&st.paso!==9)L.push('<span>Reporta la falla con los botones de Laura.</span>');
+    q('#c112-out').innerHTML=L.join('');
+  }
+  function reiniciar(){nuevo();q('#c112-chat').innerHTML='';q('#c112-reg').innerHTML='';pia('Hola, Laura. Soy Pía, la asistente virtual de Servicios Ejemplo. ¿En qué te ayudo?');pintar();}
+  ['#c112-h','#c112-r'].forEach(s=>q(s).addEventListener('input',pintar));
+  document.querySelectorAll('.c112-chk input').forEach(i=>i.addEventListener('change',pintar));
+  reiniciar();
+})();
+</script>
+</body>
+</html>

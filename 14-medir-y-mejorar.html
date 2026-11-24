@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Medir y mejorar · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="medir-y-mejorar">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 14 DE 17</span><h1>Contención, desvío y satisfacción: medir y mejorar</h1><p class="lede">Un tablero que dice «78 % de contención» puede estar celebrando a clientes que se rindieron. Este capítulo arma las métricas que dicen si Pía resuelve de verdad, encuentra las conversaciones que fallan sin que nadie se queje y convierte cada falla en un cambio.</p></header>
+<section><div class="prose"><p>Pía lleva tres meses atendiendo. Consulta deudas, envía enlaces de pago, abre tickets y pasa a Carla o a Andrés los casos que no le tocan. La gerencia pregunta lo obvio: ¿funciona? Y en la reunión aparecen tres respuestas distintas. Atención dice que el bot «contiene» el 78 % de las conversaciones. Cobranza dice que las llamadas por «cuánto debo» casi no bajaron. Y el equipo de Pía muestra una encuesta con 4,6 de 5 estrellas.</p><p>Las tres cifras pueden ser ciertas a la vez, y ninguna responde la pregunta. Este capítulo enseña a medir lo que importa: si el cliente quedó <b>resuelto de verdad</b>, si dejó de usar el canal caro y si volvió por lo mismo. En el capítulo 1 viste por qué la contención engaña; aquí la vas a calcular, a desarmar y a acompañar de las métricas que la vuelven honesta.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en un médico de guardia que mide su trabajo por cuántos pacientes salen del consultorio sin ser enviados al especialista. Si despacha a todos con un analgésico, su «tasa de contención» es perfecta. La pregunta que lo delata es otra: ¿cuántos volvieron a la semana con el mismo dolor? Medir un bot es lo mismo: no basta con contar quién salió; hay que saber quién se curó.</p></div></section>
+<section><h2>Contención: la fórmula y la falsa contención</h2><div class="prose"><p>La <b>contención</b> (<i>containment rate</i>) es la proporción de conversaciones que terminan sin pasar a una persona:</p><div class="code-copia"><pre><code>contención = conversaciones terminadas sin traspaso ÷ conversaciones con una intención reconocida</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>El denominador ya es una decisión. Si se cuentan los «hola» que nunca escribieron nada más, la contención sube sola, porque nadie los traspasó. Por eso Servicios Ejemplo cuenta solo las conversaciones en las que la comprensión reconoció al menos una intención del catálogo (capítulo 2). También se decide qué hacer con una conversación que pasó a Carla pero volvió a Pía para cerrar el pago (capítulo 9): cuenta como traspasada, porque una persona trabajó en ella.</p><p>El problema es el numerador. «Terminó sin traspaso» incluye cuatro historias muy distintas:</p><ol class="steps"><li><span>Laura pidió su saldo, lo recibió y pagó. <b>Resuelta.</b></span></li><li><span>Laura pidió su saldo, Pía no la entendió dos veces y Laura cerró WhatsApp. <b>Abandono.</b></span></li><li><span>Laura recibió una respuesta incorrecta sobre su recargo, dijo «ok» y llamó al día siguiente. <b>Escape a otro canal.</b></span></li><li><span>Laura pidió hablar con una persona, Pía no le ofreció la salida y Laura se rindió. <b>Rendición.</b></span></li></ol><p>Las cuatro suman a la contención. Solo la primera es un éxito. A las otras tres se les llama <b>falsa contención</b> (<i>false containment</i>): conversaciones que el tablero cuenta como resueltas por el bot y que el cliente vivió como un fracaso.</p></div><figure class="fig fig-esquema" id="14-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="min-width:760px" role="img" aria-label="Barra de 10.000 conversaciones de Pía: 5.600 resueltas por Pía, 2.200 de falsa contención (900 abandonos, 800 escapes a otro canal y 500 rendiciones) y 2.200 pasadas a una persona (1.950 resueltas y 250 no). La contención suma las resueltas por Pía y la falsa contención, 78 %. La resolución correcta suma las resueltas por Pía y por una persona, 75,5 %. El recontacto a siete días, 17 %, sale de los escapes, parte de abandonos y rendiciones y los traspasos no resueltos.">
+  <text x="450" y="28" class="t t-b" text-anchor="middle">Un mes de Pía: 10.000 conversaciones con una intención reconocida</text>
+
+  
+  <path d="M40 112v-14h639v14" class="ln" style="stroke:var(--accent);stroke-width:2"/>
+  <text x="359" y="88" class="t t-b" text-anchor="middle" style="fill:var(--accent)">Contención = 7.800 ÷ 10.000 = 78 %</text>
+  <text x="359" y="66" class="t t-s t-m" text-anchor="middle">lo que celebra un tablero ingenuo: verde + naranja</text>
+
+  
+  <rect x="40" y="122" width="459" height="64" style="fill:var(--good-soft);stroke:var(--good)"/>
+  <rect x="499" y="122" width="74" height="64" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <rect x="573" y="122" width="65" height="64" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <rect x="638" y="122" width="41" height="64" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+  <rect x="679" y="122" width="160" height="64" class="c-red"/>
+  <rect x="839" y="122" width="21" height="64" class="c-red" style="stroke-dasharray:4 3"/>
+
+  <text x="269" y="150" class="t t-b" text-anchor="middle">Resueltas por Pía</text>
+  <text x="269" y="170" class="t t-s" text-anchor="middle">5.600 · confirmadas y sin recontacto</text>
+  <text x="536" y="150" class="t t-s t-b" text-anchor="middle">aban-</text>
+  <text x="536" y="164" class="t t-s t-b" text-anchor="middle">dono</text>
+  <text x="536" y="180" class="t t-s" text-anchor="middle">900</text>
+  <text x="605" y="157" class="t t-s t-b" text-anchor="middle">escape</text>
+  <text x="605" y="180" class="t t-s" text-anchor="middle">800</text>
+  <text x="658" y="157" class="t t-xs t-b" text-anchor="middle">rend.</text>
+  <text x="658" y="180" class="t t-s" text-anchor="middle">500</text>
+  <text x="759" y="150" class="t t-b" text-anchor="middle">Pasadas a</text>
+  <text x="759" y="166" class="t t-b" text-anchor="middle">una persona</text>
+  <text x="759" y="181" class="t t-s" text-anchor="middle">1.950 resueltas</text>
+
+  
+  <g style="fill:var(--warm)">
+    <circle cx="520" cy="200" r="4"/><circle cx="590" cy="200" r="4"/><circle cx="605" cy="200" r="4"/><circle cx="620" cy="200" r="4"/>
+    <circle cx="650" cy="200" r="4"/><circle cx="849" cy="200" r="4"/>
+  </g>
+  <text x="866" y="160" class="t t-xs t-m" transform="rotate(90 866 160)">250 no</text>
+
+  
+  <path d="M40 222v14h459v-14" class="ln" style="stroke:var(--good);stroke-width:2"/>
+  <path d="M679 222v14h160v-14" class="ln" style="stroke:var(--good);stroke-width:2"/>
+  <path d="M269 236v20M759 236v20M269 256h490" class="ln ln-d" style="stroke:var(--good)"/>
+  <text x="514" y="276" class="t t-b" text-anchor="middle" style="fill:var(--good)">Resolución correcta = (5.600 + 1.950) ÷ 10.000 = 75,5 %</text>
+  <text x="514" y="294" class="t t-s t-m" text-anchor="middle">verde + azul resuelto: la naranja nunca suma, aunque la contención sí la cuente</text>
+
+  
+  <rect x="40" y="318" width="820" height="64" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <circle cx="64" cy="340" r="5" style="fill:var(--warm)"/>
+  <text x="78" y="344" class="t t-b k-warm">Recontacto a 7 días = 1.700 ÷ 10.000 = 17 %</text>
+  <text x="78" y="366" class="t t-s">Sale de los puntos: todo el escape, parte de los abandonos y rendiciones, y los traspasos que no se resolvieron.</text>
+</svg></div><figcaption><b>Qué cuenta cada métrica en 10.000 conversaciones de Pía.</b> La barra del centro reparte un mes de conversaciones según cómo terminaron: en verde, las que Pía resolvió; en naranja, la falsa contención (abandonos, escapes a otro canal y rendiciones); en azul, las que pasaron a una persona, resueltas o no. Las llaves de arriba muestran lo que suma la contención: verde y naranja juntos. Las de abajo, lo que suman la resolución correcta (verde más las resueltas por una persona) y el recontacto a siete días (los que volvieron por lo mismo, de cualquier tramo). La misma barra da números muy distintos según qué tramos sume cada fórmula.</figcaption></figure><div class="prose"><p>La falsa contención no se ve en el registro de la conversación: hay que buscarla fuera de ella, en lo que el cliente hizo después. Por eso la contención se publica siempre con su acompañante, la resolución correcta, que se explica más abajo. Una contención alta con una resolución baja no es un bot eficiente: es un bot que esconde trabajo, y ese trabajo llega después, más caro, al teléfono.</p></div></section>
+<section><h2>Desvío: cuántos contactos dejó de recibir el canal caro</h2><div class="prose"><p>La contención mide lo que pasa <b>dentro</b> del bot. El <b>desvío</b> (<i>deflection</i>) mide lo que pasa <b>fuera</b>: cuántos contactos dejó de recibir el canal caro (el centro de llamadas, las agencias, el correo) gracias a que el bot existe. Es la métrica que más le interesa a finanzas, porque es la que mueve el costo, y también la más fácil de inflar.</p><p>La trampa más común es suponer que cada conversación de Pía es una llamada menos. No lo es. Muchas personas que hoy le escriben «¿cuánto debo?» a Pía nunca habrían llamado: habrían esperado la factura o mirado el portal. Esa <b>demanda inducida</b> (<i>induced demand</i>) es buena para el cliente, pero no ahorra una sola llamada.</p><p>Para medir el desvío hace falta una <b>línea base</b> (<i>baseline</i>): cuántos contactos habría recibido el canal caro sin el bot. Servicios Ejemplo la arma así:</p><div class="tbl"><table><thead><tr><th>Paso</th><th>Qué se hace</th><th>Ejemplo con «cuánto debo»</th></tr></thead><tbody><tr><td>1. Volumen antes</td><td>llamadas por ese motivo en los meses previos al lanzamiento</td><td>9.000 al mes</td></tr><tr><td>2. Ajuste por clientes</td><td>el volumen esperado crece con la base de clientes</td><td>+5 %: 9.450 esperadas</td></tr><tr><td>3. Ajuste por temporada</td><td>los meses de facturación anual o de cortes traen más llamadas</td><td>noviembre, +10 %: 10.400 esperadas</td></tr><tr><td>4. Volumen real</td><td>llamadas por ese motivo después del lanzamiento</td><td>7.100</td></tr><tr><td>5. Desvío</td><td>(esperadas − reales) ÷ esperadas</td><td>3.300 llamadas, 32 %</td></tr></tbody></table></div><p>Ese 32 % se compara con las 6.500 conversaciones de Pía sobre el mismo motivo: la mitad desvió una llamada y la otra mitad era demanda nueva. Las dos mitades tienen valor, pero solo una paga el proyecto.</p><p>La mejor línea base no es un cálculo: es un <b>grupo de control</b> (<i>control group</i>). Si Pía se lanza primero en una región y la otra sigue sin bot unas semanas, la diferencia entre las dos regiones, descontada la que ya había antes, es el desvío más creíble que se puede mostrar. Es la misma lógica del ensayo del asistente Pounce de la Universidad Estatal de Georgia que viste en el capítulo 1. El costo de cada llamada desviada y de cada conversación del bot está en el capítulo 13.</p></div></section>
+<section><h2>CSAT al cierre: por qué responden pocos y no siempre los mismos</h2><div class="prose"><p>La <b>satisfacción del cliente</b> (<i>CSAT, Customer Satisfaction Score</i>) se pregunta al cierre de la conversación, con un toque: «¿Te ayudé con lo que necesitabas?» y dos botones, o una escala de 1 a 5. Se calcula como la proporción de respuestas positivas sobre las respuestas recibidas.</p><p>La palabra clave es <b>recibidas</b>. En un bot, responde la encuesta una minoría, a menudo menos de uno de cada diez. Y esa minoría no se parece al resto, por tres razones:</p><ul><li><b>Solo la ve quien llega al cierre.</b> El cliente que abandonó en el segundo turno nunca vio la pregunta. La encuesta mide a los sobrevivientes, y los sobrevivientes son los que mejor la pasaron.</li><li><b>Responden los extremos.</b> Quien quedó muy contento o muy molesto contesta más que quien quedó indiferente.</li><li><b>La pregunta cambia la respuesta.</b> «¿Te ayudé?» justo después de un pago aprobado recibe más «sí» que la misma pregunta después de un «no puedo darte un descuento».</li></ul><p>Por eso el 4,6 de la reunión no dice mucho por sí solo. Se lee con su <b>tasa de respuesta</b> (cuántos contestaron sobre cuántos llegaron al cierre) y <b>por segmentos</b>: por flujo, por canal y por quién resolvió, Pía o una persona. Un CSAT de cobranza mezclado con uno de ventas promedia dos cosas que no se parecen.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>El margen de error de una encuesta con pocas respuestas</h3></div><p>Vas a calcular cuánto puede moverse un CSAT del 82 % por puro azar, según cuántas personas respondieron. Usas la aproximación normal del intervalo de confianza al 95 %: 1,96 × raíz de p × (1 − p) ÷ n. Windows lo hace con PowerShell; macOS y Linux, con awk.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>1.96 * [math]::Sqrt(0.82 * 0.18 / 600) * 100</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>1.96 * [math]::Sqrt(0.82 * 0.18 / 120) * 100</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>1.96 * [math]::Sqrt(0.82 * 0.18 / 30) * 100</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>awk 'BEGIN { print 1.96 * sqrt(0.82 * 0.18 / 600) * 100 }'</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>awk 'BEGIN { print 1.96 * sqrt(0.82 * 0.18 / 120) * 100 }'</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>awk 'BEGIN { print 1.96 * sqrt(0.82 * 0.18 / 30) * 100 }'</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta las tres líneas: son 600, 120 y 30 respuestas con el mismo 82 % positivo.</span></li><li><span>Anota cada resultado como «82 % ± tantos puntos».</span></li><li><span>Imagina que el flujo de pagos tuvo 30 respuestas este mes y el mes pasado tuvo 78 %. ¿Puedes afirmar que mejoró?</span></li></ol><p><b>Qué observar:</b> con 600 respuestas el margen ronda ±3 puntos; con 120, ±7; con 30, casi ±14. Un CSAT por flujo con pocas respuestas se mueve de un mes a otro sin que nada haya cambiado. Y ojo: el margen solo mide el azar de quiénes respondieron. No corrige el sesgo de que respondan los sobrevivientes y los extremos: ese sesgo no baja aunque lleguen mil respuestas.</p></div></section>
+<section><h2>Resolución correcta de punta a punta, recontacto y escape</h2><div class="prose"><p>La <b>resolución correcta de punta a punta</b> (<i>end-to-end resolution</i>) responde la pregunta que de verdad importa: ¿la necesidad del cliente quedó atendida, y bien? Es la métrica más honesta y la más cara de medir, porque no sale de una sola fuente. Servicios Ejemplo la arma con tres evidencias:</p><div class="tbl"><table><thead><tr><th>Evidencia</th><th>De dónde sale</th><th>Ejemplo</th></tr></thead><tbody><tr><td>El sistema lo confirma</td><td>la facturación, la pasarela o la mesa de ayuda</td><td>el pago de F-2207 quedó registrado; el ticket 5512 se cerró y no se reabrió</td></tr><tr><td>El cliente no volvió por lo mismo</td><td>el <b>recontacto</b> en cualquier canal</td><td>Laura no escribió ni llamó por su factura en siete días</td></tr><tr><td>Una persona lo revisó</td><td>una muestra etiquetada a mano</td><td>la respuesta sobre el recargo coincide con la política vigente</td></tr></tbody></table></div><p>El <b>recontacto a siete días</b> (<i>7-day recontact</i>) es el porcentaje de clientes que vuelven por el <b>mismo motivo</b>, por <b>cualquier canal</b>, dentro de siete días. Las dos palabras en negrita son la parte difícil. «Mismo motivo» exige que el bot, el centro de llamadas y la mesa de ayuda clasifiquen los contactos con la misma lista de motivos. «Cualquier canal» exige reconocer a Laura en WhatsApp, en el teléfono y en la agencia como la misma persona: la identidad omnicanal del capítulo 8. Sin esas dos piezas, el recontacto se mide solo dentro del bot y se pierde justo lo que interesa.</p><p>El <b>escape</b> (<i>escape rate</i>) es un caso particular: el cliente deja la conversación con Pía y en pocas horas aparece en el canal caro. Es la señal más directa de falsa contención, y se mide cruzando la hora en que terminó la conversación con la hora de la llamada.</p></div><figure class="fig fig-arquitectura" id="14-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" style="min-width:760px" role="img" aria-label="Arquitectura de la medición: cuatro fuentes de eventos (conversaciones de Pía y de los agentes, centro de llamadas, mesa de ayuda, facturación y pasarela) llegan a un almacén de eventos que los une por cliente, con la identidad omnicanal, y por motivo, con una sola lista. De esa unión salen las métricas del tablero y las señales de falla que alimentan la cola de revisión.">
+  <defs>
+    <marker id="d142-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-inet"/></marker>
+  </defs>
+  <text x="120" y="26" class="t t-xs t-m" text-anchor="middle">FUENTES DE EVENTOS</text>
+  <text x="450" y="26" class="t t-xs t-m" text-anchor="middle">UNIR</text>
+  <text x="770" y="26" class="t t-xs t-m" text-anchor="middle">LO QUE SALE</text>
+
+  
+  <rect x="10" y="44" width="220" height="74" rx="10" class="c-red"/>
+  <text x="24" y="68" class="t t-b">Conversaciones</text>
+  <text x="24" y="86" class="t t-s">Pía y agentes: intención, estado,</text>
+  <text x="24" y="102" class="t t-s">traspaso, CSAT, hora de cierre</text>
+
+  <rect x="10" y="138" width="220" height="74" rx="10" class="d-sis"/>
+  <text x="24" y="162" class="t t-b">Centro de llamadas</text>
+  <text x="24" y="180" class="t t-s">número, hora y motivo marcado</text>
+  <text x="24" y="196" class="t t-s">por el agente al cerrar</text>
+
+  <rect x="10" y="232" width="220" height="74" rx="10" class="d-sis"/>
+  <text x="24" y="256" class="t t-b">Mesa de ayuda</text>
+  <text x="24" y="274" class="t t-s">ticket creado, cerrado o</text>
+  <text x="24" y="290" class="t t-s">reabierto, con su motivo</text>
+
+  <rect x="10" y="326" width="220" height="74" rx="10" class="d-sis"/>
+  <text x="24" y="350" class="t t-b">Facturación y pasarela</text>
+  <text x="24" y="368" class="t t-s">pago creado, aprobado,</text>
+  <text x="24" y="384" class="t t-s">registrado o rechazado</text>
+
+  <g class="ln" style="stroke:var(--d-inet);stroke-width:1.6">
+    <path d="M230 81H330" marker-end="url(#d142-m)"/>
+    <path d="M230 175H330" marker-end="url(#d142-m)"/>
+    <path d="M230 269H330" marker-end="url(#d142-m)"/>
+    <path d="M230 363H330" marker-end="url(#d142-m)"/>
+  </g>
+
+  
+  <rect x="334" y="44" width="232" height="356" rx="12" class="d-inet"/>
+  <text x="450" y="70" class="t t-b" text-anchor="middle">Almacén de eventos</text>
+  <text x="450" y="88" class="t t-s t-m" text-anchor="middle">cada evento con fecha y hora</text>
+  <rect x="350" y="108" width="200" height="96" rx="10" class="d-casa"/>
+  <text x="450" y="130" class="t t-b k-casa" text-anchor="middle">Llave 1 · el cliente</text>
+  <text x="450" y="150" class="t t-s" text-anchor="middle">identidad omnicanal</text>
+  <text x="450" y="166" class="t t-s" text-anchor="middle">(capítulo 8): Laura en</text>
+  <text x="450" y="182" class="t t-s" text-anchor="middle">WhatsApp = Laura al teléfono</text>
+  <rect x="350" y="220" width="200" height="96" rx="10" class="c-tra"/>
+  <text x="450" y="242" class="t t-b k-tra" text-anchor="middle">Llave 2 · el motivo</text>
+  <text x="450" y="262" class="t t-s" text-anchor="middle">una sola lista de motivos</text>
+  <text x="450" y="278" class="t t-s" text-anchor="middle">para el bot, el teléfono</text>
+  <text x="450" y="294" class="t t-s" text-anchor="middle">y la mesa de ayuda</text>
+  <text x="450" y="342" class="t t-s" text-anchor="middle">se unen por cliente + motivo</text>
+  <text x="450" y="358" class="t t-s" text-anchor="middle">+ ventana de tiempo (7 días)</text>
+  <text x="450" y="384" class="t t-s t-m" text-anchor="middle">datos personales enmascarados</text>
+
+  <g class="ln" style="stroke:var(--d-inet);stroke-width:1.6">
+    <path d="M566 140H660" marker-end="url(#d142-m)"/>
+    <path d="M566 320H660" marker-end="url(#d142-m)"/>
+  </g>
+
+  
+  <rect x="664" y="44" width="226" height="190" rx="10" class="caja"/>
+  <text x="680" y="68" class="t t-b">Tablero</text>
+  <g class="t t-s">
+    <text x="680" y="92">contención</text>
+    <text x="680" y="110">desvío frente a la línea base</text>
+    <text x="680" y="128" class="t-b">resolución correcta</text>
+    <text x="680" y="146" class="t-b">recontacto a 7 días</text>
+    <text x="680" y="164">escape a otro canal</text>
+    <text x="680" y="182">CSAT y tasa de respuesta</text>
+    <text x="680" y="206" class="t-m">por flujo, canal y área</text>
+  </g>
+  <rect x="664" y="254" width="226" height="146" rx="10" class="caja"/>
+  <text x="680" y="278" class="t t-b">Cola de revisión</text>
+  <g class="t t-s">
+    <text x="680" y="302">señales de falla por conversación</text>
+    <text x="680" y="320">muestra al azar + marcadas</text>
+    <text x="680" y="338">+ flujos cambiados</text>
+    <text x="680" y="362">etiquetas → patrones → cambios</text>
+    <text x="680" y="380" class="t-m">(el ciclo de mejora)</text>
+  </g>
+
+  <rect x="10" y="422" width="880" height="36" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="445" class="t t-s" text-anchor="middle">Sin la llave 1, el recontacto solo se ve dentro del bot. Sin la llave 2, «volvió» no distingue «por lo mismo» de «por otra cosa».</text>
+</svg></div><figcaption><b>De dónde salen las métricas.</b> A la izquierda, las fuentes de eventos, cada una con su color: las conversaciones de Pía y de los agentes (orquestación), el centro de llamadas, la mesa de ayuda y la facturación (sistemas). En el centro, el almacén de eventos donde todo se une por dos llaves: el cliente, con su identidad omnicanal, y el motivo, con una sola lista para todos los canales. A la derecha, en gris de medición, lo que sale de esa unión: las métricas del tablero (contención, desvío, resolución correcta, recontacto, escape y CSAT) y las señales de falla que alimentan la cola de revisión. Si falta una de las dos llaves, el recontacto y el escape no se pueden calcular.</figcaption></figure><div class="prose"><p>El laboratorio siguiente junta todo. Mueves el <b>umbral de escalamiento</b> de Pía, la confianza mínima con la que sigue atendiendo sola antes de pasar a una persona, y miras las métricas a la vez. Un umbral bajo hace que Pía se quede con casi todo; uno alto, que pase casi todo.</p></div><div class="lab" id="14-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Tablero de contención: mueve el umbral de escalamiento</h3></div><p class="hint">Mueve el umbral y mira las cuatro curvas a la vez: contención, falsa contención, resolución correcta y recontacto a siete días. Luego baja la capacidad de los agentes: cuando la cola se llena, los traspasos esperan, algunos clientes se van y la resolución cae también por ese lado. Busca el umbral que da la mayor resolución correcta y compáralo con el que da la mayor contención. Fíjate en el CSAT medido y en el que se obtendría si respondieran todos.</p><style>
+[id="14-lab-1"] .c141-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+[id="14-lab-1"] .c141-kpi{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card)}
+[id="14-lab-1"] .c141-kpi small{display:block;font:700 .64rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+[id="14-lab-1"] .c141-kpi b{display:block;font:700 1.45rem var(--f-display);line-height:1.15}
+[id="14-lab-1"] .c141-kpi span{font:400 .76rem var(--f-body);color:var(--muted)}
+[id="14-lab-1"] .c141-graf{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px}
+[id="14-lab-1"] .c141-graf svg{display:block;width:100%;height:auto}
+[id="14-lab-1"] .c141-graf text{font:500 11px var(--f-display);fill:var(--muted)}
+</style>
+<div class="ctls">
+  <label class="ctl">Umbral de escalamiento: confianza mínima para que Pía siga sola <output id="c141-t-o"></output>
+    <input id="c141-t" type="range" min="10" max="95" step="5" value="50"></label>
+  <label class="ctl">Capacidad de los agentes: casos al mes <output id="c141-k-o"></output>
+    <input id="c141-k" type="range" min="1000" max="6000" step="250" value="3000"></label>
+</div>
+<div class="c141-kpis">
+  <div class="c141-kpi"><small>Contención</small><b id="c141-k1" style="color:var(--accent)"></b><span>sin traspaso</span></div>
+  <div class="c141-kpi"><small>Falsa contención</small><b id="c141-k2" style="color:var(--warm)"></b><span>del total</span></div>
+  <div class="c141-kpi"><small>Resolución correcta</small><b id="c141-k3" style="color:var(--good)"></b><span>de punta a punta</span></div>
+  <div class="c141-kpi"><small>Recontacto 7 días</small><b id="c141-k4"></b><span>mismo motivo</span></div>
+  <div class="c141-kpi"><small>CSAT medido</small><b id="c141-k5"></b><span id="c141-k5s"></span></div>
+</div>
+<div class="c141-graf"><svg id="c141-svg" viewBox="0 0 600 270" role="img" aria-label="Curvas de contención, falsa contención, resolución correcta y recontacto según el umbral de escalamiento"></svg></div>
+<div class="legend"><span><i style="background:var(--accent)"></i>Contención</span><span><i style="background:var(--warm)"></i>Falsa contención</span><span><i style="background:var(--good)"></i>Resolución correcta</span><span><i style="background:var(--ink)"></i>Recontacto a 7 días</span></div>
+<div class="readout texto" id="c141-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Modelo del ejemplo, 10.000 conversaciones al mes: cada conversación llega con una confianza de Pía; con confianza alta, Pía la resuelve casi siempre, y con confianza baja, pocas veces. Las personas resuelven el 90 %, pero si los traspasos superan su capacidad, la mitad del exceso se cansa de esperar y se va. De la falsa contención, el 55 % vuelve por lo mismo en siete días. Responden la encuesta el 9 % de los resueltos por Pía, el 12 % de los atendidos por personas y solo el 2 % de la falsa contención.</p></div><div class="prose"><p>La lección del laboratorio es que la contención <b>siempre</b> sube cuando Pía escala menos, y que la resolución correcta <b>no</b>: tiene un máximo en el medio. A la izquierda de ese máximo, Pía se queda con conversaciones que no sabe resolver; a la derecha, pasa a las personas casos que sí resolvía y llena la cola. El número que se optimiza es la resolución correcta, con el recontacto como alarma. La contención se reporta, pero no se persigue.</p></div></section>
+<section><h2>Detectar conversaciones fallidas: abandono, repeticiones, frustración y escalamientos tardíos</h2><div class="prose"><p>La mayoría de las conversaciones que fallan no dejan una queja. El cliente no califica, no reclama, no pide una persona: se va. Para encontrar esas <b>fallas silenciosas</b> (<i>silent failures</i>) se buscan señales en el propio registro de la conversación, que se calculan solas sobre cada una:</p><div class="tbl"><table><thead><tr><th>Señal</th><th>Qué se mira</th><th>Por qué indica falla</th></tr></thead><tbody><tr><td>Abandono a mitad de flujo</td><td>la conversación termina en un estado que esperaba una respuesta</td><td>el cliente dejó el pago o el ticket a medias</td></tr><tr><td>Repetición</td><td>la misma intención dos o más veces en la conversación</td><td>la primera respuesta no sirvió</td></tr><tr><td>Respaldo repetido</td><td>dos o más «no te entendí» (capítulo 4)</td><td>la comprensión no alcanzó</td></tr><tr><td>Frustración</td><td>«no entiendes», «otra vez», mayúsculas, signos repetidos</td><td>el cliente lo dice, aunque no pida nada</td></tr><tr><td>Escalamiento tardío</td><td>pidió una persona después de muchos turnos</td><td>la salida humana llegó tarde o estaba escondida</td></tr><tr><td>Recontacto</td><td>volvió por lo mismo en siete días</td><td>la señal más fuerte, pero llega una semana después</td></tr></tbody></table></div><p>Ninguna señal es perfecta. «No, gracias, eso era todo» tiene un «no» y no es frustración. Un cliente que repite su número de cuenta porque Pía se lo pidió no está repitiendo una intención. Por eso las señales se validan contra una muestra que alguien revisó a mano: se mide cuántas de las conversaciones marcadas eran fallas de verdad (precisión) y cuántas de las fallas de verdad quedaron marcadas (cobertura). Una señal que marca todo satura la cola de revisión; una que marca poco deja escapar lo que importa.</p></div><div class="lab" id="14-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Detector de conversaciones fallidas</h3></div><p class="hint">Tienes doce conversaciones de Pía. Activa o desactiva cada señal y ajusta sus umbrales: el detector marca las conversaciones sospechosas. Cuando estés conforme, toca «Revelar la revisión manual» y mira cuántas fallas atrapaste, cuántas falsas alarmas mandaste a la cola y cuáles se escaparon. Prueba sin la señal de recontacto y luego con ella.</p><style>
+[id="14-lab-2"] .c142-sen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:6px 16px;font:500 .84rem var(--f-display)}
+[id="14-lab-2"] .c142-sen label{display:flex;gap:6px;align-items:center}
+[id="14-lab-2"] .c142-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:8px}
+[id="14-lab-2"] .c142-c{border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);display:grid;gap:4px;font:400 .8rem/1.35 var(--f-body)}
+[id="14-lab-2"] .c142-c.marcada{border-color:var(--warm);box-shadow:inset 4px 0 0 var(--warm)}
+[id="14-lab-2"] .c142-c h4{margin:0;font:700 .84rem var(--f-display)}
+[id="14-lab-2"] .c142-c q{display:block;color:var(--muted);quotes:none;font-style:italic}
+[id="14-lab-2"] .c142-chips{display:flex;flex-wrap:wrap;gap:4px}
+[id="14-lab-2"] .c142-chips em{font:600 .64rem var(--f-display);letter-spacing:.05em;text-transform:uppercase;font-style:normal;padding:2px 6px;border-radius:4px;background:var(--warm-soft);color:var(--warm)}
+[id="14-lab-2"] .c142-v{font:600 .76rem var(--f-display);padding:3px 6px;border-radius:5px}
+[id="14-lab-2"] .c142-v.f{background:var(--warm-soft);color:var(--warm)}
+[id="14-lab-2"] .c142-v.o{background:var(--good-soft);color:var(--good)}
+</style>
+<div class="c142-sen" role="group" aria-label="Señales del detector">
+  <label><input type="checkbox" id="c142-ab" checked> Abandono a mitad de flujo</label>
+  <label><input type="checkbox" id="c142-fr" checked> Frustración en el texto</label>
+  <label><input type="checkbox" id="c142-cs"> CSAT negativo</label>
+  <label><input type="checkbox" id="c142-rc"> Recontacto a 7 días (llega una semana después)</label>
+</div>
+<div class="ctls">
+  <label class="ctl">Repetición: misma intención al menos <output id="c142-rep-o"></output>
+    <input id="c142-rep" type="range" min="2" max="5" step="1" value="2"></label>
+  <label class="ctl">Respaldo: «no te entendí» al menos <output id="c142-fb-o"></output>
+    <input id="c142-fb" type="range" min="1" max="4" step="1" value="2"></label>
+  <label class="ctl">Escalamiento tardío: pidió una persona desde el turno <output id="c142-tt-o"></output>
+    <input id="c142-tt" type="range" min="2" max="11" step="1" value="6"></label>
+</div>
+<p class="hint" style="margin:0">Una señal en su máximo queda apagada: repetición 5, respaldo 4 y turno 11 no marcan nada en este lote.</p>
+<div class="btns"><button type="button" id="c142-rev" aria-pressed="false">Revelar la revisión manual</button></div>
+<div class="c142-lista" id="c142-lista"></div>
+<div class="readout texto" id="c142-out" aria-live="polite"></div></div><div class="ml"><b>En la práctica</b><p><b>McDonald's y la toma de pedidos por voz, 2021-2024.</b> La cadena probó durante unos tres años, junto con IBM, un sistema de voz que tomaba los pedidos en la ventanilla de autoservicio de más de cien restaurantes de Estados Unidos. En 2024 circularon en redes sociales videos de pedidos absurdos, como cientos de nuggets agregados sin que el cliente los pidiera, y en junio de ese año la empresa anunció que terminaba la prueba (según medios como CNBC, con confirmación de la propia empresa). Más allá de la tecnología, la lección para medir es incómoda: las fallas que se volvieron públicas eran del tipo que un detector simple atrapa (el cliente corrige una y otra vez, el pedido no coincide con lo que dijo). Si una empresa se entera de sus fallas por los videos de los clientes, su medición llegó tarde.</p></div></section>
+<section><h2>Revisar registros de conversación: muestreo, etiquetado y patrones de falla</h2><div class="prose"><p>Las métricas dicen <b>cuánto</b> falla Pía. Para saber <b>por qué</b>, alguien tiene que leer conversaciones. No todas: una <b>muestra</b> (<i>sample</i>) bien elegida. Servicios Ejemplo revisa cada semana unas doscientas, de tres montones:</p><ul><li><b>Al azar</b>, para tener una foto honesta de lo normal. Sin este montón, el equipo solo ve problemas y pierde la proporción.</li><li><b>Marcadas por las señales</b>, para entender las fallas que el detector encontró.</li><li><b>Por flujo nuevo o cambiado</b>, para vigilar lo que se publicó esa semana (capítulo 15).</li></ul><p>Cada conversación revisada recibe una <b>etiqueta</b> (<i>label</i>) de una lista corta y fija, para que las semanas se puedan comparar:</p><div class="tbl"><table><thead><tr><th>Etiqueta</th><th>Qué pasó</th><th>Quién la arregla</th></tr></thead><tbody><tr><td>No entendió</td><td>la intención o el dato no se reconoció</td><td>diseño conversacional, catálogo de intenciones</td></tr><tr><td>No pudo</td><td>un sistema falló, tardó o no tenía la función</td><td>integración (capítulo 11)</td></tr><tr><td>Contenido</td><td>la respuesta era vieja, incompleta o contradictoria</td><td>el dueño del tema en la base de conocimiento (capítulo 7)</td></tr><tr><td>Flujo</td><td>el camino era confuso, largo o sin salida</td><td>diseño conversacional (capítulo 4)</td></tr><tr><td>Traspaso</td><td>la persona llegó tarde o sin contexto</td><td>atención (capítulo 9)</td></tr><tr><td>Proceso</td><td>el bot hizo lo correcto, pero la política o el sistema de la empresa causan el problema</td><td>el área dueña del proceso</td></tr></tbody></table></div><p>Dos personas que etiquetan la misma conversación no siempre coinciden. Por eso, de vez en cuando, dos revisores etiquetan el mismo lote y se mide cuánto coinciden; si coinciden poco, la lista de etiquetas está mal definida. Y los registros que se revisan llevan los datos personales enmascarados, como se vio en el capítulo 12. Cómo se guardan y se consultan las trazas de cada paso del modelo, con sus herramientas de observabilidad, está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Calcula las métricas de veinte conversaciones en una hoja de cálculo</h3></div><p>Vas a calcular contención, falsa contención, resolución correcta y recontacto con datos inventados de Pía. Necesitas cualquier hoja de cálculo en línea (Google Sheets, Excel en la web o LibreOffice). Copia el bloque y pégalo en la celda A1; si todo queda en una columna, usa «Dividir texto en columnas» con la coma como separador.</p><div class="code-copia"><pre><code>id,traspaso,resuelta,volvio_7d,csat
+1,no,si,no,positivo
+2,no,si,no,
+3,no,no,si,
+4,si,si,no,positivo
+5,no,si,no,positivo
+6,no,no,no,
+7,no,si,no,
+8,si,no,si,negativo
+9,no,si,no,positivo
+10,no,no,si,negativo
+11,no,si,no,
+12,si,si,no,
+13,no,si,no,positivo
+14,no,no,si,
+15,no,si,no,
+16,no,si,no,positivo
+17,si,si,no,positivo
+18,no,no,no,
+19,no,si,no,
+20,no,si,si,</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Contención: cuenta las filas con <code>traspaso</code> = no y divide por 20. Con fórmula: <code>=CONTAR.SI(B2:B21;"no")/20</code> (en inglés, <code>=COUNTIF(B2:B21,"no")/20</code>; algunas configuraciones usan coma en lugar de punto y coma).</span></li><li><span>Falsa contención: cuenta las filas con <code>traspaso</code> = no y <code>resuelta</code> = no (<code>CONTAR.SI.CONJUNTO</code>, en inglés <code>COUNTIFS</code>).</span></li><li><span>Resolución correcta: filas con <code>resuelta</code> = si y <code>volvio_7d</code> = no, sobre 20.</span></li><li><span>CSAT: respuestas «positivo» sobre respuestas no vacías. Anota también cuántas respondieron.</span></li></ol><p><b>Qué observar:</b> la contención da 80 %, pero 5 de esas 16 conversaciones no resolvieron nada, y la resolución correcta queda en 65 %. La fila 20 está marcada como resuelta y aun así el cliente volvió: por eso el recontacto entra en la resolución correcta. El CSAT da 78 % con solo 9 respuestas de 20, y no hay ninguna de los clientes que se fueron sin resolver y sin volver (filas 6 y 18). Es el sesgo del sobreviviente, en una hoja de cálculo.</p></div></section>
+<section><h2>La mejora continua: de la falla al cambio de flujo, de contenido o de proceso</h2><div class="prose"><p>Medir sin cambiar nada es caro y no sirve. Lo que convierte las métricas en un bot mejor es un <b>ciclo de mejora continua</b> (<i>continuous improvement loop</i>) con ritmo fijo, dueños con nombre y una regla: cada patrón de falla termina en un cambio o en una decisión explícita de no cambiar.</p></div><figure class="fig fig-esquema" id="14-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" style="min-width:740px" role="img" aria-label="Ciclo semanal de mejora de Pía en seis estaciones: medir, detectar, revisar, priorizar, cambiar y verificar. La estación cambiar tiene tres salidas: flujo o comprensión, contenido y proceso fuera del bot. Todo cambio pasa por pruebas y despliegue antes de verificarse. En el centro, la pregunta: ¿bajó el recontacto del motivo que se tocó?">
+  <defs>
+    <marker id="d143-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-inet"/></marker>
+  </defs>
+  
+  <circle cx="520" cy="240" r="92" class="caja" style="stroke-dasharray:4 4"/>
+  <text x="520" y="222" class="t t-b" text-anchor="middle">¿Bajó el</text>
+  <text x="520" y="240" class="t t-b" text-anchor="middle">recontacto del</text>
+  <text x="520" y="258" class="t t-b" text-anchor="middle">motivo tocado?</text>
+  <text x="520" y="280" class="t t-s t-m" text-anchor="middle">cada semana</text>
+
+  
+  <g>
+    <rect x="440" y="30" width="160" height="58" rx="10" class="d-inet"/>
+    <text x="520" y="54" class="t t-b" text-anchor="middle">1 · Medir</text>
+    <text x="520" y="74" class="t t-s" text-anchor="middle">el tablero por motivo</text>
+
+    <rect x="680" y="118" width="160" height="58" rx="10" class="d-inet"/>
+    <text x="760" y="142" class="t t-b" text-anchor="middle">2 · Detectar</text>
+    <text x="760" y="162" class="t t-s" text-anchor="middle">señales de falla</text>
+
+    <rect x="680" y="304" width="160" height="58" rx="10" class="d-inet"/>
+    <text x="760" y="328" class="t t-b" text-anchor="middle">3 · Revisar</text>
+    <text x="760" y="348" class="t t-s" text-anchor="middle">muestra y etiquetas</text>
+
+    <rect x="440" y="392" width="160" height="58" rx="10" class="d-inet"/>
+    <text x="520" y="416" class="t t-b" text-anchor="middle">4 · Priorizar</text>
+    <text x="520" y="436" class="t t-s" text-anchor="middle">volumen × daño</text>
+
+    <rect x="200" y="304" width="160" height="58" rx="10" class="caja" style="stroke:var(--ink);stroke-width:1.6"/>
+    <text x="280" y="328" class="t t-b" text-anchor="middle">5 · Cambiar</text>
+    <text x="280" y="348" class="t t-s" text-anchor="middle">con dueño y versión</text>
+
+    <rect x="200" y="118" width="160" height="58" rx="10" class="d-inet"/>
+    <text x="280" y="142" class="t t-b" text-anchor="middle">6 · Verificar</text>
+    <text x="280" y="162" class="t t-s" text-anchor="middle">antes y después</text>
+  </g>
+
+  <g class="ln" style="stroke:var(--d-inet);stroke-width:1.8">
+    <path d="M600 70Q660 80 700 114" marker-end="url(#d143-m)"/>
+    <path d="M760 176V300" marker-end="url(#d143-m)"/>
+    <path d="M700 362Q660 400 604 412" marker-end="url(#d143-m)"/>
+    <path d="M440 420Q390 400 340 366" marker-end="url(#d143-m)"/>
+    <path d="M280 304V180" marker-end="url(#d143-m)"/>
+    <path d="M340 118Q390 80 436 66" marker-end="url(#d143-m)"/>
+  </g>
+  <rect x="286" y="222" width="112" height="36" rx="6" class="caja"/>
+  <text x="342" y="237" class="t t-xs" text-anchor="middle">PRUEBAS Y</text>
+  <text x="342" y="251" class="t t-xs" text-anchor="middle">DESPLIEGUE · 15</text>
+
+  
+  <text x="20" y="226" class="t t-xs t-m">TRES SALIDAS DEL CAMBIO</text>
+  <rect x="20" y="238" width="150" height="56" rx="8" class="c-red"/>
+  <text x="32" y="260" class="t t-s t-b">Flujo o comprensión</text>
+  <text x="32" y="278" class="t t-s">ejemplos, preguntas</text>
+  <rect x="20" y="306" width="150" height="56" rx="8" class="c-enl"/>
+  <text x="32" y="328" class="t t-s t-b">Contenido</text>
+  <text x="32" y="346" class="t t-s">el artículo del dueño</text>
+  <rect x="20" y="374" width="150" height="56" rx="8" class="c-apl"/>
+  <text x="32" y="396" class="t t-s t-b">Proceso (fuera del bot)</text>
+  <text x="32" y="414" class="t t-s">política, sistema, aviso</text>
+  <g class="ln" style="stroke:var(--muted)">
+    <path d="M200 324L170 266"/><path d="M200 333H170"/><path d="M200 342L170 402"/>
+  </g>
+</svg></div><figcaption><b>El ciclo semanal de mejora de Pía.</b> Seis estaciones en círculo, en el sentido del reloj: medir (el tablero), detectar (las señales), revisar (la muestra etiquetada), priorizar (por volumen y por daño), cambiar y verificar. En la estación «cambiar», tres salidas con sus colores: un cambio de flujo o de comprensión (orquestación), un cambio de contenido (conocimiento) y un cambio de proceso que no es del bot (reglas). Todo cambio pasa por las pruebas y el despliegue del capítulo 15 antes de volver a medirse. En el centro, la pregunta que gobierna el ciclo: ¿bajó el recontacto del motivo que se tocó?</figcaption></figure><div class="prose"><p>Tres ejemplos de Servicios Ejemplo muestran las tres salidas:</p><ul><li><b>Cambio de flujo.</b> El detector marca muchas repeticiones en «cuánto debo» los días 1 de cada mes. La revisión muestra que los clientes escriben «la factura nueva» y Pía responde con la vieja, ya pagada. Se agrega un ejemplo al catálogo y una pregunta de aclaración en el flujo.</li><li><b>Cambio de contenido.</b> El recontacto por «recargo» es el doble que el de cualquier otro motivo. La respuesta de Pía explicaba el recargo con un artículo de hace un año. El dueño del tema lo actualiza y lo versiona (capítulo 7).</li><li><b>Cambio de proceso.</b> Muchas conversaciones de «no tengo internet» se abandonan durante una avería masiva: Pía hace bien su trabajo, pero el cliente quiere saber cuándo vuelve el servicio y nadie le avisa. La solución no está en el bot: operaciones empieza a publicar la hora estimada de reparación, y Pía la lee del monitoreo de la red.</li></ul><p>El tercer ejemplo es el más valioso y el que más se olvida. Un bot conversa con miles de clientes al día, y su registro es el mejor <b>sensor</b> que tiene la empresa de lo que confunde o molesta a sus clientes. Un equipo que solo arregla al bot desperdicia la mitad de lo que aprende.</p><p>Cada cambio se verifica igual que se detectó: con la misma métrica, del mismo motivo, antes y después. Si el cambio al artículo del recargo no bajó el recontacto por recargo en tres semanas, el problema estaba en otra parte y se vuelve a revisar. Cómo se prueba y se libera el cambio sin romper otra cosa es el tema del capítulo 15.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que arma su primer tablero de chatbot suele empezar con la contención como meta del trimestre, y suele descubrir el problema en la reunión de cierre: la contención subió diez puntos y las llamadas no bajaron. Al revisar una muestra encuentran que el bot había aprendido a «cerrar» conversaciones con un menú final sin salida humana. La corrección que funciona no es técnica: cambiar la meta a resolución correcta con recontacto, dejar la contención como dato informativo y revisar cada semana una muestra al azar además de la marcada.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>medir resolución correcta y recontacto, no solo contención, y convertir cada falla en un cambio.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué una contención alta no prueba que el bot resuelva?</summary><p>Porque cuenta toda conversación que terminó sin traspaso, y ahí entran los abandonos, los escapes a otro canal y las rendiciones. Esa falsa contención solo se ve fuera de la conversación: en el recontacto, en el escape y en la revisión de muestras.</p></details><details><summary>Pía tuvo 6.500 conversaciones por «cuánto debo» y las llamadas por ese motivo bajaron en 3.300 frente a la línea base. ¿Qué pasó con las otras 3.200?</summary><p>Son demanda inducida: clientes que le escribieron a Pía pero que sin el bot no habrían llamado. Tienen valor para el cliente, pero no desvían contactos del canal caro.</p></details><details><summary>¿Por qué el CSAT de un bot tiende a verse mejor de lo que es?</summary><p>Porque solo lo responden quienes llegan al cierre (los que abandonaron nunca ven la pregunta), responden más los extremos y la tasa de respuesta es baja. Se lee con su tasa de respuesta y por segmentos.</p></details><details><summary>¿Qué dos piezas de la plataforma hacen falta para medir el recontacto a siete días?</summary><p>Una identidad del cliente que lo reconozca en todos los canales y una sola lista de motivos que usen el bot, el centro de llamadas y la mesa de ayuda.</p></details><details><summary>¿Por qué la resolución correcta tiene un máximo al mover el umbral de escalamiento, mientras la contención solo sube?</summary><p>Con un umbral bajo, el bot se queda con conversaciones que no sabe resolver; con uno alto, pasa a las personas casos que sí resolvía y llena la cola, y la espera hace que algunos se vayan. La contención siempre sube al escalar menos, pero la resolución cae en los dos extremos.</p></details><details><summary>El recontacto por «sin servicio» sube durante las averías masivas aunque Pía responda bien. ¿Qué tipo de cambio corresponde?</summary><p>Un cambio de proceso, fuera del bot: publicar la hora estimada de reparación desde operaciones para que Pía la lea del monitoreo y la comunique.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es el método de diferencias en diferencias y por qué sirve para medir el efecto de un cambio cuando no se puede asignar al azar quién lo recibe?<small>Pista: busca «difference in differences» y «tendencias paralelas».</small></li><li>¿Qué es el intervalo de Wilson y por qué se prefiere a la aproximación normal cuando hay pocas respuestas o porcentajes cercanos a 0 o a 100?<small>Pista: busca «Wilson score interval».</small></li><li>¿Qué es el coeficiente kappa de Cohen y por qué no basta con el porcentaje de coincidencia entre dos etiquetadores?<small>Pista: busca «acuerdo entre evaluadores kappa».</small></li><li>¿Qué es el CES (<i>Customer Effort Score</i>) y en qué se diferencia del CSAT?<small>Pista: busca «Customer Effort Score».</small></li><li>¿Qué es el muestreo estratificado y cómo se reparte el tamaño de la muestra entre estratos de distinto tamaño?<small>Pista: busca «muestreo estratificado asignación proporcional».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://en.wikipedia.org/wiki/Participation_bias" target="_blank" rel="noopener">Participation bias (Wikipedia) <small>por qué los que responden una encuesta no se parecen a los que no responden</small></a><a class="vid" href="https://www.cnbc.com/2024/06/17/mcdonalds-to-end-ibm-ai-drive-thru-test.html" target="_blank" rel="noopener">McDonald's to end IBM AI drive-thru test (CNBC) <small>el fin de la prueba de pedidos por voz</small></a><a class="vid" href="https://en.wikipedia.org/wiki/Survivorship_bias" target="_blank" rel="noopener">Survivorship bias (Wikipedia) <small>el sesgo de medir solo a quienes llegaron al final</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const N=10000;
+  const cs=[],w=[];let S=0;
+  for(let i=0;i<20;i++){const c=0.025+0.05*i;cs.push(c);const v=0.3+3*c*c;w.push(v);S+=v;}
+  for(let i=0;i<20;i++)w[i]/=S;
+  const pBot=c=>0.12+0.8*Math.pow(c,1.6);
+  const n0=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const pct=v=>(Math.round(v*1000)/10).toString().replace('.',',')+' %';
+  function calc(t,K){
+    let cont=0,botres=0;
+    for(let i=0;i<20;i++){if(cs[i]>=t){cont+=N*w[i];botres+=N*w[i]*pBot(cs[i]);}}
+    const falsa=cont-botres,E=N-cont;
+    const exc=E>0?Math.max(0,(E-K)/E):0;
+    const humres=E*0.9*(1-exc*0.5),humun=E-humres;
+    const res=(botres+humres)/N,rec=(falsa*0.55+humun*0.6)/N;
+    const resp=botres*0.09+falsa*0.02+humres*0.12+humun*0.08;
+    const pos=botres*0.09*0.92+falsa*0.02*0.15+humres*0.12*0.85+humun*0.08*0.2;
+    const real=(botres*0.92+falsa*0.15+humres*0.85+humun*0.2)/N;
+    return {cont:cont/N,falsa:falsa/N,res,rec,E,exc,csat:pos/resp,resp,real};
+  }
+  const X0=50,X1=585,Y0=230,Y1=14;
+  const X=t=>X0+(t-0.1)/(0.85)*(X1-X0), Y=v=>Y0-v*(Y0-Y1);
+  function dibujar(t,K){
+    const ts=[];for(let v=10;v<=95;v+=5)ts.push(v/100);
+    const rs=ts.map(x=>calc(x,K));
+    let h='';
+    for(let v=0;v<=100;v+=25){h+='<line x1="'+X0+'" x2="'+X1+'" y1="'+Y(v/100)+'" y2="'+Y(v/100)+'" style="stroke:var(--grid)"/><text x="'+(X0-6)+'" y="'+(Y(v/100)+4)+'" text-anchor="end">'+v+' %</text>';}
+    for(let v=0.1;v<=0.951;v+=0.15){h+='<text x="'+X(v)+'" y="'+(Y0+16)+'" text-anchor="middle">'+v.toFixed(2).replace('.',',')+'</text>';}
+    h+='<text x="'+((X0+X1)/2)+'" y="'+(Y0+34)+'" text-anchor="middle">umbral de escalamiento →  Pía escala más</text>';
+    const linea=(k,col,dash)=>'<polyline fill="none" style="stroke:var('+col+');stroke-width:2.4'+(dash?';stroke-dasharray:5 4':'')+'" points="'+rs.map((r,i)=>X(ts[i]).toFixed(1)+','+Y(r[k]).toFixed(1)).join(' ')+'"/>';
+    h+=linea('cont','--accent')+linea('falsa','--warm',true)+linea('res','--good')+linea('rec','--ink',true);
+    let best=0;rs.forEach((r,i)=>{if(r.res>rs[best].res)best=i;});
+    h+='<circle cx="'+X(ts[best])+'" cy="'+Y(rs[best].res)+'" r="5" style="fill:var(--good)"/>';
+    h+='<line x1="'+X(t)+'" x2="'+X(t)+'" y1="'+Y1+'" y2="'+Y0+'" style="stroke:var(--ink);stroke-width:1.5;stroke-dasharray:2 3"/>';
+    q('#c141-svg').innerHTML=h;
+    return ts[best];
+  }
+  function upd(){
+    const t=+q('#c141-t').value/100,K=+q('#c141-k').value;
+    q('#c141-t-o').textContent=t.toFixed(2).replace('.',',');
+    q('#c141-k-o').textContent=n0(K);
+    const r=calc(t,K),best=dibujar(t,K),rb=calc(best,K);
+    q('#c141-k1').textContent=pct(r.cont);
+    q('#c141-k2').textContent=pct(r.falsa);
+    q('#c141-k3').textContent=pct(r.res);
+    q('#c141-k4').textContent=pct(r.rec);
+    q('#c141-k5').textContent=pct(r.csat);
+    q('#c141-k5s').textContent='real: '+pct(r.real);
+    let msg='<span>Traspasos este mes: <b>'+n0(r.E)+'</b> para una capacidad de '+n0(K)+(r.exc>0?' · <span class="warn">'+n0(r.E-K)+' esperan de más y la mitad se va</span>':' · la cola alcanza')+'.</span>';
+    msg+='<span>Encuestas respondidas: <b>'+n0(r.resp)+'</b> de '+n0(N)+'. El CSAT medido ('+pct(r.csat)+') supera al real ('+pct(r.real)+') porque casi nadie de la falsa contención contesta.</span>';
+    const d=Math.abs(t-best)<0.001;
+    if(d)msg+='<span class="ok">Este umbral da la mayor resolución correcta con esta capacidad: '+pct(r.res)+'.</span>';
+    else if(t<best)msg+='<span class="warn">Pía se queda con casos que no sabe resolver: la contención luce, pero la resolución correcta queda '+pct(rb.res-r.res).replace(' %',' puntos')+' por debajo del mejor umbral ('+best.toFixed(2).replace('.',',')+').</span>';
+    else msg+='<span class="warn">Pía pasa a las personas casos que sí resolvía'+(r.exc>0?' y la cola se desborda':'')+': la resolución correcta queda '+pct(rb.res-r.res).replace(' %',' puntos')+' por debajo del mejor umbral ('+best.toFixed(2).replace('.',',')+').</span>';
+    q('#c141-out').innerHTML=msg;
+  }
+  ['#c141-t','#c141-k'].forEach(s=>q(s).addEventListener('input',upd));
+  upd();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const C=[
+    {t:'Saldo y pago',x:'«cuánto debo» → saldo → «sí» → enlace → pago registrado',ab:0,rep:1,fb:0,fr:0,per:null,cs:'pos',rc:0,f:0,n:'Resuelta: el sistema confirma el pago.'},
+    {t:'¡¡GRACIAS!!',x:'pago confirmado. Laura: «¡¡GRACIAS!! Eso era todo»',ab:0,rep:1,fb:0,fr:1,per:null,cs:null,rc:0,f:0,n:'Resuelta. Las mayúsculas eran de alegría: falsa alarma de la frustración.'},
+    {t:'Se fue en la verificación',x:'Pía: «Te envié un código por SMS, escríbelo aquí». (silencio)',ab:1,rep:1,fb:0,fr:0,per:null,cs:null,rc:0,f:1,n:'Falla: el SMS nunca llegó. El abandono la atrapa.'},
+    {t:'La factura vieja',x:'«cuánto debo» ×3; Pía responde con la factura ya pagada',ab:0,rep:3,fb:0,fr:0,per:null,cs:null,rc:1,f:1,n:'Falla de flujo: la repetición la atrapa.'},
+    {t:'Transferencia',x:'«quiero pagar con transferencia» → «no te entendí» → opciones → paga',ab:0,rep:1,fb:1,fr:0,per:null,cs:'pos',rc:0,f:0,n:'Resuelta tras un respaldo: el respaldo progresivo funcionó.'},
+    {t:'OTRA VEZ LO MISMO',x:'dos «no te entendí», «NO ENTIENDES», pide persona en el turno 8',ab:0,rep:2,fb:2,fr:1,per:8,cs:'neg',rc:0,f:1,n:'Falla: la salida humana llegó tarde.'},
+    {t:'El recargo mal explicado',x:'«¿por qué subió?» → respuesta con un artículo viejo → «ok»',ab:0,rep:1,fb:0,fr:0,per:null,cs:null,rc:1,f:1,n:'Falla silenciosa: dijo «ok» y llamó al día siguiente. Solo el recontacto la ve.'},
+    {t:'¿Algo más?',x:'saldo consultado. Pía: «¿Algo más?» (sin respuesta)',ab:1,rep:1,fb:0,fr:0,per:null,cs:null,rc:0,f:0,n:'Resuelta: no contestar «¿algo más?» no es abandono. Falsa alarma.'},
+    {t:'Reclamo directo',x:'«quiero reclamar un cobro» → pide persona en el turno 2 → Carla',ab:0,rep:1,fb:0,fr:0,per:2,cs:'pos',rc:0,f:0,n:'Bien: el reclamo va a una persona desde el inicio, como manda el capítulo 9.'},
+    {t:'Avería en la zona',x:'«no tengo internet» → avería masiva → «¿y cuándo vuelve?» ×2 (silencio)',ab:1,rep:2,fb:0,fr:0,per:null,cs:null,rc:1,f:1,n:'Falla de proceso: nadie publica la hora estimada de reparación.'},
+    {t:'Sin descuento',x:'«quiero un descuento» → la regla no aplica → CSAT negativo',ab:0,rep:1,fb:0,fr:0,per:null,cs:'neg',rc:0,f:0,n:'Bien resuelta: el CSAT es malo por la política, no por el bot.'},
+    {t:'Cuotas',x:'«quiero pagar en cuotas» → «no te entendí» ×2 → opciones sin persona (silencio)',ab:1,rep:1,fb:2,fr:0,per:null,cs:null,rc:0,f:1,n:'Falla: rendición sin salida humana.'}
+  ];
+  const FALLAS=C.filter(c=>c.f).length;
+  let rev=false;
+  function senales(c){
+    const s=[],rep=+q('#c142-rep').value,fb=+q('#c142-fb').value,tt=+q('#c142-tt').value;
+    if(q('#c142-ab').checked&&c.ab)s.push('abandono');
+    if(rep<5&&c.rep>=rep)s.push('repetición');
+    if(fb<4&&c.fb>=fb)s.push('respaldo');
+    if(q('#c142-fr').checked&&c.fr)s.push('frustración');
+    if(tt<11&&c.per!==null&&c.per>=tt)s.push('escalamiento tardío');
+    if(q('#c142-cs').checked&&c.cs==='neg')s.push('CSAT negativo');
+    if(q('#c142-rc').checked&&c.rc)s.push('recontacto');
+    return s;
+  }
+  function upd(){
+    const rep=+q('#c142-rep').value,fb=+q('#c142-fb').value,tt=+q('#c142-tt').value;
+    q('#c142-rep-o').textContent=rep<5?rep+' veces':'apagada';
+    q('#c142-fb-o').textContent=fb<4?fb+' veces':'apagada';
+    q('#c142-tt-o').textContent=tt<11?tt:'apagada';
+    let marc=0,ok=0,fa=0;const esc=[];
+    q('#c142-lista').innerHTML=C.map((c,i)=>{
+      const s=senales(c),m=s.length>0;
+      if(m){marc++;if(c.f)ok++;else fa++;}else if(c.f)esc.push(c.t);
+      return '<div class="c142-c'+(m?' marcada':'')+'"><h4>'+(i+1)+'. '+c.t+'</h4><q>'+c.x+'</q>'+
+        '<div class="c142-chips">'+s.map(x=>'<em>'+x+'</em>').join('')+'</div>'+
+        (rev?'<span class="c142-v '+(c.f?'f':'o')+'">'+(c.f?'Falla real':'Bien')+' · '+c.n+'</span>':'')+'</div>';
+    }).join('');
+    let h='<span>El detector marcó <b>'+marc+'</b> de 12 conversaciones para la cola de revisión.</span>';
+    if(rev){
+      const prec=marc?Math.round(ok/marc*100):0,cob=Math.round(ok/FALLAS*100);
+      h+='<span>Fallas atrapadas: <b>'+ok+' de '+FALLAS+'</b> (cobertura '+cob+' %) · falsas alarmas: <b>'+fa+'</b> (precisión '+prec+' %).</span>';
+      h+=esc.length?'<span class="warn">Se escaparon: '+esc.join(', ')+'.</span>':'<span class="ok">No se escapó ninguna falla.</span>';
+      if(fa>=3)h+='<span class="warn">Demasiadas falsas alarmas: la cola de revisión se llena de conversaciones que estaban bien.</span>';
+      if(!q('#c142-rc').checked)h+='<span>Prueba activar el recontacto: atrapa la falla que no deja ninguna huella dentro de la conversación.</span>';
+    }else h+='<span>Ajusta las señales y toca «Revelar la revisión manual» para ver qué pasó de verdad en cada una.</span>';
+    q('#c142-out').innerHTML=h;
+  }
+  ['#c142-ab','#c142-fr','#c142-cs','#c142-rc','#c142-rep','#c142-fb','#c142-tt'].forEach(s=>q(s).addEventListener('input',upd));
+  q('#c142-rev').addEventListener('click',e=>{rev=!rev;e.currentTarget.setAttribute('aria-pressed',rev);e.currentTarget.textContent=rev?'Ocultar la revisión manual':'Revelar la revisión manual';upd();});
+  upd();
+})();
+</script>
+</body>
+</html>

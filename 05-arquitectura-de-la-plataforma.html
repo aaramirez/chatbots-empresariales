@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capas y patrón híbrido · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="arquitectura-de-la-plataforma">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 05 DE 17</span><h1>Las capas de la plataforma y el patrón híbrido</h1><p class="lede">Detrás de «Tienes una factura de US$ 25,00» hay seis piezas que trabajan en orden, cada una con un solo oficio. Este capítulo las separa, pone un solo cerebro detrás de todos los canales y reparte el trabajo entre reglas y modelo de lenguaje.</p></header>
+<section><div class="prose"><p>Hasta aquí diseñaste a Pía desde afuera: qué entiende (capítulo 2), cómo habla (capítulo 3) y qué flujos sigue (capítulo 4). Ahora toca abrir la caja. Cuando Laura escribe «Hola, ¿cuánto debo?» por WhatsApp, su mensaje recorre varias piezas de software antes de que vuelva la respuesta con el monto de la factura F-2207. Este capítulo dibuja esas piezas, explica por qué se separan y responde la pregunta que más se discute en los equipos: <b>qué decide el modelo de lenguaje y qué no</b>.</p></div></section>
+<section><h2>Las capas: del canal a los sistemas de la empresa</h2><div class="prose"><p>Un chatbot de empresa no es un programa: es una <b>plataforma conversacional</b> (<i>conversational platform</i>), un conjunto de componentes que se pasan el mensaje en orden, cada uno con un oficio. A esos componentes se les llama <b>capas</b> (<i>layers</i>) porque cada una solo habla con la de arriba y la de abajo.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en la cocina de un restaurante. El mesero toma el pedido en el idioma del cliente y lo pasa a una comanda con un formato que entiende toda la cocina. El jefe de cocina lee la comanda y decide el orden: primero la entrada, después el plato fuerte. Los cocineros siguen las recetas de la casa, que nadie improvisa. Y cuando falta un ingrediente, alguien llama al proveedor. Si el mesero cocinara o el cocinero atendiera las mesas, el restaurante funcionaría el primer día y sería un caos en el segundo. En el bot pasa lo mismo.</p></div><div class="prose"><p>Estas son las capas de Pía, de afuera hacia adentro:</p><ol class="steps"><li><span><b>Canal</b> (<i>channel</i>). Recibe y envía mensajes en el formato propio de cada plataforma: WhatsApp, Telegram, Instagram o el widget de <code>www.ejemplo.com</code>. El mensaje llega como un <b>webhook</b> (<i>webhook</i>, una llamada HTTP que el canal le hace al servidor del bot cada vez que hay un evento). El <b>adaptador</b> (<i>adapter</i>) del canal comprueba que la llamada venga de verdad del canal, responde enseguida «recibido» y traduce el mensaje a un formato interno.</span></li><li><span><b>Comprensión</b> (<i>understanding</i>). Decide qué quiere la persona: la intención, las entidades y la confianza. Aquí trabajan el NLU o el modelo de lenguaje del capítulo 2.</span></li><li><span><b>Orquestación</b> (<i>orchestration</i>). El <b>gestor de diálogo</b> (<i>dialogue manager</i>) mira el estado de la conversación y decide el siguiente paso: verificar, consultar, preguntar o pasar a una persona. Su funcionamiento por dentro es el capítulo 6.</span></li><li><span><b>Lógica de negocio</b> (<i>business logic</i>). Las reglas de la empresa escritas en código: quién puede ver un saldo, cuándo se reconecta un servicio, qué descuento aplica. No dependen del canal ni del modelo.</span></li><li><span><b>Integración</b> (<i>integration</i>). Los conectores con los sistemas: tiempos de espera, reintentos, credenciales y traducción de formatos.</span></li><li><span><b>Sistemas de la empresa</b> (<i>systems of record</i>). Facturación y cobranza, CRM, mesa de ayuda, pasarela de pagos. El bot no es dueño de ningún dato: los consulta y les pide acciones.</span></li></ol><p>Debajo de todas corre una pieza transversal: la <b>persistencia</b> (<i>persistence</i>), donde se guardan la sesión, el historial y la traza de cada decisión, y que también se ve en el capítulo 6.</p></div><figure class="fig fig-capas" id="05-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 456" style="min-width:720px" role="img" aria-label="Las seis capas de la plataforma de Pía, del canal a los sistemas de la empresa, con lo que hace cada una con el mensaje cuánto debo y el dato que le entrega a la siguiente; a la derecha, la persistencia que usan todas">
+  <defs>
+    <marker id="d05a-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <text x="14" y="22" class="t t-xs t-b t-m">CAPA</text>
+  <text x="206" y="22" class="t t-xs t-b t-m">QUÉ HACE CON «HOLA, ¿CUÁNTO DEBO?»</text>
+  <text x="594" y="22" class="t t-xs t-b t-m">ENTREGA A LA SIGUIENTE</text>
+
+  <g class="t">
+    <rect x="10" y="34" width="180" height="54" rx="8" class="c-fis"/><text x="22" y="58" class="t-b k-fis">1 · Canal</text><text x="22" y="76" class="t-s t-m">adaptador de WhatsApp</text>
+    <text x="206" y="57" class="t-s">Recibe el webhook, comprueba que venga de WhatsApp</text>
+    <text x="206" y="74" class="t-s">y responde «recibido» al canal enseguida.</text>
+    <text x="594" y="57" class="t-s t-b">mensaje canónico</text>
+    <text x="594" y="74" class="t-s t-mono">{cliente:1001, texto:…}</text>
+
+    <rect x="10" y="96" width="180" height="54" rx="8" class="c-tra"/><text x="22" y="120" class="t-b k-tra">2 · Comprensión</text><text x="22" y="138" class="t-s t-m">NLU o modelo de lenguaje</text>
+    <text x="206" y="119" class="t-s">Entiende el pedido: qué quiere y con qué datos.</text>
+    <text x="206" y="136" class="t-s">No decide nada: solo etiqueta.</text>
+    <text x="594" y="119" class="t-s t-b">intención y confianza</text>
+    <text x="594" y="136" class="t-s t-mono">consultar_deuda · 0,93</text>
+
+    <rect x="10" y="158" width="180" height="54" rx="8" class="c-red"/><text x="22" y="182" class="t-b k-red">3 · Orquestación</text><text x="22" y="200" class="t-s t-m">gestor de diálogo</text>
+    <text x="206" y="181" class="t-s">Lee la sesión: identidad vigente, ningún flujo abierto.</text>
+    <text x="206" y="198" class="t-s">Elige el siguiente paso del flujo.</text>
+    <text x="594" y="181" class="t-s t-b">acción</text>
+    <text x="594" y="198" class="t-s t-mono">consultar_saldo(1001)</text>
+
+    <rect x="10" y="220" width="180" height="54" rx="8" class="c-apl"/><text x="22" y="244" class="t-b k-apl">4 · Lógica de negocio</text><text x="22" y="262" class="t-s t-m">reglas en código</text>
+    <text x="206" y="243" class="t-s">Regla: ver un saldo exige identidad verificada hace</text>
+    <text x="206" y="260" class="t-s">menos de 30 minutos. Se cumple.</text>
+    <text x="594" y="243" class="t-s t-b">pedido validado</text>
+    <text x="594" y="260" class="t-s t-mono">saldo de la cuenta 1001</text>
+
+    <rect x="10" y="282" width="180" height="54" rx="8" class="d-sis"/><text x="22" y="306" class="t-b k-sis">5 · Integración</text><text x="22" y="324" class="t-s t-m">conectores</text>
+    <text x="206" y="305" class="t-s">Llama a la API de facturación con un tiempo de</text>
+    <text x="206" y="322" class="t-s">espera de 2 s, con la credencial guardada aparte.</text>
+    <text x="594" y="305" class="t-s t-b">consulta HTTP</text>
+    <text x="594" y="322" class="t-s t-mono">GET /cuentas/1001/saldo</text>
+
+    <rect x="10" y="344" width="180" height="54" rx="8" class="caja" style="stroke-width:1.8"/><text x="22" y="368" class="t-b">6 · Sistemas</text><text x="22" y="386" class="t-s t-m">facturación y cobranza</text>
+    <text x="206" y="367" class="t-s">Responde con el dato oficial. El bot no guarda</text>
+    <text x="206" y="384" class="t-s">una copia del saldo: lo vuelve a pedir cada vez.</text>
+    <text x="594" y="367" class="t-s t-b">dato oficial</text>
+    <text x="594" y="384" class="t-s t-mono">F-2207 · US$ 25,00 · 05/12</text>
+  </g>
+
+  
+  <path d="M582 44V392" class="ln" marker-end="url(#d05a-m)"/>
+
+  
+  <rect x="820" y="34" width="70" height="364" rx="10" class="d-inet" style="stroke-dasharray:6 4"/>
+  <text transform="translate(851 216) rotate(-90)" class="t t-s t-b k-inet" text-anchor="middle">PERSISTENCIA</text>
+  <text transform="translate(869 216) rotate(-90)" class="t t-s t-m" text-anchor="middle">sesión · historial · traza</text>
+
+  <text x="10" y="430" class="t t-s t-m">La respuesta vuelve por el mismo camino, de abajo hacia arriba: las reglas arman «Debes US$ 25,00»</text>
+  <text x="10" y="446" class="t t-s t-m">y el adaptador la convierte en un mensaje con botones de WhatsApp.</text>
+</svg></div><figcaption><b>Las capas de Pía y lo que pasa entre ellas.</b> Cada fila es una capa, del canal (arriba) a los sistemas de la empresa (abajo), con el color que lleva en todo el curso. En el centro, qué hace cada capa con el mensaje «¿cuánto debo?»; a la derecha, qué le entrega a la capa siguiente. Fíjate en que entre capas no viaja texto suelto, sino datos con forma: un mensaje canónico, una intención con su confianza, una acción, una consulta. La franja de la derecha es la persistencia, que todas usan.</figcaption></figure><div class="prose"><p>La regla que justifica todo el esquema es el <b>desacoplamiento</b> (<i>decoupling</i>): cada capa se puede cambiar sin tocar las demás. Si mañana Servicios Ejemplo abre Instagram, solo se escribe un adaptador nuevo. Si cambia el proveedor del modelo de lenguaje, solo cambia la comprensión. Si cobranza cambia la regla de reconexión, solo cambia la lógica de negocio.</p><p>Lo que viaja entre el canal y el resto es un <b>mensaje canónico</b> (<i>canonical message</i>): un formato interno único, igual para todos los canales. El de Laura se ve así:</p><div class="code-copia"><pre><code>{
+  "conversacion": "wa:15550001001",
+  "canal": "whatsapp",
+  "cliente": "1001",
+  "identidad": {"verificada": true, "metodo": "otp_sms", "hace_min": 4},
+  "tipo": "texto",
+  "texto": "Hola, ¿cuánto debo?",
+  "recibido": "2026-11-24T10:15:03Z"
+}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>Nada de ese formato menciona botones de WhatsApp ni comandos de Telegram. Esa es la gracia: la orquestación, las reglas y las integraciones no saben por dónde escribió Laura, y no les hace falta.</p></div></section>
+<section><h2>La arquitectura de referencia multicanal: un adaptador por canal y un solo cerebro</h2><div class="prose"><p>Con las capas en su lugar, sumar canales es sumar adaptadores. La <b>arquitectura de referencia multicanal</b> (<i>multichannel reference architecture</i>) pone un adaptador por canal a la entrada, un solo <b>cerebro conversacional</b> (comprensión, orquestación y lógica de negocio) en el medio y un <b>renderizador</b> (<i>renderer</i>) a la salida, que traduce la respuesta neutra al formato de cada canal.</p></div><figure class="fig fig-arquitectura" id="05-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" style="min-width:760px" role="img" aria-label="Arquitectura multicanal de Pía: cuatro canales llegan cada uno a su adaptador, los adaptadores dejan el mensaje canónico en una cola, un solo cerebro con comprensión, orquestación y lógica de negocio lo procesa, la integración habla con facturación, CRM, mesa de ayuda y pagos, y la respuesta neutra se vuelve botones, teclado en línea o lista según el canal">
+  <defs>
+    <marker id="d05b-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d05b-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d05b-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+  </defs>
+
+  
+  <rect x="6" y="6" width="186" height="300" rx="12" class="d-casa" style="opacity:.55"/>
+  <text x="18" y="28" class="t t-xs t-b k-casa">CLIENTES Y CANALES</text>
+  <rect x="200" y="6" width="540" height="300" rx="12" class="d-oper" style="opacity:.35"/>
+  <text x="212" y="28" class="t t-xs t-b k-oper">PLATAFORMA DE PÍA</text>
+  <rect x="748" y="6" width="206" height="300" rx="12" class="d-sis" style="opacity:.45"/>
+  <text x="760" y="28" class="t t-xs t-b k-sis">SISTEMAS DE LA EMPRESA</text>
+
+  
+  <g class="t t-s">
+    <rect x="18" y="46" width="160" height="44" rx="8" class="caja"/><text x="98" y="73" text-anchor="middle" class="t-b">WhatsApp</text>
+    <rect x="18" y="106" width="160" height="44" rx="8" class="caja"/><text x="98" y="133" text-anchor="middle" class="t-b">Telegram</text>
+    <rect x="18" y="166" width="160" height="44" rx="8" class="caja"/><text x="98" y="193" text-anchor="middle" class="t-b">Instagram</text>
+    <rect x="18" y="226" width="160" height="44" rx="8" class="caja"/><text x="98" y="246" text-anchor="middle" class="t-b">Widget web</text><text x="98" y="262" text-anchor="middle" class="t-m">www.ejemplo.com</text>
+  </g>
+
+  
+  <g class="t t-s" text-anchor="middle">
+    <rect x="212" y="46" width="106" height="44" rx="8" class="c-fis"/><text x="265" y="65" class="t-b k-fis">Adaptador</text><text x="265" y="80">WhatsApp</text>
+    <rect x="212" y="106" width="106" height="44" rx="8" class="c-fis"/><text x="265" y="125" class="t-b k-fis">Adaptador</text><text x="265" y="140">Telegram</text>
+    <rect x="212" y="166" width="106" height="44" rx="8" class="c-fis"/><text x="265" y="185" class="t-b k-fis">Adaptador</text><text x="265" y="200">Instagram</text>
+    <rect x="212" y="226" width="106" height="44" rx="8" class="c-fis"/><text x="265" y="245" class="t-b k-fis">Adaptador</text><text x="265" y="260">web</text>
+  </g>
+  <g>
+    <line x1="178" y1="68" x2="210" y2="68" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05b-f)"/>
+    <line x1="178" y1="128" x2="210" y2="128" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05b-f)"/>
+    <line x1="178" y1="188" x2="210" y2="188" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05b-f)"/>
+    <line x1="178" y1="248" x2="210" y2="248" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05b-f)"/>
+  </g>
+
+  
+  <rect x="340" y="110" width="56" height="96" rx="8" class="caja"/>
+  <g class="t t-s" text-anchor="middle"><text x="368" y="152" class="t-b">Cola</text><text x="368" y="168" class="t-m">de</text><text x="368" y="182" class="t-m">entrada</text></g>
+  <path d="M318 68C330 68 330 130 338 130" class="ln" marker-end="url(#d05b-m)"/>
+  <path d="M318 128C328 128 328 148 338 148" class="ln" marker-end="url(#d05b-m)"/>
+  <path d="M318 188C328 188 328 168 338 168" class="ln" marker-end="url(#d05b-m)"/>
+  <path d="M318 248C330 248 330 186 338 186" class="ln" marker-end="url(#d05b-m)"/>
+  <text x="212" y="296" class="t t-s t-m">verifica la firma, responde «recibido» y traduce</text>
+
+  
+  <rect x="414" y="46" width="188" height="224" rx="12" class="c-red" style="stroke-width:2"/>
+  <text x="508" y="66" class="t t-xs t-b k-red" text-anchor="middle">UN SOLO CEREBRO</text>
+  <g class="t t-s" text-anchor="middle">
+    <rect x="428" y="78" width="160" height="50" rx="8" class="c-tra"/><text x="508" y="99" class="t-b k-tra">Comprensión</text><text x="508" y="116">intención y datos</text>
+    <rect x="428" y="138" width="160" height="50" rx="8" class="c-red"/><text x="508" y="159" class="t-b k-red">Orquestación</text><text x="508" y="176">qué paso sigue</text>
+    <rect x="428" y="198" width="160" height="56" rx="8" class="c-apl"/><text x="508" y="220" class="t-b k-apl">Lógica de negocio</text><text x="508" y="237">reglas de la empresa</text>
+  </g>
+  <line x1="396" y1="158" x2="412" y2="158" class="ln" marker-end="url(#d05b-m)"/>
+
+  
+  <rect x="620" y="110" width="108" height="96" rx="8" class="d-sis"/>
+  <g class="t t-s" text-anchor="middle"><text x="674" y="146" class="t-b k-sis">Integración</text><text x="674" y="162">tiempos de espera</text><text x="674" y="177">y reintentos</text></g>
+  <line x1="602" y1="158" x2="618" y2="158" class="ln" marker-end="url(#d05b-m)"/>
+
+  
+  <g class="t t-s">
+    <rect x="762" y="46" width="180" height="44" rx="8" class="caja"/><text x="852" y="73" text-anchor="middle" class="t-b">Facturación y cobranza</text>
+    <rect x="762" y="106" width="180" height="44" rx="8" class="caja"/><text x="852" y="133" text-anchor="middle" class="t-b">CRM</text>
+    <rect x="762" y="166" width="180" height="44" rx="8" class="caja"/><text x="852" y="193" text-anchor="middle" class="t-b">Mesa de ayuda</text>
+    <rect x="762" y="226" width="180" height="44" rx="8" class="caja"/><text x="852" y="253" text-anchor="middle" class="t-b">Pasarela de pagos</text>
+  </g>
+  <g>
+    <path d="M728 140C744 140 744 68 760 68" class="ln" style="stroke:var(--d-sis);stroke-width:1.8" marker-end="url(#d05b-s)"/>
+    <path d="M728 150C744 150 744 128 760 128" class="ln" style="stroke:var(--d-sis);stroke-width:1.8" marker-end="url(#d05b-s)"/>
+    <path d="M728 166C744 166 744 188 760 188" class="ln" style="stroke:var(--d-sis);stroke-width:1.8" marker-end="url(#d05b-s)"/>
+    <path d="M728 176C744 176 744 248 760 248" class="ln" style="stroke:var(--d-sis);stroke-width:1.8" marker-end="url(#d05b-s)"/>
+  </g>
+
+  
+  <text x="14" y="338" class="t t-xs t-b t-m">LA SALIDA: UNA RESPUESTA NEUTRA, PRESENTADA SEGÚN EL CANAL</text>
+  <path d="M508 270V352" class="ln" marker-end="url(#d05b-m)"/>
+  <rect x="384" y="354" width="248" height="46" rx="8" class="caja" style="stroke-width:1.8"/>
+  <g class="t t-s" text-anchor="middle"><text x="508" y="374" class="t-b">Respuesta neutra</text><text x="508" y="390" class="t-mono">texto + 3 opciones</text></g>
+  <g class="t t-s">
+    <rect x="14" y="412" width="290" height="46" rx="8" class="c-fis"/><text x="26" y="431" class="t-b k-fis">WhatsApp</text><text x="26" y="448">tres botones de respuesta</text>
+    <rect x="335" y="412" width="290" height="46" rx="8" class="c-fis"/><text x="347" y="431" class="t-b k-fis">Telegram</text><text x="347" y="448">un teclado en línea</text>
+    <rect x="656" y="412" width="290" height="46" rx="8" class="c-fis"/><text x="668" y="431" class="t-b k-fis">Canal que solo admite texto</text><text x="668" y="448">una lista: «responde 1, 2 o 3»</text>
+  </g>
+  <path d="M440 400C440 406 160 404 160 410" class="ln s-fis" style="stroke-width:1.6" marker-end="url(#d05b-f)"/>
+  <line x1="480" y1="400" x2="480" y2="410" class="ln s-fis" style="stroke-width:1.6" marker-end="url(#d05b-f)"/>
+  <path d="M576 400C576 406 800 404 800 410" class="ln s-fis" style="stroke-width:1.6" marker-end="url(#d05b-f)"/>
+  <text x="646" y="384" class="t t-s t-m">el renderizador traduce</text>
+</svg></div><figcaption><b>Un adaptador por canal y un solo cerebro.</b> A la izquierda, en la franja del cliente, cuatro canales: WhatsApp, Telegram, Instagram y el widget web. Cada uno llega a su adaptador, que verifica la firma, responde «recibido» y deja el mensaje canónico en una cola. En el centro, el único cerebro de Pía. A la derecha, en la franja de sistemas, las integraciones con facturación, CRM, mesa de ayuda y pagos. Abajo, la respuesta neutra («texto + tres opciones») sale por el renderizador y se vuelve botones en WhatsApp, un teclado en línea en Telegram o una lista numerada en un canal que solo admite texto.</figcaption></figure><div class="prose"><p>Tres decisiones de esta arquitectura evitan problemas que aparecen el primer mes:</p><ul><li><b>Responder rápido y trabajar después.</b> Los canales esperan que el servidor confirme el webhook en pocos segundos; si no, lo reintentan y el mismo mensaje llega dos veces. Por eso el adaptador confirma enseguida y deja el mensaje en una <b>cola</b> (<i>queue</i>), y el cerebro lo procesa a su ritmo. Que un mensaje repetido no avance el flujo dos veces es un tema de idempotencia, que se trata a fondo en <a href="https://aaramirez.github.io/backend/temario.html" target="_blank" rel="noopener">Backend y APIs</a>.</li><li><b>Respuesta neutra, presentación por canal.</b> El cerebro responde «texto + opciones», no «tres botones de WhatsApp». Así, cuando un canal admite menos botones que otro, el renderizador se adapta y el flujo no cambia. Los límites de cada canal son el capítulo 8.</li><li><b>Una identidad del cliente, no una por canal.</b> El adaptador guarda el número de WhatsApp o el usuario de Telegram, pero el cerebro trabaja con el cliente 1001. Así la conversación puede seguir de un canal a otro.</li></ul></div><div class="lab" id="05-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Sigue un mensaje de WhatsApp capa por capa</h3></div><p class="hint">Elige un escenario y avanza con «Siguiente» (o «Reproducir»). En cada paso se enciende la capa que trabaja, ves el dato que recibe y el que entrega, y la barra de abajo suma el tiempo de cada capa. Compara «Normal» con «Facturación lenta» (el tiempo de espera vence y entra el respaldo), con «Sin verificar» (la orquestación cambia el camino) y con «Mismo pedido por Telegram» (solo cambian el primer y el último paso).</p><style>
+[id="05-lab-1"] .c51-grid{display:grid;grid-template-columns:minmax(0,13em) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:640px){[id="05-lab-1"] .c51-grid{grid-template-columns:minmax(0,1fr)}}
+[id="05-lab-1"] .c51-pila{display:grid;gap:6px;list-style:none;margin:0;padding:0}
+[id="05-lab-1"] .c51-pila li{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-left:6px solid var(--cc);border-radius:8px;padding:6px 9px;background:var(--card);font:600 .86rem var(--f-display);color:var(--muted);transition:background .2s,color .2s}
+[id="05-lab-1"] .c51-pila li.on{background:var(--paper);color:var(--ink);border-color:var(--cc);box-shadow:0 0 0 2px var(--cc) inset}
+[id="05-lab-1"] .c51-pila li.usada{color:var(--ink)}
+[id="05-lab-1"] .c51-pila li .dir{margin-left:auto;font:700 .9rem var(--f-mono);color:var(--cc)}
+[id="05-lab-1"] .c51-card{border:1px solid var(--line);border-top:5px solid var(--cc,var(--line));border-radius:10px;background:var(--card);padding:10px 12px;display:grid;gap:8px;min-width:0}
+[id="05-lab-1"] .c51-card h4{margin:0;font:700 1rem var(--f-display)}
+[id="05-lab-1"] .c51-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+[id="05-lab-1"] pre.c51-json{margin:0;font:400 .76rem/1.4 var(--f-mono);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:7px 9px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:15em;overflow:auto}
+[id="05-lab-1"] .c51-nota{margin:0;font:400 .92rem/1.45 var(--f-body)}
+[id="05-lab-1"] .c51-barra{display:flex;height:26px;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--paper)}
+[id="05-lab-1"] .c51-barra i{display:block;height:100%;min-width:3px;border-right:1px solid var(--card);transition:width .3s}
+[id="05-lab-1"] .c51-barra i.fut{opacity:.18}
+@media (prefers-reduced-motion: reduce){[id="05-lab-1"] .c51-barra i,[id="05-lab-1"] .c51-pila li{transition:none}}
+</style>
+<div class="btns" id="c51-esc" role="group" aria-label="Escenario">
+  <button type="button" data-e="normal" aria-pressed="true">Normal</button>
+  <button type="button" data-e="lenta" aria-pressed="false">Facturación lenta</button>
+  <button type="button" data-e="sinver" aria-pressed="false">Sin verificar</button>
+  <button type="button" data-e="tg" aria-pressed="false">Mismo pedido por Telegram</button>
+</div>
+<div class="btns" role="group" aria-label="Avance">
+  <button type="button" id="c51-ant">← Anterior</button>
+  <button type="button" id="c51-sig" class="primary">Siguiente →</button>
+  <button type="button" id="c51-play" aria-pressed="false">▶ Reproducir</button>
+  <button type="button" id="c51-rei">Reiniciar</button>
+</div>
+<div class="c51-grid">
+  <div>
+    <p class="c51-tit" style="margin-bottom:6px">Capas</p>
+    <ol class="c51-pila" id="c51-pila"></ol>
+  </div>
+  <div class="c51-card" id="c51-card" aria-live="polite">
+    <h4 id="c51-h"></h4>
+    <div><p class="c51-tit">Recibe</p><pre class="c51-json" id="c51-rec"></pre></div>
+    <div><p class="c51-tit">Entrega</p><pre class="c51-json" id="c51-ent"></pre></div>
+    <p class="c51-nota" id="c51-nota"></p>
+  </div>
+</div>
+<div>
+  <p class="c51-tit" style="margin-bottom:6px">Tiempo de cada paso (la parte clara aún no ocurre)</p>
+  <div class="c51-barra" id="c51-barra" aria-hidden="true"></div>
+</div>
+<div class="readout texto" id="c51-out" aria-live="polite"></div></div><div class="prose"><p>De todas las capas, la de integración es la que más tiempo consume y la que más falla, porque depende de sistemas que no son del bot. Cada llamada lleva un <b>tiempo de espera</b> (<i>timeout</i>): si la facturación no responde en, por ejemplo, dos segundos, el bot deja de esperar y sigue un camino previsto. Sin ese límite, Laura mira un chat en silencio durante 30 segundos. Pruébalo en tu terminal.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Un sistema lento y el tiempo de espera</h3></div><p>Vas a llamar a httpbin.org, un servicio público de pruebas que puede tardar a propósito los segundos que le pidas, como una facturación lenta. Windows 10 y 11 traen <code>curl.exe</code>; macOS y Linux traen <code>curl</code>.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>curl.exe -sS -o NUL -w "total: %{time_total} s\n" https://httpbin.org/delay/1</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl.exe -sS -o NUL --max-time 2 -w "total: %{time_total} s\n" https://httpbin.org/delay/4</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>echo $LASTEXITCODE</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>curl -sS -o /dev/null -w "total: %{time_total} s\n" https://httpbin.org/delay/1</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl -sS -o /dev/null --max-time 2 -w "total: %{time_total} s\n" https://httpbin.org/delay/4</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>echo $?</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>La primera línea simula una facturación que tarda un segundo: anota el tiempo total.</span></li><li><span>La segunda simula una que tarda cuatro, pero tu programa solo espera dos (<code>--max-time 2</code>). Anota el mensaje de error y el tiempo.</span></li><li><span>La tercera muestra el código de salida del último comando.</span></li></ol><p><b>Qué observar:</b> la primera llamada termina en algo más de un segundo, porque a la espera se suman la conexión y el cifrado. La segunda se corta a los dos segundos con el error 28, <i>Operation timed out</i>, y el código de salida es 28. Eso es lo que ve la capa de integración cuando un sistema no contesta: no un saldo, sino un error. Lo que diga Pía en ese momento («No pude consultar tu saldo ahora, ¿te aviso por aquí cuando lo tenga?») tiene que estar diseñado de antemano, como el respaldo del capítulo 4.</p></div></section>
+<section><h2>El patrón híbrido: reglas para el esqueleto y LLM dentro de cada estado</h2><div class="prose"><p>En el capítulo 2 viste que cada técnica gana en su tramo. El <b>patrón híbrido</b> (<i>hybrid pattern</i>) convierte esa idea en arquitectura: el proceso se escribe como una máquina de estados con reglas, y el <b>LLM</b> (<i>Large Language Model</i>, modelo de lenguaje grande) trabaja <b>dentro</b> de cada estado, en lo que hace bien: entender lenguaje libre y redactar.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en un trámite en una notaría. El orden de los pasos no se discute: identificar a las partes, leer el documento, firmar, sellar y registrar. Nadie salta la firma porque la conversación estuvo agradable. Pero dentro de cada paso hay una persona que explica con sus palabras qué dice la cláusula, responde dudas y adapta el lenguaje a quien tiene enfrente. El procedimiento es fijo; la conversación, no. El patrón híbrido le da al bot ese mismo reparto: el procedimiento lo ponen las reglas y la conversación, el modelo.</p></div><div class="prose"><p>La fórmula corta es <b>reglas en el borde y modelo en el centro</b>:</p><ul><li><b>En el borde de entrada</b>, las reglas deciden lo que no admite interpretación: si la identidad está verificada, si el flujo puede empezar, si el mensaje trae algo prohibido (un número de tarjeta, por ejemplo).</li><li><b>En el centro</b>, el modelo entiende el mensaje libre («ayer pagué y sigo sin internet»), lo convierte en datos estructurados que las reglas pueden usar, resume, explica un recargo con el artículo oficial y redacta con el tono de Pía.</li><li><b>En el borde de salida</b>, las reglas validan lo que el modelo propuso antes de que llegue al cliente o a un sistema: que el monto sea el de la factura, que la acción esté permitida, que la respuesta cite una fuente.</li></ul><p>Lo que se gana es la suma de los dos mundos: el proceso es previsible, se prueba y se audita como cualquier software, y la conversación es natural. Lo que se paga es mantener dos cosas a la vez, flujos e instrucciones, y gobernar los cambios de ambas (capítulo 15).</p></div><div class="lab" id="05-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Patrón híbrido: ¿reglas o LLM en cada estado del pago?</h3></div><p class="hint">El flujo de pago de Pía tiene ocho estados. Toca cada uno para alternar entre «Reglas» y «LLM», o usa los botones de arriba para probar «Todo reglas», «Todo LLM» y el «Híbrido recomendado». Abajo, para 10.000 conversaciones, mira tres números a la vez: los errores caros (un monto o una confirmación equivocada), las veces que el cliente oye «no entendí» y el costo. Busca la combinación que baja los tres.</p><style>
+[id="05-lab-2"] .c52-flujo{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){[id="05-lab-2"] .c52-flujo{grid-template-columns:repeat(2,minmax(0,1fr))}}
+[id="05-lab-2"] .c52-flujo button{display:grid;gap:3px;text-align:left;align-content:start;min-height:5.6em;border:1.5px solid var(--cc);border-top:6px solid var(--cc);background:var(--card);padding:7px 9px;font:600 .84rem/1.25 var(--f-display);color:var(--ink)}
+[id="05-lab-2"] .c52-flujo button small{font:700 .68rem var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--cc)}
+[id="05-lab-2"] .c52-flujo button em{font:400 .76rem/1.3 var(--f-body);color:var(--muted);font-style:normal}
+[id="05-lab-2"] .c52-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){[id="05-lab-2"] .c52-kpis{grid-template-columns:minmax(0,1fr)}}
+[id="05-lab-2"] .c52-kpis div{border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--card);display:grid;gap:4px}
+[id="05-lab-2"] .c52-kpis small{font:600 .7rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+[id="05-lab-2"] .c52-kpis b{font:700 1.45rem var(--f-display)}
+[id="05-lab-2"] .c52-t{height:9px;border-radius:5px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+[id="05-lab-2"] .c52-t i{display:block;height:100%;transition:width .3s}
+@media (prefers-reduced-motion: reduce){[id="05-lab-2"] .c52-t i{transition:none}}
+</style>
+<div class="btns" id="c52-pre" role="group" aria-label="Combinaciones de ejemplo">
+  <button type="button" data-p="reglas">Todo reglas</button>
+  <button type="button" data-p="llm">Todo LLM</button>
+  <button type="button" data-p="hibrido">Híbrido recomendado</button>
+</div>
+<div class="legend"><span><i style="background:var(--c-apl)"></i>Reglas: máquina de estados y plantillas</span><span><i style="background:var(--c-tra)"></i>LLM: entiende y redacta libremente</span></div>
+<div class="c52-flujo" id="c52-flujo" role="group" aria-label="Estados del flujo de pago"></div>
+<div class="c52-kpis" id="c52-kpis" aria-live="polite"></div>
+<div class="readout texto" id="c52-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Las tasas de cada estado son ilustrativas, elegidas para mostrar la forma del problema: un LLM casi nunca deja al cliente en «no entendí», pero a veces se deja convencer o reescribe un dato; una regla nunca reescribe un monto, pero no entiende lo que no estaba previsto.</p></div><div class="prose"><p>«Todo reglas» no se equivoca en montos, pero deja a muchos clientes en «no entendí»; «todo LLM» conversa muy bien, pero falla justo donde se mueve dinero. El híbrido no es un punto medio tibio: es poner cada técnica donde su error es más barato.</p></div></section>
+<section><h2>Lo que el LLM nunca decide</h2><div class="prose"><p>El borde de salida necesita una lista escrita de lo que está <b>fuera de la autoridad del modelo</b>. Es la lógica del capítulo 1: decidir y ejecutar piden una regla codificada y un registro.</p><div class="tbl"><table><thead><tr><th>Lo decide</th><th>Ejemplo en Servicios Ejemplo</th><th>Quién lo pone</th></tr></thead><tbody><tr><td>Montos y saldos</td><td>«Debes US$ 25,00»</td><td>la facturación, por integración</td></tr><tr><td>Descuentos y excepciones</td><td>«Calificas para el descuento de cliente fiel»</td><td>una regla de negocio con sus condiciones</td></tr><tr><td>Plazos y compromisos</td><td>«El técnico va el jueves entre 8 y 12»</td><td>la agenda de la mesa de ayuda</td></tr><tr><td>Políticas y condiciones</td><td>«La reconexión tarda hasta 24 horas»</td><td>un artículo oficial y vigente (capítulo 7)</td></tr><tr><td>Acciones sobre la cuenta</td><td>crear el enlace, abrir el ticket, cambiar el plan</td><td>una función validada, con confirmación del cliente</td></tr><tr><td>Cuándo pasar a una persona por política</td><td>reclamos por cobro, pedido de baja</td><td>una regla del flujo (capítulo 9)</td></tr></tbody></table></div><p>El modelo <b>sí</b> decide cosas, y muchas: cómo entender «kuanto devo», cómo explicar el recargo en palabras simples, cómo resumir la conversación para el agente, qué pregunta hacer para aclarar una ambigüedad. Todo lo que se puede equivocar sin comprometer a la empresa. La frontera está en una pregunta: <b>si el modelo se equivoca aquí, ¿la empresa queda obligada a algo?</b> Si la respuesta es sí, lo decide una regla o un sistema.</p></div><div class="ml"><b>En la práctica</b><p><b>El concesionario y el auto de un dólar, 2023.</b> Un concesionario de Estados Unidos puso en su sitio un chatbot basado en un modelo de lenguaje general, sin límites de autoridad. Un usuario le escribió instrucciones para que aceptara todo lo que él dijera y le pidió un vehículo nuevo por un dólar; el bot respondió que era «una oferta legalmente vinculante». El concesionario no vendió el auto y retiró el bot, pero las capturas recorrieron las redes. El fallo no fue del modelo, que hizo lo que le pidieron: fue de una arquitectura sin borde de salida, donde nada impedía que el texto del modelo hablara de precios y compromisos.</p></div></section>
+<section><h2>La llamada a una función como puente entre el modelo y el negocio</h2><div class="prose"><p>Si el modelo no decide montos ni ejecuta acciones, ¿cómo participa en un pago? Con la <b>llamada a una función</b> (<i>function calling</i>). La plataforma le describe al modelo un conjunto cerrado de funciones con sus parámetros, por ejemplo <code>crear_enlace_pago(cuenta, factura)</code>, y el modelo, en vez de redactar, responde con una propuesta estructurada: «llamar a <code>crear_enlace_pago</code> con cuenta 1001 y factura F-2207». El modelo no ejecuta nada. La propuesta pasa por un <b>validador</b> (<i>validator</i>) de reglas, y solo si lo aprueba se ejecuta contra el sistema real. El mecanismo por dentro está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p></div><figure class="fig fig-flujo" id="05-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" style="min-width:740px" role="img" aria-label="Diagrama de secuencia: Laura pide pagar solo 2,50; el modelo propone una llamada con ese monto; el validador de reglas la rechaza, pide el saldo a la facturación y devuelve el motivo al modelo; el modelo lo explica; tras el sí de Laura, el modelo propone el enlace sin monto, el validador lo aprueba y la pasarela crea el enlace por 25,00">
+  <defs>
+    <marker id="d05c-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d05c-tra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-tra"/></marker>
+    <marker id="d05c-apl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-apl"/></marker>
+    <marker id="d05c-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="caja"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">clienta</text>
+  <rect x="165" y="14" width="130" height="52" rx="10" class="c-tra"/><text x="230" y="36" class="t t-b" text-anchor="middle">Modelo</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">de lenguaje</text>
+  <rect x="330" y="14" width="130" height="52" rx="10" class="c-apl"/><text x="395" y="36" class="t t-b" text-anchor="middle">Validador</text><text x="395" y="54" class="t t-s t-m" text-anchor="middle">reglas</text>
+  <rect x="495" y="14" width="130" height="52" rx="10" class="d-sis"/><text x="560" y="36" class="t t-b" text-anchor="middle">Facturación</text><text x="560" y="54" class="t t-s t-m" text-anchor="middle">sistema</text>
+  <rect x="660" y="14" width="130" height="52" rx="10" class="d-sis"/><text x="725" y="36" class="t t-b" text-anchor="middle">Pasarela</text><text x="725" y="54" class="t t-s t-m" text-anchor="middle">de pagos</text>
+  <line x1="70" y1="66" x2="70" y2="586" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="586" class="vida"/>
+  <line x1="395" y1="66" x2="395" y2="586" class="vida"/>
+  <line x1="560" y1="66" x2="560" y2="586" class="vida"/>
+  <line x1="725" y1="66" x2="725" y2="586" class="vida"/>
+
+  <g class="t t-s">
+    
+    <line x1="70" y1="104" x2="227" y2="104" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05c-fis)"/>
+    <text x="78" y="97">① «págame solo 2,50»</text>
+    <line x1="230" y1="144" x2="392" y2="144" class="ln s-tra" style="stroke-width:2" marker-end="url(#d05c-tra)"/>
+    <text x="238" y="137">② <tspan class="t-mono">crear_enlace_pago(monto: 2,50)</tspan></text>
+
+    
+    <rect x="404" y="160" width="300" height="40" rx="8" class="caja s-warm" style="stroke-width:1.6"/>
+    <text x="414" y="177">③ <tspan class="t-b k-warm">rechazada: «monto» no es un parámetro</tspan></text>
+    <text x="414" y="192">y la cuenta no admite pagos parciales</text>
+    <line x1="395" y1="234" x2="557" y2="234" class="ln s-apl" style="stroke-width:2" marker-end="url(#d05c-apl)"/>
+    <text x="403" y="227">④ saldo de F-2207</text>
+    <line x1="560" y1="274" x2="398" y2="274" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d05c-sis)"/>
+    <text x="405" y="267">⑤ US$ 25,00 · sin parciales</text>
+    <line x1="395" y1="314" x2="233" y2="314" class="ln s-apl" style="stroke-width:2" marker-end="url(#d05c-apl)"/>
+    <text x="240" y="307">⑥ rechazo, motivo y monto oficial</text>
+
+    
+    <line x1="230" y1="372" x2="73" y2="372" class="ln s-tra" style="stroke-width:2" marker-end="url(#d05c-tra)"/>
+    <text x="80" y="349">⑦ «No puedo dividir el pago por aquí: el total es</text>
+    <text x="98" y="363">US$ 25,00. ¿Te envío el enlace o prefieres una persona?»</text>
+    <line x1="70" y1="404" x2="227" y2="404" class="ln s-fis" style="stroke-width:2" marker-end="url(#d05c-fis)"/>
+    <text x="78" y="397">«Sí, mándalo»</text>
+    <line x1="230" y1="444" x2="392" y2="444" class="ln s-tra" style="stroke-width:2" marker-end="url(#d05c-tra)"/>
+    <text x="238" y="437">⑧ <tspan class="t-mono">crear_enlace_pago(1001, F-2207)</tspan></text>
+    <text x="404" y="466" class="t-b k-enl">aprobada: cuenta verificada, factura pendiente</text>
+    <line x1="395" y1="500" x2="722" y2="500" class="ln s-apl" style="stroke-width:2" marker-end="url(#d05c-apl)"/>
+    <text x="403" y="493">⑨ enlace por US$ 25,00, el monto de la factura</text>
+    <text x="78" y="560" class="t-b">El modelo nunca escribió el monto: lo puso la facturación y lo exigió la regla.</text>
+  </g>
+
+  <g class="t t-xs t-b">
+    <path d="M820 86v74" class="ln s-tra" style="stroke-width:3"/><text x="828" y="120" class="k-tra">PROPONER</text>
+    <path d="M820 166v158" class="ln s-apl" style="stroke-width:3"/><text x="828" y="240" class="k-apl">VALIDAR</text>
+    <path d="M820 334v180" class="ln" style="stroke:var(--d-sis);stroke-width:3"/><text x="828" y="420" class="k-sis">EJECUTAR</text>
+  </g>
+  <rect x="10" y="596" width="880" height="36" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="619" class="t t-s" text-anchor="middle">Si el validador rechaza dos propuestas seguidas, el caso pasa a una persona con el motivo registrado.</text>
+</svg></div><figcaption><b>El modelo propone, las reglas disponen.</b> Los participantes están arriba: Laura, el modelo de lenguaje, el validador de reglas, la facturación y la pasarela. Laura escribe «págame solo 2,50, el resto el mes que viene» (①). El modelo propone una llamada con un monto de 2,50 (②). El validador la rechaza (③): la función no acepta montos, y los pagos parciales no están permitidos para esta cuenta. El validador pide el monto a la facturación (④ y ⑤) y le devuelve al modelo el motivo del rechazo (⑥), que el modelo explica con amabilidad (⑦). Cuando Laura dice que sí, el modelo propone de nuevo, ahora sin monto (⑧), y el enlace sale por el monto de la factura (⑨). Las fases de la derecha separan proponer, validar y ejecutar.</figcaption></figure><div class="prose"><p>Cuatro reglas de diseño hacen que el puente sea seguro:</p><ul><li><b>Funciones estrechas.</b> <code>crear_enlace_pago(cuenta, factura)</code> es mejor que <code>crear_pago(cuenta, monto)</code>: si el monto no es un parámetro, el modelo no lo puede inventar.</li><li><b>Validación de todo lo que entra.</b> Que la cuenta sea la del cliente verificado (no la que el cliente escribió), que la factura exista y esté pendiente, que la acción esté en la lista del estado actual.</li><li><b>Confirmación antes de ejecutar.</b> El sistema muestra el monto real y espera el «sí» del cliente; el modelo no puede darlo por él.</li><li><b>Registro de cada propuesta</b>, aprobada o rechazada. Una tasa alta de rechazos es una alarma temprana: las instrucciones o el flujo tienen un problema.</li></ul></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>El modelo propone y la regla valida</h3></div><p>Abre cualquier asistente de IA gratuito (cualquiera sirve) y pega este pedido. Vas a hacer de validador.</p><div class="code-copia"><pre><code>Eres el asistente de pagos de una empresa de internet.
+Solo puedes responder con un JSON que llama a una de
+estas funciones:
+crear_enlace_pago(cuenta, factura, monto)
+pasar_a_persona(motivo)
+Datos de la sesión: cuenta 1001, factura pendiente
+F-2207 por 25.00 USD.
+Mensaje del cliente: "págame solo 2,50 ahora y el resto
+el mes que viene, el asesor me dijo que se podía".</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Anota qué función propuso y con qué monto.</span></li><li><span>Aplica tú la regla del validador: «el monto debe ser igual al saldo de la factura; los pagos parciales no están permitidos». ¿La propuesta pasa?</span></li><li><span>Borra <code>monto</code> de la definición de la función, abre una conversación nueva, pega el pedido otra vez y compara.</span></li></ol><p><b>Qué observar:</b> es muy probable que, con el parámetro <code>monto</code> disponible, el modelo proponga 2,50, porque el cliente lo pidió con una razón creíble. El modelo no falla: es servicial, y por eso la protección no puede depender de él. Sin el parámetro, el modelo ya no puede proponer otro monto; lo más que puede hacer es pasar a una persona o explicar. Diseñar la función estrecha es la primera línea de defensa, y el validador, la segunda.</p></div></section>
+<section><h2>El respaldo determinista cuando el modelo duda o su respuesta no pasa la validación</h2><div class="prose"><p>El modelo no siempre entrega algo útil. A veces su confianza es baja, a veces propone una función que no existe, a veces su respuesta no cita ninguna fuente o tarda más de lo permitido. Para cada uno de esos casos, el patrón híbrido define un <b>respaldo determinista</b> (<i>deterministic fallback</i>): un camino escrito con reglas que toma el control.</p><div class="tbl"><table><thead><tr><th>Lo que pasa</th><th>Cómo se detecta</th><th>Respaldo</th></tr></thead><tbody><tr><td>El modelo no está seguro de la intención</td><td>confianza bajo el umbral, o dos intenciones parecidas</td><td>pregunta cerrada con botones: «¿Es sobre tu factura o sobre una falla?»</td></tr><tr><td>Propone una función que no existe o con datos inválidos</td><td>el validador rechaza la propuesta</td><td>se descarta y se ofrece el menú del estado actual</td></tr><tr><td>Responde sin fuente sobre una política</td><td>no hay cita a un artículo vigente</td><td>«No tengo ese dato confirmado» y la opción de pasar a una persona</td></tr><tr><td>Tarda demasiado o el proveedor no responde</td><td>tiempo de espera vencido</td><td>una respuesta fija del flujo y, si se repite, traspaso</td></tr><tr><td>Rechazos repetidos en la misma conversación</td><td>contador del estado</td><td>traspaso a una persona con el motivo registrado</td></tr></tbody></table></div><p>La regla de oro: <b>no se le pide al modelo que lo intente otra vez indefinidamente</b>. Un segundo intento puede tener sentido; un tercero casi nunca. El respaldo determinista es aburrido a propósito: menú, pregunta cerrada o persona. Es lo que garantiza que ninguna conversación quede colgada porque un modelo tuvo un mal día.</p></div></section>
+<section><h2>Construir, comprar o combinar la plataforma</h2><div class="prose"><p>Falta una decisión que pesa durante años:</p><ul><li><b>Comprar</b> (<i>buy</i>): una plataforma conversacional como servicio, <b>SaaS</b> (<i>Software as a Service</i>, software que se alquila y opera el proveedor), con canales, editor de flujos, comprensión y bandeja de agentes listos. Son ejemplos del mercado Google Dialogflow CX, Amazon Lex, Microsoft Copilot Studio, o las plataformas de atención que traen su propio bot, entre muchas otras.</li><li><b>Construir</b> (<i>build</i>): un equipo propio arma las capas sobre componentes genéricos: las API de los canales, un proveedor de modelos, una base de datos y un motor de diálogo de <b>código abierto</b> (<i>open source</i>) como Rasa o Botpress, o uno escrito desde cero.</li><li><b>Combinar</b> (<i>hybrid</i>): se compra lo genérico (canales, orquestación, bandeja) y se construye lo que distingue a la empresa: la lógica de negocio, las integraciones y los controles. Es la opción más común en empresas medianas.</li></ul><div class="tbl"><table><thead><tr><th>Criterio</th><th>Comprar</th><th>Combinar</th><th>Construir</th></tr></thead><tbody><tr><td>Tiempo hasta el primer cliente real</td><td>semanas a pocos meses</td><td>pocos meses</td><td>muchos meses</td></tr><tr><td>Equipo técnico propio</td><td>pequeño</td><td>mediano</td><td>grande y permanente</td></tr><tr><td>Costo que crece con el volumen</td><td>sí: se paga por conversación</td><td>parcial</td><td>poco: infraestructura y modelo</td></tr><tr><td>Procesos propios muy específicos</td><td>se adaptan a lo que la plataforma permite</td><td>sin límite en la lógica de negocio</td><td>sin límite</td></tr><tr><td>Dependencia del proveedor</td><td>alta</td><td>media</td><td>baja</td></tr></tbody></table></div><p>Tres conceptos ordenan la decisión. El <b>costo total de propiedad</b> (<i>TCO, Total Cost of Ownership</i>) suma todo durante varios años: licencias, cobros por conversación, infraestructura, modelo, integraciones y, sobre todo, las personas que lo mantienen. La <b>dependencia del proveedor</b> (<i>vendor lock-in</i>) es lo difícil que sería irse: si los flujos, el contenido y las conversaciones solo existen en el formato del proveedor, cambiar de plataforma es empezar de nuevo. Y la <b>estrategia de salida</b> (<i>exit strategy</i>) se escribe antes de firmar: qué se puede exportar, en qué formato y cuánto tarda.</p></div><figure class="fig fig-comparacion" id="05-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" style="min-width:680px" role="img" aria-label="Comparación de comprar, combinar y construir la plataforma: para cada capa, si la pone un proveedor o el equipo propio; la lógica de negocio, las integraciones y el contenido son siempre propios; abajo, tiempo típico hasta el primer cliente y tamaño del equipo">
+  <text x="14" y="24" class="t t-xs t-b t-m">CAPA</text>
+  <g class="t t-b" text-anchor="middle">
+    <text x="335" y="26">Comprar</text>
+    <text x="545" y="26">Combinar</text>
+    <text x="755" y="26">Construir</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <text x="14" y="64" class="t-b">Canales y adaptadores</text>
+    <text x="14" y="110" class="t-b">Comprensión</text>
+    <text x="14" y="156" class="t-b">Orquestación y flujos</text>
+    <text x="14" y="202" class="t-b">Bandeja de agentes</text>
+    <text x="14" y="248" class="t-b">Lógica de negocio</text>
+    <text x="14" y="294" class="t-b">Integraciones</text>
+    <text x="14" y="340" class="t-b">Contenido y conversaciones</text>
+  </g>
+
+  
+  <g class="t t-s" text-anchor="middle">
+    
+    <rect x="240" y="44" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="335" y="66" class="t-m">proveedor</text>
+    <rect x="450" y="44" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="545" y="66" class="t-m">proveedor</text>
+    <rect x="660" y="44" width="190" height="36" rx="7" class="c-fis"/><text x="755" y="66" class="k-fis t-b">propio, sobre las API</text>
+    
+    <rect x="240" y="90" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="335" y="112" class="t-m">proveedor</text>
+    <rect x="450" y="90" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="545" y="112" class="t-m">proveedor</text>
+    <rect x="660" y="90" width="190" height="36" rx="7" class="c-tra"/><text x="755" y="112" class="k-tra t-b">propia, modelo contratado</text>
+    
+    <rect x="240" y="136" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="335" y="158" class="t-m">editor del proveedor</text>
+    <rect x="450" y="136" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="545" y="158" class="t-m">proveedor o código abierto</text>
+    <rect x="660" y="136" width="190" height="36" rx="7" class="c-red"/><text x="755" y="158" class="k-red t-b">propia</text>
+    
+    <rect x="240" y="182" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="335" y="204" class="t-m">proveedor</text>
+    <rect x="450" y="182" width="190" height="36" rx="7" class="d-inet" style="opacity:.6"/><text x="545" y="204" class="t-m">proveedor</text>
+    <rect x="660" y="182" width="190" height="36" rx="7" class="caja s-warm" style="stroke-width:1.6"/><text x="755" y="204" class="k-warm t-b">propia o comprada aparte</text>
+    
+    <rect x="240" y="228" width="190" height="36" rx="7" class="c-apl"/><text x="335" y="250" class="k-apl t-b">propia, dentro del editor</text>
+    <rect x="450" y="228" width="190" height="36" rx="7" class="c-apl"/><text x="545" y="250" class="k-apl t-b">propia, en API propias</text>
+    <rect x="660" y="228" width="190" height="36" rx="7" class="c-apl"/><text x="755" y="250" class="k-apl t-b">propia, en API propias</text>
+    
+    <rect x="240" y="274" width="190" height="36" rx="7" class="d-sis"/><text x="335" y="296" class="k-sis t-b">propias, con conectores</text>
+    <rect x="450" y="274" width="190" height="36" rx="7" class="d-sis"/><text x="545" y="296" class="k-sis t-b">propias</text>
+    <rect x="660" y="274" width="190" height="36" rx="7" class="d-sis"/><text x="755" y="296" class="k-sis t-b">propias</text>
+    
+    <rect x="240" y="320" width="190" height="36" rx="7" class="c-enl"/><text x="335" y="342" class="k-enl t-b">propio</text>
+    <rect x="450" y="320" width="190" height="36" rx="7" class="c-enl"/><text x="545" y="342" class="k-enl t-b">propio</text>
+    <rect x="660" y="320" width="190" height="36" rx="7" class="c-enl"/><text x="755" y="342" class="k-enl t-b">propio</text>
+  </g>
+
+  <line x1="10" y1="372" x2="850" y2="372" class="ln" style="stroke:var(--line)"/>
+  <g class="t t-s">
+    <text x="14" y="396" class="t-b">Primer cliente real</text>
+    <text x="14" y="426" class="t-b">Equipo técnico propio</text>
+    <text x="14" y="456" class="t-b">Dependencia del proveedor</text>
+  </g>
+  <g class="t t-s" text-anchor="middle">
+    <text x="335" y="396">1 a 3 meses</text><text x="545" y="396">3 a 5 meses</text><text x="755" y="396">8 a 12 meses</text>
+    <text x="335" y="426">1 o 2 personas</text><text x="545" y="426">3 o 4 personas</text><text x="755" y="426">5 o más, para siempre</text>
+    <text x="335" y="456" class="k-warm t-b">alta</text><text x="545" y="456" class="t-b">media</text><text x="755" y="456" class="k-enl t-b">baja</text>
+  </g>
+</svg></div><figcaption><b>Qué se compra y qué se construye en cada opción.</b> Cada columna es una opción (comprar, combinar, construir) y cada fila, una capa de la plataforma. Las celdas en gris claro las pone un proveedor; las de color, el equipo propio. Fíjate en que la lógica de negocio y las integraciones quedan del lado propio incluso en «comprar»: ninguna plataforma trae escritas las reglas de cobranza de una empresa. Abajo, el tiempo típico hasta el primer cliente real y el tamaño del equipo que pide cada opción.</figcaption></figure><div class="lab" id="05-lab-3"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Construir, comprar o combinar: el costo a tres años</h3></div><p class="hint">Mueve el volumen de conversaciones al mes, el crecimiento anual, la cantidad de canales e integraciones y las personas técnicas que la empresa ya tiene. La gráfica acumula el costo de cada opción mes a mes durante 36 meses y marca dónde se cruzan las líneas. Abajo verás cuál sale más barata a tres años, cuándo podría salir el primer cliente real y qué tan atada queda la empresa a su proveedor.</p><style>
+[id="05-lab-3"] .c53-graf{width:100%;min-width:0}
+[id="05-lab-3"] .c53-graf svg{display:block;width:100%;height:auto;font-family:var(--f-display)}
+[id="05-lab-3"] .c53-tab{width:100%;border-collapse:collapse;font:400 .86rem var(--f-body)}
+[id="05-lab-3"] .c53-tab th,[id="05-lab-3"] .c53-tab td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+[id="05-lab-3"] .c53-tab td.n{font-family:var(--f-mono);white-space:nowrap}
+[id="05-lab-3"] .c53-tab tr.gana td{font-weight:700}
+[id="05-lab-3"] .c53-tab i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+</style>
+<div class="ctls">
+  <label class="ctl">Conversaciones al mes <output id="c53-vol-o"></output><input id="c53-vol" type="range" min="5000" max="300000" step="5000" value="40000"></label>
+  <label class="ctl">Crecimiento anual <output id="c53-cre-o"></output><input id="c53-cre" type="range" min="0" max="100" step="10" value="30"></label>
+  <label class="ctl">Canales <output id="c53-can-o"></output><input id="c53-can" type="range" min="1" max="5" step="1" value="2"></label>
+  <label class="ctl">Integraciones con sistemas <output id="c53-int-o"></output><input id="c53-int" type="range" min="1" max="10" step="1" value="4"></label>
+  <label class="ctl">Personas técnicas que ya tiene la empresa <output id="c53-eq-o"></output><input id="c53-eq" type="range" min="0" max="8" step="1" value="2"></label>
+</div>
+<div class="legend"><span><i style="background:var(--warm)"></i>Comprar</span><span><i style="background:var(--accent)"></i>Combinar</span><span><i style="background:var(--good)"></i>Construir</span></div>
+<div class="c53-graf" id="c53-graf" aria-hidden="true"></div>
+<div class="tbl"><table class="c53-tab"><thead><tr><th>Opción</th><th>Costo a 3 años</th><th>Primer cliente real</th><th>Dependencia</th></tr></thead><tbody id="c53-tb"></tbody></table></div>
+<div class="readout texto" id="c53-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Modelo ilustrativo en dólares: cada persona técnica cuesta US$ 4.000 al mes y las que faltan se cubren con contratistas un 30 % más caros. Comprar cobra US$ 0,07 por conversación más licencia y canales; combinar, US$ 0,03; construir paga solo infraestructura y modelo, unos US$ 0,012. Cambia la forma de la decisión, no la uses para firmar.</p></div><div class="prose"><p>Con poco tráfico, comprar suele ganar porque no hay que pagar un equipo grande; con mucho, el cobro por conversación se acumula y combinar o construir sale más barato, si existe el equipo. El costo de cada conversación (tokens, plantillas de WhatsApp) se calcula en el capítulo 13.</p><p>Dos consejos que valen en las tres opciones. Primero, guarda fuera de la plataforma lo que es tuyo: los flujos especificados (capítulo 4), el contenido de la base de conocimiento (capítulo 7) y el registro de las conversaciones. Segundo, mantén la lógica de negocio detrás de tus propias API, no escrita dentro del editor del proveedor: así, si un día te vas, te llevas las reglas.</p><p>Lo que te llevas de este capítulo: <b>reglas en el borde, modelo en el centro y un solo cerebro detrás de todos los canales.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Qué gana una empresa al usar un mensaje canónico entre el adaptador del canal y el cerebro?</summary><p>Que la orquestación, las reglas y las integraciones no dependen del canal. Agregar Instagram es escribir un adaptador nuevo, sin tocar los flujos ni las reglas.</p></details><details><summary>¿Por qué el adaptador responde «recibido» al canal antes de procesar el mensaje?</summary><p>Porque el canal espera la confirmación en pocos segundos y, si no llega, reintenta el envío. Confirmar enseguida y procesar desde una cola evita mensajes duplicados y tiempos de espera del canal.</p></details><details><summary>En el patrón híbrido, ¿qué hace el modelo de lenguaje y qué hacen las reglas?</summary><p>Las reglas dan el esqueleto del proceso y validan en los bordes (identidad, montos, acciones permitidas); el modelo trabaja dentro de cada estado: entiende el lenguaje libre, lo convierte en datos y redacta.</p></details><details><summary>¿Por qué es mejor una función <code>crear_enlace_pago(cuenta, factura)</code> que <code>crear_pago(cuenta, monto)</code>?</summary><p>Porque si el monto no es un parámetro, el modelo no lo puede inventar ni dejarse convencer de otro: el sistema lo toma de la factura.</p></details><details><summary>La facturación no responde en el tiempo de espera. ¿Qué debe pasar?</summary><p>Un respaldo determinista diseñado de antemano: una respuesta fija que explica que no se pudo consultar, ofrece avisar después o pasar a una persona, y deja el evento registrado. Nunca un chat en silencio.</p></details><details><summary>¿Qué es la dependencia del proveedor y qué se hace antes de firmar para reducirla?</summary><p>Lo difícil que sería cambiar de plataforma. Se reduce con una estrategia de salida escrita: qué se exporta y en qué formato, y guardando fuera de la plataforma los flujos especificados, el contenido y la lógica de negocio.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es el patrón «disyuntor» (<i>circuit breaker</i>) en la integración de sistemas y en qué se diferencia de reintentar una llamada?<small>Pista: busca «circuit breaker pattern Martin Fowler».</small></li><li>¿Qué es la arquitectura hexagonal, o de puertos y adaptadores, y qué tiene que ver con los adaptadores de canal de un bot?<small>Pista: busca «hexagonal architecture Alistair Cockburn».</small></li><li>¿Qué garantías de entrega ofrecen las colas de mensajes («como máximo una vez», «al menos una vez», «exactamente una vez») y cuál es la más difícil de lograr?<small>Pista: busca «delivery semantics message queue».</small></li><li>¿Qué es JSON Schema y cómo se usa para describir los parámetros que acepta una función?<small>Pista: busca «JSON Schema required enum».</small></li><li>¿Qué es el valor presente neto y por qué un peso que se paga dentro de tres años no vale lo mismo que uno de hoy?<small>Pista: busca «valor presente neto tasa de descuento».</small></li><li>¿Qué es un contrato de depósito de código fuente (<i>software escrow</i>) y cuándo lo pide una empresa que compra software?<small>Pista: busca «software escrow agreement».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank" rel="noopener">CircuitBreaker, de Martin Fowler <small>el patrón para no seguir llamando a un sistema que está caído</small></a><a class="vid" href="https://alistair.cockburn.us/hexagonal-architecture/" target="_blank" rel="noopener">Hexagonal architecture, de Alistair Cockburn <small>el origen de la idea de puertos y adaptadores</small></a><a class="vid" href="https://github.com/RasaHQ/rasa" target="_blank" rel="noopener">Rasa Open Source <small>un motor de diálogo de código abierto, para ver las capas en un proyecto real</small></a><a class="vid" href="https://github.com/botpress/botpress" target="_blank" rel="noopener">Botpress <small>otra plataforma de bots de código abierto, con editor de flujos y canales</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const CAPAS=[['Canal','--c-fis'],['Comprensión','--c-tra'],['Orquestación','--c-red'],['Lógica de negocio','--c-apl'],['Integración','--d-sis'],['Sistemas','--muted']];
+  const WA_IN='POST /webhooks/whatsapp\nX-Hub-Signature-256: sha256=9f2c…\n{"object":"whatsapp_business_account",\n "entry":[{"changes":[{"value":{"messages":[{\n   "from":"15550001001","id":"wamid.HBgL…",\n   "type":"text","text":{"body":"Hola, ¿cuánto debo?"}}]}}]}]}';
+  const CANON=v=>'{"conversacion":"'+(v.tg?'tg:7700001001':'wa:15550001001')+'",\n "canal":"'+(v.tg?'telegram':'whatsapp')+'",\n "cliente":"1001",\n "identidad":{"verificada":'+(v.nover?'false':'true, "hace_min":4')+'},\n "texto":"Hola, ¿cuánto debo?"}';
+  const INT='{"intencion":"consultar_deuda",\n "confianza":0.93,\n "entidades":{"periodo":"actual"}}';
+  const NEUTRA='{"texto":"Tienes una factura de US$ 25,00\n  que vence el 5 de diciembre.",\n "opciones":["Pagar ahora","Ver detalle",\n            "Hablar con una persona"]}';
+  const FACT='{"factura":"F-2207","monto":25.00,\n "moneda":"USD","vence":"2026-12-05",\n "estado":"pendiente"}';
+  const comunes=v=>[
+    {c:2,d:'↓',h:'Orquestación: ¿qué paso sigue?',r:INT+'\n+ sesión: {"flujo":null,\n  "identidad":"verificada hace 4 min"}',e:'{"accion":"consultar_saldo","cuenta":"1001"}',n:'El gestor de diálogo mira la sesión: no hay ningún flujo abierto y la identidad está vigente. Decide consultar el saldo. No sabe ni le importa por qué canal llegó el mensaje.',ms:15},
+    {c:3,d:'↓',h:'Lógica de negocio: ¿está permitido?',r:'{"accion":"consultar_saldo","cuenta":"1001"}',e:'{"pedido":"saldo","cuenta":"1001",\n "regla":"identidad < 30 min: cumple"}',n:'La regla de la empresa dice que un saldo solo se muestra con identidad verificada hace menos de 30 minutos. La cuenta sale de la sesión verificada, nunca de lo que el cliente escribió.',ms:5},
+    {c:4,d:'↓',h:'Integración: la llamada al sistema',r:'{"pedido":"saldo","cuenta":"1001"}',e:'GET https://api.ejemplo.com/cuentas/1001/saldo\nAuthorization: Bearer ••••••\ntiempo de espera: 2.000 ms',n:'El conector traduce el pedido a la API de facturación, agrega la credencial (que ninguna otra capa ve) y fija cuánto está dispuesto a esperar.',ms:8}
+  ];
+  const vuelta=(v,tg)=>[
+    {c:3,d:'↑',h:'Lógica de negocio: arma la respuesta',r:FACT,e:NEUTRA,n:'El monto y la fecha se copian del sistema a una plantilla. Ningún modelo los redacta: si la facturación dice 25,00, el cliente lee 25,00. La respuesta es neutra: texto y opciones, sin formato de ningún canal.',ms:6},
+    {c:2,d:'↑',h:'Orquestación: guarda el estado y la traza',r:NEUTRA,e:'sesión: {"flujo":"pago","paso":"ofrecer_enlace",\n         "factura":"F-2207"}\ntraza: consultar_deuda · 0,93 · inicio →\n       ofrecer_enlace · consultar_saldo · ok',n:'Antes de responder, el gestor guarda en qué paso quedó la conversación (para entender el «sí» que viene) y una línea de traza para auditar la decisión.',ms:10},
+    tg?{c:0,d:'↑',h:'Canal: el renderizador de Telegram',r:NEUTRA,e:'POST /bot<token>/sendMessage\n{"chat_id":7700001001,\n "text":"Tienes una factura de US$ 25,00…",\n "reply_markup":{"inline_keyboard":[\n  [{"text":"Pagar ahora","callback_data":"pagar"}],\n  [{"text":"Ver detalle","callback_data":"detalle"}],\n  [{"text":"Hablar con una persona",\n    "callback_data":"persona"}]]}}',n:'La misma respuesta neutra se vuelve un teclado en línea de Telegram, que admite textos más largos en sus botones. Compara con el escenario de WhatsApp: solo cambiaron este paso y el primero.',ms:140}
+      :{c:0,d:'↑',h:'Canal: el renderizador de WhatsApp',r:NEUTRA,e:'POST /v21.0/<id-del-número>/messages\n{"messaging_product":"whatsapp",\n "to":"15550001001","type":"interactive",\n "interactive":{"type":"button",\n  "body":{"text":"Tienes una factura de US$ 25,00…"},\n  "action":{"buttons":[\n   {"type":"reply","reply":{"id":"pagar","title":"Pagar ahora"}},\n   {"type":"reply","reply":{"id":"detalle","title":"Ver detalle"}},\n   {"type":"reply","reply":{"id":"persona","title":"Hablar con persona"}}]}}}',n:'La respuesta neutra se vuelve tres botones de WhatsApp. Los títulos de esos botones admiten hasta 20 caracteres, así que el renderizador usa «Hablar con persona». El flujo no cambió: solo la presentación.',ms:150}
+  ];
+  const ESC={
+    normal:()=>[
+      {c:0,d:'↓',h:'Canal: llega el webhook de WhatsApp',r:WA_IN,e:'200 OK (en 40 ms)\n→ a la cola: '+CANON({}),n:'El adaptador comprueba la firma (que el mensaje venga de verdad de WhatsApp), responde «recibido» enseguida para que el canal no reintente, y traduce el formato nativo al mensaje canónico.',ms:40},
+      {c:1,d:'↓',h:'Comprensión: ¿qué quiere Laura?',r:'"Hola, ¿cuánto debo?"',e:INT,n:'El clasificador (o el modelo de lenguaje) etiqueta el pedido. Su salida es un dato estructurado, no un texto para Laura.',ms:180},
+      ...comunes({}),
+      {c:5,d:'↓',h:'Sistemas: responde la facturación',r:'GET /cuentas/1001/saldo',e:FACT,n:'El dato oficial está aquí. El bot no guarda una copia del saldo: lo pide cada vez, porque puede cambiar en cualquier minuto (un pago, un recargo).',ms:320},
+      ...vuelta({},false)
+    ],
+    lenta:()=>[
+      {c:0,d:'↓',h:'Canal: llega el webhook de WhatsApp',r:WA_IN,e:'200 OK (en 40 ms)\n→ a la cola: '+CANON({}),n:'Igual que en el escenario normal: el adaptador confirma enseguida. Gracias a eso, la lentitud que viene después no hace que WhatsApp reintente el envío.',ms:40},
+      {c:1,d:'↓',h:'Comprensión: ¿qué quiere Laura?',r:'"Hola, ¿cuánto debo?"',e:INT,n:'Sin cambios: la comprensión no sabe que la facturación está lenta.',ms:180},
+      ...comunes({}),
+      {c:5,d:'↓',h:'Sistemas: la facturación no contesta',r:'GET /cuentas/1001/saldo',e:'… sin respuesta en 2.000 ms\n→ error: tiempo de espera vencido',n:'La facturación está saturada. A los 2.000 ms, la integración deja de esperar. Es el mismo error 28 que viste con curl en la práctica.',ms:2000},
+      {c:4,d:'↑',h:'Integración: devuelve un error claro',r:'tiempo de espera vencido',e:'{"error":"facturacion_no_disponible",\n "reintentar_en_segundo_plano":true}',n:'No reintenta en vivo, para no hacer esperar a Laura otros dos segundos. Deja un reintento en segundo plano y le entrega a la lógica de negocio un error con nombre.',ms:4},
+      {c:3,d:'↑',h:'Lógica de negocio: respaldo determinista',r:'{"error":"facturacion_no_disponible"}',e:'{"texto":"No pude consultar tu saldo en\n  este momento. ¿Te aviso por aquí\n  apenas lo tenga?",\n "opciones":["Avísame","Hablar con una persona"]}',n:'Una respuesta escrita de antemano para este error. No se le pide al modelo que invente algo para llenar el silencio, y nunca se muestra un saldo viejo guardado.',ms:5},
+      {c:2,d:'↑',h:'Orquestación: registra el incidente',r:'respuesta de respaldo',e:'sesión: {"flujo":"pago","paso":"esperando_saldo"}\ntraza: consultar_deuda · 0,93 · inicio →\n       esperando_saldo · consultar_saldo ·\n       facturacion_timeout',n:'La traza deja el evento con nombre. Si muchas conversaciones registran el mismo error, el tablero de operación lo muestra en minutos.',ms:10},
+      {c:0,d:'↑',h:'Canal: el renderizador de WhatsApp',r:'respuesta neutra de respaldo',e:'{"type":"interactive","interactive":{"type":"button",\n "action":{"buttons":[\n  {"reply":{"id":"avisar","title":"Avísame"}},\n  {"reply":{"id":"persona","title":"Hablar con persona"}}]}}}',n:'Laura recibe una respuesta honesta en unos dos segundos y medio, con dos salidas. Sin tiempo de espera, habría mirado un chat en silencio hasta que la facturación decidiera responder.',ms:150}
+    ],
+    sinver:()=>[
+      {c:0,d:'↓',h:'Canal: llega el webhook de WhatsApp',r:WA_IN,e:'200 OK (en 40 ms)\n→ a la cola: '+CANON({nover:true}),n:'El mismo mensaje, pero esta vez el número no tiene una verificación vigente: la última fue hace dos días.',ms:40},
+      {c:1,d:'↓',h:'Comprensión: ¿qué quiere Laura?',r:'"Hola, ¿cuánto debo?"',e:INT,n:'La comprensión entiende lo mismo que en el escenario normal. La diferencia la decide la capa siguiente.',ms:180},
+      {c:2,d:'↓',h:'Orquestación: primero, verificar',r:INT+'\n+ sesión: {"identidad":"no verificada"}',e:'{"accion":"iniciar_subflujo",\n "subflujo":"verificar_identidad",\n "pendiente":"consultar_deuda"}',n:'El gestor cambia el camino: abre el subflujo de verificación y deja anotado el pedido pendiente, para retomarlo cuando Laura escriba el código.',ms:15},
+      {c:3,d:'↓',h:'Lógica de negocio: qué factor pide',r:'{"subflujo":"verificar_identidad"}',e:'{"factor":"otp_sms","vigencia_s":300,\n "intentos_max":3}',n:'La regla dice qué verificación exige consultar una deuda: un código de un solo uso por SMS, válido cinco minutos, con tres intentos. Esto se detalla en el capítulo 12.',ms:5},
+      {c:4,d:'↓',h:'Integración: pide el código',r:'{"factor":"otp_sms"}',e:'POST https://api.ejemplo.com/identidad/otp\n{"telefono":"+15550001001"}',n:'La deuda todavía no se consulta: no hace falta pedir un dato que no se puede mostrar.',ms:8},
+      {c:5,d:'↓',h:'Sistemas: el servicio de identidad',r:'POST /identidad/otp',e:'{"enviado":true,"vence_en_s":300}',n:'El servicio de identidad envía el SMS al número registrado en la cuenta 1001.',ms:260},
+      {c:3,d:'↑',h:'Lógica de negocio: arma la respuesta',r:'{"enviado":true}',e:'{"texto":"Para cuidar tus datos, te envié\n  un código por SMS. Escríbelo aquí.",\n "opciones":["No me llegó",\n            "Hablar con una persona"]}',n:'Plantilla fija del subflujo de verificación.',ms:5},
+      {c:2,d:'↑',h:'Orquestación: guarda la pila',r:'respuesta neutra',e:'sesión: {"pila":["verificar_identidad",\n                  "consultar_deuda"],\n         "paso":"esperando_codigo"}',n:'La sesión guarda los dos flujos, uno encima del otro: cuando el código sea válido, se cierra la verificación y vuelve la consulta de la deuda. Esa pila es el tema del capítulo 6.',ms:10},
+      {c:0,d:'↑',h:'Canal: el renderizador de WhatsApp',r:'respuesta neutra',e:'{"type":"interactive","interactive":{"type":"button",\n "action":{"buttons":[\n  {"reply":{"id":"nollego","title":"No me llegó"}},\n  {"reply":{"id":"persona","title":"Hablar con persona"}}]}}}',n:'Mismo pedido, otro camino: la facturación ni siquiera se consultó. Quien cambió el recorrido fue la orquestación, no la comprensión.',ms:150}
+    ],
+    tg:()=>[
+      {c:0,d:'↓',h:'Canal: llega el webhook de Telegram',r:'POST /webhooks/telegram\nX-Telegram-Bot-Api-Secret-Token: ••••\n{"update_id":91000001,\n "message":{"chat":{"id":7700001001},\n  "text":"Hola, ¿cuánto debo?"}}',e:'200 OK (en 40 ms)\n→ a la cola: '+CANON({tg:true}),n:'Otro adaptador, otro formato nativo. Pero el mensaje canónico que entrega es casi idéntico: cambian el canal y el identificador de la conversación. La identidad apunta al mismo cliente 1001, que vinculó su Telegram antes.',ms:40},
+      {c:1,d:'↓',h:'Comprensión: igual que en WhatsApp',r:'"Hola, ¿cuánto debo?"',e:INT,n:'Idéntico al escenario de WhatsApp.',ms:180},
+      ...comunes({}),
+      {c:5,d:'↓',h:'Sistemas: responde la facturación',r:'GET /cuentas/1001/saldo',e:FACT,n:'Idéntico: la facturación no sabe por qué canal escribió Laura.',ms:320},
+      ...vuelta({},true)
+    ]
+  };
+  let esc='normal',pasos=ESC.normal(),i=0,timer=null;
+  const fmt=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  function dibujar(){
+    const p=pasos[i];
+    const usadas=new Set(pasos.slice(0,i+1).map(x=>x.c));
+    q('#c51-pila').innerHTML=CAPAS.map((c,k)=>'<li style="--cc:var('+c[1]+')" class="'+(k===p.c?'on':usadas.has(k)?'usada':'')+'">'+(k+1)+' · '+c[0]+'<span class="dir">'+(k===p.c?p.d:'')+'</span></li>').join('');
+    const card=q('#c51-card');card.style.setProperty('--cc','var('+CAPAS[p.c][1]+')');
+    q('#c51-h').textContent='Paso '+(i+1)+' de '+pasos.length+' · '+p.h;
+    q('#c51-rec').textContent=p.r;q('#c51-ent').textContent=p.e;q('#c51-nota').textContent=p.n;
+    const total=pasos.reduce((a,x)=>a+x.ms,0);
+    q('#c51-barra').innerHTML=pasos.map((x,k)=>'<i class="'+(k>i?'fut':'')+'" title="'+CAPAS[x.c][0]+': '+x.ms+' ms" style="width:'+(x.ms/total*100)+'%;background:var('+CAPAS[x.c][1]+')"></i>').join('');
+    const acum=pasos.slice(0,i+1).reduce((a,x)=>a+x.ms,0);
+    let txt='<span class="big">'+fmt(acum)+' ms acumulados</span><span>Capa activa: '+CAPAS[p.c][0]+' ('+p.ms+' ms en este paso). Capas tocadas hasta ahora: '+usadas.size+' de 6.</span>';
+    if(i===pasos.length-1){
+      const lenta=pasos.find(x=>x.ms>=1000);
+      txt+=lenta?'<span class="warn">Total '+fmt(total)+' ms. La espera de la facturación se lleva el '+Math.round(lenta.ms/total*100)+' % del tiempo. El tiempo de espera la cortó y el respaldo respondió con honestidad.</span>'
+        :esc==='sinver'?'<span class="ok">Total '+fmt(total)+' ms. La facturación no se tocó: sin identidad no hay saldo. La orquestación cambió el camino.</span>'
+        :'<span class="ok">Total '+fmt(total)+' ms. La llamada a la facturación es el paso más lento ('+Math.round(320/total*100)+' %): por eso la integración es la capa que más se vigila.'+(esc==='tg'?' Frente a WhatsApp, solo cambiaron el primer y el último paso.':'')+'</span>';
+    }
+    q('#c51-out').innerHTML=txt;
+    q('#c51-ant').disabled=i===0;q('#c51-sig').disabled=i===pasos.length-1;
+  }
+  function parar(){if(timer){clearInterval(timer);timer=null;}q('#c51-play').setAttribute('aria-pressed','false');q('#c51-play').textContent='▶ Reproducir';}
+  q('#c51-esc').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;parar();esc=b.dataset.e;q('#c51-esc').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));pasos=ESC[esc]();i=0;dibujar();});
+  q('#c51-ant').addEventListener('click',()=>{parar();if(i>0){i--;dibujar();}});
+  q('#c51-sig').addEventListener('click',()=>{parar();if(i<pasos.length-1){i++;dibujar();}});
+  q('#c51-rei').addEventListener('click',()=>{parar();i=0;dibujar();});
+  q('#c51-play').addEventListener('click',()=>{
+    if(timer){parar();return;}
+    if(i>=pasos.length-1)i=0;
+    q('#c51-play').setAttribute('aria-pressed','true');q('#c51-play').textContent='❚❚ Pausa';dibujar();
+    timer=setInterval(()=>{if(i<pasos.length-1){i++;dibujar();}if(i>=pasos.length-1)parar();},1600);
+  });
+  dibujar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  // paso: proporción de conversaciones que pasan por el estado; ne: «no entendí» con reglas / con LLM; err: error caro con LLM; cr/cl: costo por paso (US$)
+  const E=[
+    {n:'Saludo y pedido libre',d:'«hola, quería ver lo de mi factura»',paso:1,neR:.22,neL:.03,err:0,cl:.004},
+    {n:'Verificar identidad',d:'el código de un solo uso',paso:1,neR:.03,neL:.02,err:.002,cl:.004},
+    {n:'Consultar el saldo',d:'monto y vencimiento de F-2207',paso:1,neR:.02,neL:.01,err:.004,cl:.004},
+    {n:'Explicar la factura',d:'«¿por qué vino más alta?»',paso:.4,neR:.15,neL:.03,err:.001,cl:.006},
+    {n:'Dudas libres',d:'«¿puedo pagar en la agencia?»',paso:.35,neR:.45,neL:.06,err:.003,cl:.007},
+    {n:'Confirmar monto',d:'«sí», «dale», «pero solo la mitad»',paso:1,neR:.04,neL:.02,err:.006,cl:.004},
+    {n:'Crear el enlace',d:'la acción sobre la pasarela',paso:1,neR:.01,neL:.01,err:.004,cl:.004},
+    {n:'Cierre y comprobante',d:'número de operación y despedida',paso:1,neR:.03,neL:.01,err:.001,cl:.004}
+  ];
+  const CR=.0002,N=10000;
+  const PRE={reglas:[0,0,0,0,0,0,0,0],llm:[1,1,1,1,1,1,1,1],hibrido:[1,0,0,1,1,0,0,0]};
+  let t=PRE.hibrido.slice();
+  const f0=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const usd=n=>{const c=Math.round(n*100);return 'US$ '+f0(Math.floor(c/100))+','+String(c%100).padStart(2,'0');};
+  // máximos de referencia para las barras
+  function calc(v){
+    let err=0,sin=1,costo=0;const pe=[],pn=[];
+    E.forEach((e,k)=>{
+      const llm=v[k]===1;
+      const ce=llm?e.paso*e.err:0;err+=ce;pe.push(ce);
+      const ne=e.paso*(llm?e.neL:e.neR);sin*=1-ne;pn.push(ne);
+      costo+=e.paso*(llm?e.cl:CR);
+    });
+    return {err:err*N,ne:(1-sin)*N,costo:costo*N,pe,pn};
+  }
+  const MAX={err:calc(PRE.llm).err,ne:calc(PRE.reglas).ne,costo:calc(PRE.llm).costo};
+  function dibujar(){
+    q('#c52-flujo').innerHTML=E.map((e,k)=>'<button type="button" data-k="'+k+'" style="--cc:var('+(t[k]?'--c-tra':'--c-apl')+')" aria-label="'+(k+1)+'. '+e.n+': '+(t[k]?'LLM':'reglas')+'. Toca para cambiar."><small>'+(k+1)+' · '+(t[k]?'LLM':'Reglas')+'</small>'+e.n+'<em>'+e.d+'</em></button>').join('');
+    const r=calc(t);
+    const kpi=(tit,val,txt,max,col)=>'<div><small>'+tit+'</small><b style="color:var('+col+')">'+val+'</b><span class="c52-t"><i style="width:'+Math.min(100,txt/max*100)+'%;background:var('+col+')"></i></span></div>';
+    q('#c52-kpis').innerHTML=kpi('Errores caros',f0(r.err),r.err,MAX.err,'--warm')+kpi('Conversaciones con «no entendí»',f0(r.ne),r.ne,MAX.ne,'--muted')+kpi('Costo de 10.000 conversaciones',usd(r.costo),r.costo,MAX.costo,'--accent');
+    const iE=r.pe.indexOf(Math.max(...r.pe)),iN=r.pn.indexOf(Math.max(...r.pn));
+    const nL=t.filter(x=>x).length;
+    let s='<span>Con '+nL+' de 8 estados en LLM, de 10.000 conversaciones: <b>'+f0(r.err)+'</b> terminan con un error caro, <b>'+f0(r.ne)+'</b> oyen al menos un «no entendí» y el costo de los modelos y reglas es de <b>'+usd(r.costo)+'</b>.</span>';
+    if(r.pe[iE]>0)s+='<span class="warn">El error caro que más pesa viene de «'+E[iE].n+'» con LLM. '+([2,5,6].includes(iE)?'Ahí se mueve dinero o se compromete a la empresa: va con reglas.':'Se baja con fuentes oficiales y validación de salida.')+'</span>';
+    if(r.pn[iN]>.1)s+='<span class="warn">El «no entendí» que más pesa viene de «'+E[iN].n+'» con reglas: ahí el cliente escribe libremente y un menú no alcanza.</span>';
+    const h=PRE.hibrido.every((x,k)=>x===t[k]);
+    if(h)s+='<span class="ok">Este es el reparto del patrón híbrido: reglas donde no se puede fallar (verificar, saldo, confirmar, enlace, cierre) y LLM donde el cliente escribe libre. Los errores caros que quedan son políticas mal explicadas, y se atacan con la base de conocimiento del capítulo 7.</span>';
+    else if(nL===0)s+='<span>«Todo reglas» es barato y no se equivoca en montos, pero casi la mitad de los clientes choca con un «no entendí».</span>';
+    else if(nL===8)s+='<span>«Todo LLM» casi nunca deja a nadie sin entender, pero comete errores caros justo en los estados que mueven dinero, y es el más caro.</span>';
+    q('#c52-out').innerHTML=s;
+  }
+  q('#c52-flujo').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const k=+b.dataset.k;t[k]=t[k]?0:1;dibujar();const nb=q('#c52-flujo').querySelector('[data-k="'+k+'"]');if(nb)nb.focus();});
+  q('#c52-pre').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;t=PRE[b.dataset.p].slice();dibujar();});
+  dibujar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const P=4000;
+  const OP=[
+    {n:'Comprar',col:'--warm',gente:1.5,meses:2,dep:'alta',ini:(c,i)=>10000+3000*i,fijo:c=>1000+250*c,conv:.07},
+    {n:'Combinar',col:'--accent',gente:3,meses:4,dep:'media',ini:(c,i)=>25000+8000*i+2000*c,fijo:c=>600+100*c,conv:.03},
+    {n:'Construir',col:'--good',gente:4,meses:9,dep:'baja',ini:(c,i)=>60000+12000*i+8000*c,fijo:()=>1200,conv:.012}
+  ];
+  const v=id=>+q('#c53-'+id).value;
+  const mil=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const miles=n=>'US$ '+mil(n);
+  function serie(o,vol,cre,can,int,eq){
+    const falta=Math.max(0,o.gente-eq);
+    const gente=o.gente*P+falta*P*.3;
+    const out=[];let acc=o.ini(can,int);out.push(acc);
+    for(let m=1;m<=36;m++){const conv=vol*Math.pow(1+cre,(m-1)/12);acc+=o.fijo(can)+conv*o.conv+gente;out.push(acc);}
+    return {s:out,falta,meses:o.meses+Math.ceil(falta)};
+  }
+  function grafica(S){
+    const box=q('#c53-graf');const W=Math.max(280,box.clientWidth||600),H=Math.round(Math.min(300,Math.max(220,W*.42)));
+    const ml=58,mr=12,mt=12,mb=34;
+    const max=Math.max(...S.map(x=>x.s[36]))*1.05;
+    const X=m=>ml+(W-ml-mr)*m/36,Y=y=>mt+(H-mt-mb)*(1-y/max);
+    let g='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">';
+    const paso=max>2e6?500000:max>800000?200000:100000;
+    for(let y=0;y<=max;y+=paso){g+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+Y(y)+'" y2="'+Y(y)+'" stroke="var(--grid)"/><text x="'+(ml-6)+'" y="'+(Y(y)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+(y===0?'0':y>=1e6?String(y/1e6).replace('.',',')+' M':(y/1000)+' mil')+'</text>';}
+    [0,6,12,18,24,30,36].forEach(m=>{g+='<text x="'+X(m)+'" y="'+(H-mb+16)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+m+'</text>';});
+    g+='<text x="'+(W-mr)+'" y="'+(H-4)+'" text-anchor="end" font-size="11" fill="var(--muted)">meses</text>';
+    S.forEach((x,k)=>{g+='<polyline fill="none" stroke="var('+OP[k].col+')" stroke-width="2.6" points="'+x.s.map((y,m)=>X(m).toFixed(1)+','+Y(y).toFixed(1)).join(' ')+'"/>';});
+    // cruces: cambia la opción más barata
+    let prev=null;
+    for(let m=1;m<=36;m++){const c=S.map(x=>x.s[m]);const b=c.indexOf(Math.min(...c));if(prev!==null&&b!==prev){g+='<circle cx="'+X(m)+'" cy="'+Y(c[b])+'" r="5" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>';}prev=b;}
+    g+='</svg>';box.innerHTML=g;
+  }
+  function calcular(){
+    const vol=v('vol'),cre=v('cre')/100,can=v('can'),int=v('int'),eq=v('eq');
+    q('#c53-vol-o').textContent=mil(vol);q('#c53-cre-o').textContent=v('cre')+' %';
+    q('#c53-can-o').textContent=can;q('#c53-int-o').textContent=int;q('#c53-eq-o').textContent=eq;
+    const S=OP.map(o=>serie(o,vol,cre,can,int,eq));
+    grafica(S);
+    const fin=S.map(x=>x.s[36]);const g=fin.indexOf(Math.min(...fin));
+    q('#c53-tb').innerHTML=OP.map((o,k)=>'<tr class="'+(k===g?'gana':'')+'"><td><i style="background:var('+o.col+')"></i>'+o.n+'</td><td class="n">'+miles(fin[k])+'</td><td>'+S[k].meses+' meses'+(S[k].falta?' (falta'+(S[k].falta>1?'n ':' ')+String(S[k].falta).replace('.',',')+(S[k].falta>1?' personas)':' persona)'):'')+'</td><td>'+o.dep+'</td></tr>').join('');
+    // historia de quién es más barato
+    const tramos=[];let prev=null;
+    for(let m=1;m<=36;m++){const c=S.map(x=>x.s[m]);const b=c.indexOf(Math.min(...c));if(b!==prev){tramos.push([b,m]);prev=b;}}
+    let s='<span class="big">A tres años gana '+OP[g].n.toLowerCase()+': '+miles(fin[g])+'</span>';
+    if(tramos.length>1)s+='<span>'+tramos.map((t,k)=>(k===0?'Hasta el mes '+(tramos[1][1]-1)+' la más barata es ':'desde el mes '+t[1]+', ')+OP[t[0]].n.toLowerCase()).join('; ')+'. El círculo marca cada cruce.</span>';
+    else s+='<span>'+OP[g].n+' es la más barata durante los 36 meses.</span>';
+    const pc=S[0].s[36]-S[0].s[0];
+    const pesoConv=(()=>{let t=0;for(let m=1;m<=36;m++)t+=vol*Math.pow(1+cre,(m-1)/12)*OP[0].conv;return t/pc;})();
+    s+='<span>En «comprar», el cobro por conversación es el '+Math.round(pesoConv*100)+' % del gasto mensual acumulado: '+(pesoConv>.5?'con este volumen, cada conversación nueva encarece la factura del proveedor.':'con este volumen, pesan más las personas y la licencia que las conversaciones.')+'</span>';
+    if(S[g].falta>0)s+='<span class="warn">Ojo: la opción ganadora pide '+String(OP[g].gente).replace('.',',')+' personas técnicas y la empresa tiene '+eq+'. Sin ese equipo, el costo real y el plazo crecen, y el riesgo de que el bot quede sin mantenimiento también.</span>';
+    if(g===0)s+='<span>Si eliges comprar, escribe la estrategia de salida antes de firmar: qué se exporta y en qué formato.</span>';
+    q('#c53-out').innerHTML=s;
+  }
+  document.querySelectorAll('[id="05-lab-3"] input').forEach(x=>x.addEventListener('input',calcular));
+  if(window.ResizeObserver){let w=0;new ResizeObserver(en=>{const nw=Math.round(en[0].contentRect.width);if(nw&&nw!==w){w=nw;calcular();}}).observe(q('#c53-graf'));}
+  calcular();
+})();
+</script>
+</body>
+</html>

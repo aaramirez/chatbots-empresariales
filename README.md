@@ -4,7 +4,7 @@ Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño
 
 **Ver en línea:** https://aaramirez.github.io/chatbots-empresariales/
 
-Este repositorio solo tiene el sitio generado. El curso está en preparación: la tabla de contenido ya está publicada para revisión.
+Este repositorio solo tiene el sitio generado. Curso completo: 17 capítulos con laboratorios interactivos, diagramas y prácticas.
 
 | # | Capítulo |
 |---|---|

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atención, enrutamiento y ventas · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="atencion-enrutamiento-y-ventas">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 10 DE 17</span><h1>Atención, enrutamiento entre áreas, prospectos y ventas</h1><p class="lede">Pía no trabaja solo para soporte. El mismo número recibe preguntas de horarios, pedidos para cobranza, quejas que son de dos áreas a la vez y personas que quieren contratar. Este capítulo arma los flujos que informan, derivan y venden, y la integración con el CRM que hace que ningún prospecto se pierda ni se duplique.</p></header>
+<section><div class="prose"><p>Un lunes cualquiera, a Pía le llegan en una hora mensajes como estos: «¿hasta qué hora abre la agencia del centro?», «me llegó la factura con un monto raro», «se me cae el wifi cada rato», «quiero cancelar, llevo tres días sin internet», «¿tienen fibra en Calle Ejemplo 450?». Cada uno pertenece a un área distinta de Servicios Ejemplo, y uno pertenece a dos. Y el último no es de un cliente: es de alguien que podría serlo.</p><p>El capítulo 1 mostró que un chatbot empresarial sirve a varias áreas. Este capítulo arma tres familias de flujos que no son la cobranza ni el soporte técnico (esos llegan en el capítulo 11): los que <b>informan</b>, los que <b>derivan</b> al área correcta y los que <b>venden</b>. Y la pieza que los une por detrás: el <b>CRM</b> (<i>Customer Relationship Management</i>, el sistema donde la empresa guarda a sus clientes, sus prospectos y su historia).</p></div></section>
+<section><h2>Atención y consultas generales: planes, oficinas, horarios y preguntas frecuentes</h2><div class="prose"><p>Las consultas generales son el volumen más grande y el riesgo más bajo: horarios, direcciones de agencias, requisitos de un trámite, qué incluye un plan. Por eso son un buen terreno para automatizar, y también un lugar donde un bot descuidado se desprestigia rápido, porque el cliente puede comprobar el dato. Si Pía dice que la agencia abre el sábado y el sábado está cerrada, Laura no vuelve a creerle.</p><p>Tres reglas sostienen estos flujos:</p><ul><li><b>El dato sale de su fuente.</b> Los horarios y direcciones de las agencias no se escriben en el flujo: se consultan a un <b>directorio de agencias</b> con sus horarios, sus feriados y sus cierres temporales. Lo que es contenido (qué documentos pide un cambio de titular) viene de la base de conocimiento del capítulo 7. Así, un cambio de horario se hace una vez y vale en todos los canales.</li><li><b>Primero la respuesta corta, después el detalle.</b> «La agencia del centro abre de lunes a viernes de 8:00 a 17:00 y los sábados de 8:00 a 12:00. ¿Quieres la dirección o cómo llegar?». No el artículo completo.</li><li><b>Si no hay fuente, no hay respuesta.</b> Una pregunta que la base de conocimiento no cubre se reconoce como tal: «No tengo ese dato confirmado. Te paso con alguien del equipo o te dejo el enlace de la página de requisitos». Inventar un horario es el caso Air Canada en pequeño.</li></ul><p>Y una cuarta, que conecta con la sección siguiente: <b>una consulta general muchas veces es la puerta de un trámite</b>. «¿Cómo cambio mi plan?» empieza como pregunta y termina en una venta; «¿por qué me cobraron esto?» empieza como duda y termina en cobranza. El flujo de atención no se cierra solo porque respondió: está atento a ese cambio de intención y lo deriva.</p></div></section>
+<section><h2>Enrutamiento entre áreas: detectar a quién le toca y pasar el contexto</h2><div class="prose"><p>El <b>enrutamiento</b> (<i>routing</i>) es la decisión de qué flujo, y en última instancia qué área, se hace cargo de un pedido. En un bot pequeño es una sola clasificación de intenciones. En uno que atiende a cinco áreas con decenas de intenciones, conviene hacerlo en <b>dos niveles</b>: primero el <b>dominio</b> (<i>domain</i>: atención, cobranza, soporte, ventas, retención) y después la intención concreta dentro de él.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en la recepción de un hospital. La persona de la entrada no diagnostica: decide si vas a urgencias, a consulta externa, a laboratorio o a facturación. Dentro de cada área, otra persona decide qué te hace exactamente. Si la recepción intentara diagnosticar, se equivocaría mucho y haría esperar a todos. El enrutamiento en dos niveles es esa recepción: una decisión gruesa y rápida, y después la fina, en manos de quien sabe del tema.</p></div><div class="prose"><p>¿Por qué dos niveles? Porque cada área puede tener su propio catálogo de intenciones, sus propios ejemplos y hasta su propio modelo, y porque un error en el primer nivel es el más caro: manda el caso al lugar equivocado. Concentrar en él las mejores señales y las reglas más claras paga.</p></div><figure class="fig fig-esquema" id="10-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" style="min-width:740px" role="img" aria-label="Enrutamiento en dos niveles: reglas fijas, clasificador de dominio con umbral, pregunta para aclarar, tabla de prioridad entre áreas y un clasificador de intenciones por dominio, con las señales que entran a la decisión">
+  <defs>
+    <marker id="d10a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d10a-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <text x="20" y="24" class="t t-xs t-b t-m">NIVEL 1 · ¿DE QUÉ ÁREA ES?</text>
+  <text x="640" y="24" class="t t-xs t-b t-m">NIVEL 2 · ¿QUÉ PIDE?</text>
+  <rect x="20" y="150" width="110" height="60" rx="10" class="c-fis"/>
+  <text x="75" y="176" class="t t-b" text-anchor="middle">Mensaje</text><text x="75" y="194" class="t t-s t-m" text-anchor="middle">canónico</text>
+  <path d="M130 180 H160" class="ln" style="stroke-width:2" marker-end="url(#d10a)"/>
+  <rect x="164" y="140" width="130" height="80" rx="10" class="c-apl"/>
+  <text x="229" y="166" class="t t-b" text-anchor="middle">Reglas fijas</text><text x="229" y="184" class="t t-s" text-anchor="middle">«dar de baja»,</text><text x="229" y="200" class="t t-s" text-anchor="middle">«cancelar el servicio»</text>
+  <path d="M229 140 C229 90 560 70 636 74" class="ln s-apl" style="stroke-width:2" marker-end="url(#d10a)"/>
+  <text x="306" y="124" class="t t-s k-apl t-b">coincide: va directo, sin modelo</text>
+  <path d="M294 180 H324" class="ln" style="stroke-width:2" marker-end="url(#d10a)"/>
+  <rect x="328" y="140" width="150" height="80" rx="10" class="c-tra"/>
+  <text x="403" y="166" class="t t-b" text-anchor="middle">Clasificador</text><text x="403" y="184" class="t t-b" text-anchor="middle">de dominio</text><text x="403" y="202" class="t t-s t-m" text-anchor="middle">área + confianza</text>
+  <g class="t t-s">
+    <path d="M478 160 C540 150 560 140 636 140" class="ln s-tra" style="stroke-width:2" marker-end="url(#d10a)"/>
+    <text x="488" y="138" class="k-tra t-b">sobre el umbral</text>
+    <path d="M478 200 C520 240 520 262 540 272" class="ln" style="stroke-width:1.6" marker-end="url(#d10a)"/>
+    <rect x="460" y="276" width="160" height="56" rx="8" class="caja"/>
+    <text x="540" y="298" class="t-b" text-anchor="middle">Bajo el umbral</text><text x="540" y="316" text-anchor="middle">pregunta cerrada:</text>
+    <text x="540" y="348" text-anchor="middle" class="t-m">«¿factura o falla?»</text>
+    <path d="M440 220 C430 300 380 330 330 340" class="ln s-warm" style="stroke-width:1.6" marker-end="url(#d10a-w)"/>
+    <rect x="170" y="318" width="160" height="56" rx="8" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="250" y="340" class="t-b k-warm" text-anchor="middle">Casi empate</text><text x="250" y="358" text-anchor="middle">tabla de prioridad</text>
+    <text x="250" y="392" text-anchor="middle" class="t-m">falla + baja → soporte</text>
+    <text x="250" y="408" text-anchor="middle" class="t-m">venta + deuda → cobranza</text>
+  </g>
+  <g class="t t-s">
+    <rect x="640" y="40" width="240" height="44" rx="8" class="c-red" style="opacity:.9"/><text x="652" y="60" class="t-b">Retención</text><text x="652" y="76" class="t-m">baja, contraoferta, portabilidad</text>
+    <rect x="640" y="92" width="240" height="44" rx="8" class="c-red" style="opacity:.9"/><text x="652" y="112" class="t-b">Cobranza</text><text x="652" y="128" class="t-m">deuda, pago, reclamo por cobro</text>
+    <rect x="640" y="144" width="240" height="44" rx="8" class="c-red" style="opacity:.9"/><text x="652" y="164" class="t-b">Soporte</text><text x="652" y="180" class="t-m">falla, lentitud, visita, ticket</text>
+    <rect x="640" y="196" width="240" height="44" rx="8" class="c-red" style="opacity:.9"/><text x="652" y="216" class="t-b">Ventas</text><text x="652" y="232" class="t-m">planes, cobertura, contratar</text>
+    <rect x="640" y="248" width="240" height="44" rx="8" class="c-red" style="opacity:.9"/><text x="652" y="268" class="t-b">Atención general</text><text x="652" y="284" class="t-m">horarios, agencias, requisitos</text>
+    <text x="652" y="312" class="t-m">cada área, su propio</text><text x="652" y="328" class="t-m">catálogo de intenciones</text>
+  </g>
+  <rect x="20" y="422" width="860" height="24" rx="6" class="d-inet" style="opacity:.55"/>
+  <text x="450" y="439" class="t t-s" text-anchor="middle"><tspan class="t-b">Señales además del texto:</tspan> entidades (n.º de factura o de ticket) · casos abiertos del cliente · página u origen · historial reciente</text>
+</svg></div><figcaption><b>Enrutamiento en dos niveles.</b> El mensaje entra por la izquierda. Primero pasan las reglas fijas, que deciden sin modelo los casos que nunca se discuten («dar de baja» va a retención). Después, el clasificador de dominio con su confianza: sobre el umbral, el mensaje va al dominio; bajo el umbral, Pía hace una pregunta cerrada; si dos dominios quedan casi empatados, se aplica la tabla de prioridad entre áreas. A la derecha, cada dominio con su clasificador de intenciones propio. Abajo, las señales que entran en la decisión además del texto.</figcaption></figure><div class="prose"><p>El texto del mensaje no es la única señal. Un buen enrutador también usa:</p><ul><li><b>Las entidades</b> que trae el mensaje: un número de factura apunta a cobranza; un número de ticket, a soporte.</li><li><b>El contexto del cliente</b>: si tiene un ticket abierto por falla, «sigue igual» casi seguro es de soporte; si acaba de ver la página de planes (capítulo 8), «¿y cuánto sale?» es de ventas.</li><li><b>El origen</b>: un mensaje que llega desde un anuncio del plan de 500 Mbps es, con alta probabilidad, de ventas.</li><li><b>Las reglas fijas del negocio</b>: frases que van siempre al mismo lugar, sin importar lo que diga el clasificador. «Dar de baja», «cancelar el servicio» o «portabilidad» van a retención. Son pocas, se escriben a mano y se prueban.</li></ul><p>Y el enrutamiento no ocurre una sola vez. El gestor de diálogo (capítulo 6) reevalúa el dominio en cada turno: si Laura estaba consultando su factura y escribe «en realidad lo que quiero es cambiar de plan», el flujo cambia de dominio. Lo que <b>no</b> cambia es lo que ya se sabe. La identidad verificada, la cuenta y los datos ya dados pasan al nuevo flujo, igual que pasan a un agente en un traspaso (capítulo 9). Un cambio de área que vuelve a pedir la cédula es un bot que reinicia.</p></div><div class="lab" id="10-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Enrutamiento: clasifica 20 mensajes y mira los que caen entre dos áreas</h3></div><p class="hint">Asigna cada mensaje al área que creas con el selector de su fila. Después toca «Comparar con el enrutador»: verás qué decidió el enrutador, con qué confianza y por qué señal. Mueve el umbral de confianza y mira cuántos mensajes se van solos a su área, cuántos reciben una pregunta para aclarar y cuántos caen entre dos áreas y necesitan la regla de prioridad.</p><style>
+[id="10-lab-1"] .c101-tb{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+[id="10-lab-1"] table{font-size:.84rem}
+[id="10-lab-1"] td{padding:6px 8px}
+[id="10-lab-1"] td.c101-msg{min-width:170px}
+[id="10-lab-1"] select{font:500 .8rem var(--f-display);padding:4px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);max-width:120px}
+[id="10-lab-1"] .c101-e{font:700 .68rem var(--f-display);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:4px;white-space:nowrap;display:inline-block}
+[id="10-lab-1"] .e-auto{background:var(--good-soft);color:var(--good)}
+[id="10-lab-1"] .e-acl{background:var(--accent-soft);color:var(--accent)}
+[id="10-lab-1"] .e-dos{background:var(--warm-soft);color:var(--warm)}
+[id="10-lab-1"] .e-regla{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+[id="10-lab-1"] .c101-why{display:block;color:var(--muted);font-size:.76rem;margin-top:2px}
+[id="10-lab-1"] .c101-mal{color:var(--warm);font-weight:700}
+[id="10-lab-1"] .c101-bien{color:var(--good);font-weight:700}
+[id="10-lab-1"] .c101-bar{display:flex;height:26px;border-radius:7px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+[id="10-lab-1"] .c101-bar i{display:block;height:100%;transition:width .3s}
+@media (prefers-reduced-motion: reduce){[id="10-lab-1"] .c101-bar i{transition:none}}
+</style>
+<div class="ctls">
+  <label class="ctl">Umbral de confianza para enrutar solo <output id="c101-u-o"></output>
+    <input id="c101-u" type="range" min="0.5" max="0.95" step="0.05" value="0.7"></label>
+</div>
+<div class="btns" role="group" aria-label="Acciones">
+  <button type="button" class="primary" id="c101-cmp" aria-pressed="false">Comparar con el enrutador</button>
+  <button type="button" id="c101-rei">Borrar mis respuestas</button>
+</div>
+<div class="c101-tb"><table><thead><tr><th>#</th><th>Mensaje</th><th>Tu área</th><th>Enrutador</th></tr></thead><tbody id="c101-body"></tbody></table></div>
+<div class="c101-bar" id="c101-bar" role="img" aria-label="Destino de los 20 mensajes con este umbral"></div>
+<div class="legend"><span><i style="background:var(--good)"></i>Enrutado solo</span><span><i style="background:var(--muted)"></i>Regla fija</span><span><i style="background:var(--accent)"></i>Pregunta para aclarar</span><span><i style="background:var(--warm)"></i>Entre dos áreas</span></div>
+<div class="readout texto" id="c101-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">Tabla de prioridad del ejemplo: soporte antes que retención; cobranza antes que retención, que ventas y que soporte; retención antes que ventas; cualquier área antes que atención general. Dos áreas «empatan» si sus confianzas difieren en menos de 0,15 y ambas pasan de 0,35.</p></div></section>
+<section><h2>Pedidos que caen entre dos áreas y qué hacer con ellos</h2><div class="prose"><p>«Quiero cancelar, llevo tres días sin internet». ¿Es de soporte, porque hay una falla, o de retención, porque el cliente quiere irse? Las dos cosas. Estos pedidos <b>multiintención</b> (<i>multi-intent</i>) son pocos, pero son los que más daño hacen cuando se manejan mal, porque suelen venir de clientes molestos.</p><p>El error clásico es el <b>efecto ping-pong</b>: soporte dice «eso es de retención», retención dice «primero resuelva la falla con soporte», y el cliente rebota entre los dos. Se evita con tres decisiones tomadas de antemano, no en el momento:</p><ol class="steps"><li><span><b>Una tabla de prioridad entre áreas.</b> Para cada par de dominios que suelen chocar, quién va primero. En Servicios Ejemplo: falla + baja → primero soporte, porque la causa de la baja es la falla y resolverla es la mejor retención; cobro + baja → primero cobranza; venta + deuda → primero cobranza, porque no se vende un plan nuevo con una deuda vencida.</span></li><li><span><b>Un dueño del caso.</b> El área que va primero es dueña de la conversación hasta el final, aunque consulte a la otra. Las demás áreas aportan, pero no reciben el caso de vuelta.</span></li><li><span><b>El otro pedido queda anotado.</b> Si soporte resuelve la falla, el «quiero cancelar» no se borra: queda en el paquete del caso, y retención recibe un aviso para llamar al cliente si la intención de baja sigue en pie.</span></li></ol></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que revisa a mano una muestra de conversaciones derivadas suele encontrar que una parte pequeña de los mensajes mezcla dos temas, y que esa parte concentra muchas de las quejas por «me pasaron de un lado a otro». La mejora más rentable no suele ser un clasificador más fino, sino escribir la tabla de prioridad entre áreas con los jefes de cada una sentados en la misma mesa, y medir cuántos casos cambian de cola más de una vez.</p></div></section>
+<section><h2>Prospección: calificar el interés, pedir solo los datos necesarios y el consentimiento</h2><div class="prose"><p>No todos los que escriben son clientes. Un <b>prospecto</b> (<i>lead</i>) es una persona que muestra interés en comprar: comentó «precio» en una publicación de Instagram, tocó un anuncio, preguntó por cobertura en el widget. El flujo de <b>prospección</b> (<i>lead generation</i>) tiene un objetivo modesto y muy concreto: averiguar si el interés es real y si la empresa puede atenderlo, y dejarle a ventas un registro útil.</p><p>El orden de las preguntas importa. Un formulario de diez campos en el primer mensaje espanta a casi todos. Pía hace primero las preguntas que le sirven también a la persona:</p><ol class="steps"><li><span><b>Abrir con el contexto del origen.</b> «Hola, soy Pía, la asistente virtual de Servicios Ejemplo. Vi que te interesa el plan de 500 Mbps. ¿Te reviso si llega a tu dirección?»</span></li><li><span><b>Calificar con lo mínimo.</b> La dirección, para consultar la <b>cobertura</b> (<i>coverage</i>) en el sistema de red; el uso, hogar o negocio, porque son productos distintos; y la urgencia, «¿lo necesitas esta semana o estás comparando?».</span></li><li><span><b>Consultar la cobertura de verdad.</b> Con la dirección, una integración responde si hay servicio. Si no hay, se dice y se ofrece avisar cuando llegue; el interés igual se registra.</span></li><li><span><b>Recién entonces, los datos de contacto.</b> Nombre y un teléfono o correo. Nada más. Ni la cédula, ni la fecha de nacimiento, ni el ingreso mensual: no hacen falta para que un asesor llame.</span></li><li><span><b>Pedir el consentimiento.</b> Con una pregunta explícita, no con una casilla marcada de antemano.</span></li><li><span><b>Decir qué sigue.</b> «Un asesor te escribe hoy antes de las 18:00 por este mismo chat.»</span></li></ol><p>La <b>calificación</b> (<i>lead qualification</i>) termina en un puntaje sencillo que viaja con el prospecto: <b>caliente</b> (hay cobertura, es para ya, dio sus datos), <b>tibio</b> (hay cobertura, está comparando) o <b>frío</b> (sin cobertura o solo curioseando). Ventas atiende primero a los calientes.</p><p>El <b>consentimiento</b> (<i>consent</i>) merece su propio párrafo porque es una obligación legal en casi todos los países de la región, con sus leyes de <b>protección de datos personales</b> (<i>personal data protection</i>). Tres reglas prácticas: se pide para un fin concreto («que un asesor te contacte por este plan»), se guarda con evidencia (qué texto se mostró, cuándo, por qué canal y qué respondió la persona) y el consentimiento para recibir <b>ofertas</b> en el futuro es otro, aparte, que se puede negar sin perder la atención. Quien solo aceptó que lo llamen por este plan no entra a la lista de promociones.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Clasifica pedidos con un asistente y compáralo con tu criterio</h3></div><p>Abre cualquier asistente de IA gratuito (cualquiera sirve) y pega este pedido. Vas a comparar lo que hace un modelo de lenguaje con las reglas de esta sección.</p><div class="code-copia"><pre><code>Clasifica cada mensaje en UNA de estas áreas:
+atencion, cobranza, soporte, ventas, retencion.
+Si el mensaje es de dos áreas, dilo y elige cuál
+va primero. Responde en una tabla con área,
+confianza (0 a 1) y la palabra que te hizo decidir.
+1. hasta que hora abre la agencia del centro
+2. quiero cancelar, llevo 3 dias sin internet
+3. me llego la factura con un monto raro
+4. tienen fibra en calle ejemplo 450?
+5. quiero el plan de 500 pero tengo una factura vencida
+6. dar de baja</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Anota el área y la confianza de cada mensaje.</span></li><li><span>Compara los mensajes 2 y 5 con la tabla de prioridad de esta sección: falla + baja va primero a soporte; venta + deuda va primero a cobranza.</span></li><li><span>Mira el mensaje 6: ¿el modelo lo mandó a retención? En el diseño de Pía, esa frase es una regla fija y ni siquiera llega al modelo.</span></li></ol><p><b>Qué observar:</b> el modelo acierta casi todos los mensajes claros, y en los de dos áreas suele elegir bien uno de los dos, pero no siempre el que dice tu tabla de prioridad: no la conoce. La confianza que reporta tampoco es una probabilidad medida, es un número que el modelo redacta. Por eso, en producción, las prioridades entre áreas y las frases que van siempre al mismo lugar se escriben como reglas, y el modelo trabaja en lo ambiguo.</p></div></section>
+<section><h2>Entregar el prospecto a ventas: el CRM en ambos sentidos y sin duplicados</h2><div class="prose"><p>El prospecto calificado no sirve de nada si se queda en la base de datos del bot. Tiene que llegar al CRM, donde trabaja ventas, y tiene que llegar bien. La integración con el CRM tiene <b>dos sentidos</b>:</p><ul><li><b>Del CRM al bot (lectura).</b> Antes de crear nada, Pía pregunta: ¿esta persona ya existe? ¿Es cliente? ¿Es un prospecto que ya habló con un asesor la semana pasada? Esta lectura ocurre durante la conversación, así que tiene que ser rápida y con tiempo de espera, como cualquier integración del capítulo 5.</li><li><b>Del bot al CRM (escritura).</b> Crear o actualizar el prospecto, registrar la conversación como una actividad, asignar un asesor. Esta escritura puede ir por una cola, sin hacer esperar al cliente, y con reintentos si el CRM está lento.</li></ul></div><figure class="fig fig-flujo" id="10-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" style="min-width:720px" role="img" aria-label="Diagrama de secuencia de la entrega de un prospecto al CRM: consulta de cobertura, normalización y búsqueda del teléfono, actualización con clave de idempotencia, asignación del asesor, aviso y confirmación al visitante, y evento de vuelta del CRM al bot">
+  <defs>
+    <marker id="d10b-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d10b-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+    <marker id="d10b-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="70" y="36" class="t t-b" text-anchor="middle">Visitante</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en el widget</text>
+  <rect x="170" y="14" width="120" height="52" rx="10" class="c-red"/><text x="230" y="36" class="t t-b" text-anchor="middle">Pía</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">y su integración</text>
+  <rect x="330" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="390" y="36" class="t t-b" text-anchor="middle">Cobertura</text><text x="390" y="54" class="t t-s t-m" text-anchor="middle">sistema de red</text>
+  <rect x="490" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="550" y="36" class="t t-b" text-anchor="middle">CRM</text><text x="550" y="54" class="t t-s t-m" text-anchor="middle">prospectos</text>
+  <rect x="650" y="14" width="120" height="52" rx="10" style="fill:var(--warm-soft);stroke:var(--warm)"/><text x="710" y="36" class="t t-b" text-anchor="middle">Asesor</text><text x="710" y="54" class="t t-s t-m" text-anchor="middle">de ventas</text>
+  <line x1="70" y1="66" x2="70" y2="510" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="510" class="vida"/>
+  <line x1="390" y1="66" x2="390" y2="510" class="vida"/>
+  <line x1="550" y1="66" x2="550" y2="510" class="vida"/>
+  <line x1="710" y1="66" x2="710" y2="510" class="vida"/>
+  <g class="t t-s">
+    <text x="78" y="92" class="t-m">dirección, uso, urgencia, teléfono, consentimiento</text>
+    <line x1="230" y1="120" x2="387" y2="120" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="238" y="113">① ¿cobertura en Calle Ejemplo 450?</text>
+    <line x1="390" y1="154" x2="233" y2="154" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="238" y="147">② sí, fibra disponible</text>
+
+    <rect x="240" y="168" width="230" height="40" rx="6" class="caja"/>
+    <text x="250" y="184" class="t-mono">«555.010.0123» → +15550100123</text>
+    <text x="250" y="200" class="t-m">normalizar a E.164 antes de buscar</text>
+    <line x1="230" y1="232" x2="547" y2="232" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="238" y="225">③ buscar por teléfono +15550100123</text>
+    <line x1="550" y1="266" x2="233" y2="266" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="238" y="259">④ existe: P-0871 (asesor Andrés)</text>
+    <line x1="230" y1="306" x2="547" y2="306" class="ln" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="238" y="299">⑤ actualizar P-0871 · clave web:8842:prospecto</text>
+    <text x="558" y="322" class="k-warm t-b">si llega dos veces: ignorado</text>
+
+    <line x1="550" y1="350" x2="707" y2="350" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#d10b-w)"/>
+    <text x="558" y="343">⑥ asignar a Andrés</text>
+    <line x1="550" y1="384" x2="707" y2="384" class="ln ln-d" style="stroke:var(--warm);stroke-width:2" marker-end="url(#d10b-w)"/>
+    <text x="558" y="377">⑦ aviso: caliente</text>
+    <line x1="230" y1="420" x2="73" y2="420" class="ln s-fis" style="stroke-width:2" marker-end="url(#d10b-fis)"/>
+    <text x="80" y="413">⑧ «Andrés te escribe hoy</text>
+    <text x="80" y="436" class="t-m">antes de las 18:00»</text>
+    <line x1="550" y1="470" x2="233" y2="470" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d10b-sis)"/>
+    <text x="244" y="463">⑨ evento: el asesor tomó P-0871</text>
+  </g>
+  <g class="t t-xs t-b">
+    <path d="M800 100 v62" class="ln" style="stroke:var(--d-sis);stroke-width:3"/><text x="810" y="128" class="k-sis">CALIFICAR</text><text x="810" y="142" class="t-m">①–②</text>
+    <path d="M800 176 v150" class="ln s-tra" style="stroke-width:3"/><text x="810" y="246" class="k-tra">DEDUPLICAR</text><text x="810" y="260" class="t-m">③–⑤</text>
+    <path d="M800 340 v140" class="ln s-warm" style="stroke-width:3"/><text x="810" y="404" class="k-warm">ASIGNAR</text><text x="810" y="418" class="t-m">⑥–⑨</text>
+  </g>
+  <rect x="10" y="518" width="770" height="34" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="395" y="540" class="t t-s" text-anchor="middle">Lectura en ③–④ durante la conversación (rápida, con tiempo de espera); escritura en ⑤ por una cola, con reintentos.</text>
+</svg></div><figcaption><b>Del chat al CRM sin duplicados.</b> Los participantes están arriba: el visitante, Pía, el servicio de cobertura, el CRM y el asesor de ventas. Pía consulta la cobertura (① y ②), normaliza el teléfono que escribió el visitante y busca en el CRM si ya existe (③ y ④). Como existe, actualiza ese registro en vez de crear otro, con una clave que evita duplicar si el envío se repite (⑤). El CRM asigna el asesor que ya lo atendía (⑥) y le avisa (⑦); Pía le dice al visitante qué sigue (⑧). Al final, el CRM le cuenta al bot que el asesor tomó el caso (⑨), para que Pía no responda por su cuenta. Las fases separan calificar, deduplicar y asignar.</figcaption></figure><div class="prose"><p>El enemigo de esta integración es el <b>duplicado</b>: la misma persona registrada dos veces. Pasa cuando el visitante escribe su teléfono distinto cada vez («555.010.0123», «+1 (555) 010-0123»), cuando comenta en Instagram y después escribe por WhatsApp, o cuando un reintento del bot crea el registro dos veces. Las consecuencias son concretas: dos asesores llaman a la misma persona el mismo día, o el asesor de la semana pasada no se entera de que su prospecto volvió.</p><p>Tres técnicas lo evitan:</p><ol class="steps"><li><span><b>Normalizar antes de buscar.</b> El teléfono se convierte al formato internacional <b>E.164</b> (<i>la norma de la UIT para numerar teléfonos</i>: un «+», el código de país y el número, sin espacios ni guiones), y el correo, a minúsculas. Así «555.010.0123» y «+1 (555) 010-0123» son el mismo <code>+15550100123</code>.</span></li><li><span><b>Buscar y actualizar, o crear</b> (<i>upsert</i>, de <i>update</i> e <i>insert</i>). Si ya existe un registro con ese teléfono o ese correo, se actualiza y se le agrega la actividad; si no, se crea.</span></li><li><span><b>Una clave que hace inofensivos los reintentos.</b> Cada envío lleva una <b>clave de idempotencia</b> (<i>idempotency key</i>), por ejemplo el identificador de la conversación más el paso. Si el mismo envío llega dos veces, el CRM reconoce la clave y no crea otro registro. El mecanismo a fondo está en <a href="https://aaramirez.github.io/backend/temario.html" target="_blank" rel="noopener">Backend y APIs</a>.</span></li></ol></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Normaliza teléfonos como lo hace la integración antes de buscar</h3></div><p>Vas a quitar todo lo que no es dígito de tres maneras de escribir el mismo teléfono de ejemplo y a compararlas, como hace la integración antes de buscar en el CRM. Los números con 555-01xx están reservados para ejemplos y no pertenecen a nadie.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>"555.010.0123" -replace '\D',''</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>"+1 (555) 010-0123" -replace '\D',''</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>"1-555-010-0123" -replace '\D',''</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>"+" + ("555.010.0123" -replace '\D','').PadLeft(11,'1')</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>printf '%s\n' "555.010.0123" | tr -cd '0-9\n'</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>printf '%s\n' "+1 (555) 010-0123" | tr -cd '0-9\n'</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>printf '%s\n' "1-555-010-0123" | tr -cd '0-9\n'</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>printf '+1%s\n' "$(printf '%s' '555.010.0123' | tr -cd '0-9')"</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta las tres primeras líneas y compara los resultados: ¿son iguales?</span></li><li><span>La cuarta agrega el código de país (1) cuando falta y antepone el «+». Compara su resultado con el de la segunda línea.</span></li><li><span>Piensa qué pasaría si el CRM buscara con el texto tal como lo escribió el visitante.</span></li></ol><p><b>Qué observar:</b> sin normalizar, el CRM ve tres textos distintos y crearía tres prospectos para la misma persona. Al quitar los símbolos, dos quedan iguales (<code>15550100123</code>) y el primero queda sin código de país (<code>5550100123</code>); por eso la normalización completa también agrega el código del país cuando falta, y el resultado E.164 es <code>+15550100123</code> en los tres casos. En la práctica se usa una biblioteca que conoce las reglas de cada país, como libphonenumber, en vez de escribirlas a mano.</p></div><div class="lab" id="10-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Captura de prospectos: califica a un visitante y mira lo que llega al CRM</h3></div><p class="hint">Un visitante pregunta por el plan de 500 Mbps en el widget. Responde por él: dirección (con o sin cobertura), uso, urgencia, cómo escribe su teléfono y qué consentimientos da. A la derecha, el registro que Pía envía al CRM y la tabla del CRM, donde ya existe un prospecto de la semana pasada. Activa y desactiva la normalización y la clave de idempotencia, y usa «Reintentar el envío» para ver de dónde salen los duplicados.</p><style>
+[id="10-lab-2"] .c102-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px;align-items:start}
+@media (max-width:760px){[id="10-lab-2"] .c102-grid{grid-template-columns:minmax(0,1fr)}}
+[id="10-lab-2"] .c102-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+[id="10-lab-2"] .c102-chk{display:grid;gap:5px;font:500 .84rem var(--f-display)}
+[id="10-lab-2"] .c102-chk label{display:flex;gap:8px;align-items:flex-start}
+[id="10-lab-2"] pre{margin:0;font:400 .76rem/1.45 var(--f-mono);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+[id="10-lab-2"] table{font-size:.8rem}
+[id="10-lab-2"] td,[id="10-lab-2"] th{padding:5px 7px}
+[id="10-lab-2"] tr.c102-nuevo td{background:var(--good-soft)}
+[id="10-lab-2"] tr.c102-dup td{background:var(--warm-soft)}
+[id="10-lab-2"] tr.c102-act td{background:var(--accent-soft)}
+[id="10-lab-2"] .c102-log{font:400 .78rem/1.4 var(--f-mono);color:var(--muted);display:grid;gap:2px}
+</style>
+<div class="c102-grid">
+  <div style="display:grid;gap:10px;min-width:0">
+    <p class="c102-tit">Las respuestas del visitante</p>
+    <div class="opciones">
+      <label>Dirección<select id="c102-dir"><option value="si">Calle Ejemplo 450 (hay cobertura)</option><option value="no">Camino Rural 12 (sin cobertura)</option></select></label>
+      <label>Uso<select id="c102-uso"><option value="hogar">Hogar</option><option value="negocio">Negocio</option></select></label>
+      <label>Urgencia<select id="c102-urg"><option value="semana">Lo necesito esta semana</option><option value="mes">Este mes</option><option value="compara">Solo estoy comparando</option></select></label>
+      <label>Cómo escribe su teléfono<select id="c102-tel"><option>555.010.0123</option><option>+1 (555) 010-0123</option><option>1-555-010-0123</option><option>555-010-0199</option></select></label>
+      <label>Datos que pide Pía<select id="c102-dat"><option value="min">Solo nombre y teléfono</option><option value="max">Nombre, teléfono, cédula, fecha de nacimiento e ingresos</option></select></label>
+    </div>
+    <div class="c102-chk" role="group" aria-label="Consentimientos e integración">
+      <label><input type="checkbox" id="c102-c1" checked> Acepta que un asesor lo contacte por este plan</label>
+      <label><input type="checkbox" id="c102-c2"> Acepta recibir ofertas en el futuro (consentimiento aparte)</label>
+      <label><input type="checkbox" id="c102-norm" checked> Integración: normalizar el teléfono (E.164) y buscar antes de crear</label>
+      <label><input type="checkbox" id="c102-idem" checked> Integración: clave de idempotencia en cada envío</label>
+    </div>
+    <div class="btns" role="group" aria-label="Envío al CRM">
+      <button type="button" class="primary" id="c102-env">Enviar al CRM</button>
+      <button type="button" id="c102-ret">Reintentar el envío</button>
+      <button type="button" id="c102-rei">Reiniciar el CRM</button>
+    </div>
+  </div>
+  <div style="display:grid;gap:10px;min-width:0">
+    <p class="c102-tit">Registro que envía Pía</p>
+    <pre id="c102-json" aria-live="polite"></pre>
+    <p class="c102-tit">Prospectos en el CRM</p>
+    <div class="tbl"><table><thead><tr><th>ID</th><th>Teléfono</th><th>Interés</th><th>Puntaje</th><th>Actividades</th></tr></thead><tbody id="c102-crm"></tbody></table></div>
+    <div class="c102-log" id="c102-log" aria-live="polite"></div>
+  </div>
+</div>
+<div class="readout texto" id="c102-out" aria-live="polite"></div></div></section>
+<section><h2>Vender en el chat: presentar planes, comparar, catálogos y cerrar la venta</h2><div class="prose"><p>Calificado el prospecto, a veces la venta se puede cerrar ahí mismo. <b>Vender en el chat</b> (<i>conversational commerce</i>) funciona cuando el producto es estándar, el precio es de catálogo y el cliente ya sabe más o menos lo que quiere, como cambiar de plan de internet. No funciona igual de bien para ventas que piden negociación o visitas técnicas complejas; esas pasan a una persona con el contexto, como en el capítulo 9.</p></div><figure class="fig fig-flujo" id="10-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" style="min-width:720px" role="img" aria-label="Pasos de una venta en el chat, de entender la necesidad a crear la orden de instalación, con la fuente de cada dato y las salidas a oportunidad avanzada y a un asesor">
+  <defs>
+    <marker id="d10c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d10c-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <text x="200" y="22" class="t t-xs t-b t-m">PASO DEL FLUJO</text>
+  <text x="578" y="22" class="t t-xs t-b t-m">DE DÓNDE SALE EL DATO</text>
+  <g class="t">
+    <rect x="200" y="34" width="330" height="50" rx="10" class="c-tra"/><text x="216" y="56" class="t-b">1. Entender la necesidad</text><text x="216" y="73" class="t-s t-m">personas, uso, pantallas, presupuesto</text>
+    <rect x="200" y="102" width="330" height="50" rx="10" class="c-red"/><text x="216" y="124" class="t-b">2. Presentar dos o tres planes</text><text x="216" y="141" class="t-s t-m">200 Mbps US$ 25,00 · 500 Mbps US$ 35,00</text>
+    <rect x="200" y="170" width="330" height="50" rx="10" class="c-red"/><text x="216" y="192" class="t-b">3. Dudas y objeciones</text><text x="216" y="209" class="t-s t-m">precio, permanencia, instalación, mudanza</text>
+    <rect x="200" y="238" width="330" height="50" rx="10" class="c-apl"/><text x="216" y="260" class="t-b">4. Resumir y confirmar</text><text x="216" y="277" class="t-s t-m">[Sí, contratar] con precio final y condiciones</text>
+    <rect x="200" y="306" width="330" height="50" rx="10" class="d-casa"/><text x="216" y="328" class="t-b">5. Verificar la identidad</text><text x="216" y="345" class="t-s t-m">contrato y cobro recurrente (capítulo 12)</text>
+    <rect x="200" y="374" width="330" height="50" rx="10" class="d-sis"/><text x="216" y="396" class="t-b">6. Cobrar o firmar</text><text x="216" y="413" class="t-s t-m">enlace de pasarela o de firma, nunca la tarjeta</text>
+    <rect x="200" y="442" width="330" height="50" rx="10" class="d-sis"/><text x="216" y="464" class="t-b">7. Crear la orden de instalación</text><text x="216" y="481" class="t-s t-m">fecha y dirección confirmadas (capítulo 11)</text>
+  </g>
+  <g>
+    <path d="M365 84 V98" class="ln" marker-end="url(#d10c)"/><path d="M365 152 V166" class="ln" marker-end="url(#d10c)"/>
+    <path d="M365 220 V234" class="ln" marker-end="url(#d10c)"/><path d="M365 288 V302" class="ln" marker-end="url(#d10c)"/>
+    <path d="M365 356 V370" class="ln" marker-end="url(#d10c)"/><path d="M365 424 V438" class="ln" marker-end="url(#d10c)"/>
+  </g>
+  <g class="t t-s">
+    <path d="M530 59 H570" class="ln ln-d"/><text x="578" y="63">lo que dijo el cliente · origen del chat</text>
+    <path d="M530 127 H570" class="ln ln-d"/><text x="578" y="131">catálogo vigente · mensaje de catálogo en WhatsApp</text>
+    <path d="M530 195 H570" class="ln ln-d"/><text x="578" y="199">base de conocimiento (capítulo 7), con cita</text>
+    <path d="M530 263 H570" class="ln ln-d"/><text x="578" y="267">regla de la promoción · versión de las condiciones</text>
+    <path d="M530 331 H570" class="ln ln-d"/><text x="578" y="335">servicio de identidad</text>
+    <path d="M530 399 H570" class="ln ln-d"/><text x="578" y="403">pasarela de pagos · firma electrónica</text>
+    <path d="M530 467 H570" class="ln ln-d"/><text x="578" y="471">mesa de ayuda · agenda técnica</text>
+  </g>
+  <g class="t t-s">
+    <text x="10" y="22" class="t-xs t-b t-m">SALIDAS</text>
+    <rect x="10" y="150" width="166" height="58" rx="8" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="20" y="170" class="t-b k-warm">Quiere negociar</text><text x="20" y="186">traspaso a un asesor</text><text x="20" y="200">(capítulo 9)</text>
+    <path d="M200 195 H180" class="ln s-warm" style="stroke-width:1.8" marker-end="url(#d10c-w)"/>
+    <rect x="10" y="250" width="166" height="58" rx="8" style="fill:var(--warm-soft);stroke:var(--warm)"/>
+    <text x="20" y="270" class="t-b k-warm">No confirma</text><text x="20" y="286">oportunidad avanzada</text><text x="20" y="300">al CRM, con la objeción</text>
+    <path d="M200 263 C190 263 190 270 180 272" class="ln s-warm" style="stroke-width:1.8" marker-end="url(#d10c-w)"/>
+  </g>
+</svg></div><figcaption><b>Una venta en el chat, de la pregunta al pedido de instalación.</b> Cada caja es un paso del flujo de ventas de Pía, de arriba abajo: entender la necesidad, presentar dos o tres planes, responder dudas y objeciones, resumir y confirmar, verificar la identidad, cobrar o firmar, y crear la orden de instalación. A la derecha de cada paso, de dónde sale el dato (catálogo, base de conocimiento, sistema de cobertura, pasarela, mesa de ayuda). A la izquierda, en naranja, las salidas: la negociación pasa a un asesor y el cliente que no confirma queda como «oportunidad avanzada».</figcaption></figure><div class="prose"><p>El flujo tiene pasos que se repiten en cualquier venta conversacional:</p><ul><li><b>Presentar pocas opciones, no el catálogo.</b> Con lo que ya sabe (cuántas personas usan internet en la casa, si trabajan desde ahí), Pía propone dos o tres planes. «Para dos personas que trabajan desde casa te sirve el plan de 200 Mbps (US$ 25,00 al mes); si además ven televisión en varias pantallas, el de 500 Mbps (US$ 35,00)». En WhatsApp, esos planes pueden ir como mensaje de catálogo (capítulo 8).</li><li><b>Comparar con datos.</b> Una tabla corta: velocidad, precio, permanencia, instalación. Todo de la fuente oficial.</li><li><b>Responder las objeciones</b> (<i>objections</i>) más comunes con respuestas preparadas: precio, permanencia mínima, tiempo de instalación, qué pasa si me mudo. Cada respuesta cita su artículo de la base de conocimiento.</li><li><b>Resumir y confirmar</b> antes de cualquier compromiso: «Vas a contratar el plan de 500 Mbps por US$ 35,00 al mes, con instalación sin costo, sin permanencia. ¿Confirmas?». El botón dice «Sí, contratar», no «Sí».</li><li><b>Verificar la identidad</b> si la venta crea un contrato o un cobro recurrente (capítulo 12), y <b>cobrar o firmar</b> con un enlace de la pasarela o de firma electrónica, nunca pidiendo la tarjeta en el chat.</li><li><b>Crear el siguiente paso operativo</b>: la orden de instalación en la mesa de ayuda, con fecha y dirección confirmadas (capítulo 11).</li></ul><p>Y un estado que suele faltar: la <b>oportunidad avanzada no cerrada</b>. Si la persona llegó hasta el resumen y no confirmó, no es un prospecto frío: estuvo a un toque de comprar. Ese estado va al CRM con lo que se habló y la objeción que quedó pendiente, para que un asesor retome con contexto, por ejemplo al día siguiente con una plantilla de WhatsApp si la ventana se cerró.</p></div></section>
+<section><h2>Lo que el bot de ventas no promete</h2><div class="prose"><p>Un bot de ventas tiene la tentación más grande de todos: decir que sí. El cliente pregunta «¿me lo dejan en 30?», «¿la instalación es mañana?», «¿los 500 Mbps son garantizados?», y un modelo de lenguaje servicial tiende a complacer. El capítulo 5 contó el caso del concesionario cuyo bot aceptó vender un auto por un dólar. Aquí la lista de lo que Pía no promete por su cuenta:</p><div class="tbl"><table><thead><tr><th>No promete</th><th>Por qué</th><th>De dónde sale lo que sí dice</th></tr></thead><tbody><tr><td>Precios distintos al catálogo</td><td>un precio dicho por el bot es una oferta</td><td>el catálogo vigente, con fecha de vigencia</td></tr><tr><td>Promociones vencidas o de otro segmento</td><td>la promoción tiene condiciones y fechas</td><td>la regla de la promoción, consultada en el momento</td></tr><tr><td>Velocidad «garantizada»</td><td>los planes se venden como velocidad máxima («hasta»)</td><td>la ficha del plan y sus condiciones</td></tr><tr><td>Fechas de instalación</td><td>dependen de la agenda técnica</td><td>la agenda, consultada al confirmar</td></tr><tr><td>Cobertura «seguro que sí»</td><td>depende de la red en esa dirección</td><td>el sistema de cobertura</td></tr><tr><td>Descuentos por negociación</td><td>son decisiones con autoridad</td><td>un asesor, con traspaso (capítulo 9)</td></tr></tbody></table></div><p>La regla de fondo es la del capítulo 5: <b>si el bot se equivoca aquí, ¿la empresa queda obligada a algo?</b> En ventas, casi siempre sí. Por eso los precios y las condiciones se muestran tal como vienen de la fuente oficial, con su vigencia, y el modelo solo redacta alrededor de ellos.</p></div><div class="ml"><b>En la práctica</b><p><b>Las condiciones también se publican.</b> En varios países, las leyes de protección al consumidor obligan a informar el precio total, la permanencia y las condiciones antes de que el cliente acepte, y una oferta comunicada por un canal digital de la empresa puede exigirse igual que una impresa. Por eso las plataformas serias de comercio conversacional muestran, antes del botón de confirmar, un resumen con el precio final y un enlace a las condiciones completas, y guardan la versión exacta que vio el cliente. Es la misma lógica del consentimiento: no basta con que el cliente diga «sí», hay que poder demostrar a qué dijo que sí.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>cada pedido al área correcta con su contexto, y cada prospecto al CRM sin perder ni duplicar datos.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué conviene enrutar en dos niveles, primero el dominio y después la intención?</summary><p>Porque el error de dominio es el más caro (manda el caso al área equivocada) y conviene concentrar en él las mejores señales y reglas; además, cada área puede mantener su propio catálogo de intenciones y su propio clasificador.</p></details><details><summary>«Quiero cancelar, llevo tres días sin internet». ¿Qué hace Pía según la tabla de prioridad de Servicios Ejemplo?</summary><p>Va primero a soporte, que es dueño del caso, porque la causa de la baja es la falla. La intención de baja queda anotada y retención recibe un aviso si sigue en pie después de resolver la falla.</p></details><details><summary>¿Qué es un efecto ping-pong y cómo se evita?</summary><p>Que el cliente rebote entre dos áreas que se pasan el caso. Se evita con una tabla de prioridad entre áreas decidida de antemano y un dueño del caso que lo lleva hasta el final.</p></details><details><summary>¿Por qué Pía consulta la cobertura antes de pedir los datos de contacto?</summary><p>Porque la cobertura le sirve también a la persona y define si hay venta posible; pedir datos antes espanta y genera registros de prospectos que la empresa no puede atender.</p></details><details><summary>Un reintento del bot envía el mismo prospecto dos veces al CRM. ¿Qué evita el duplicado?</summary><p>La clave de idempotencia: el CRM reconoce que ese envío ya se procesó y no crea otro registro. La normalización y la búsqueda antes de crear evitan los duplicados que vienen de escribir el dato de formas distintas.</p></details><details><summary>¿Qué es una oportunidad avanzada no cerrada y por qué no se trata como un prospecto frío?</summary><p>Una persona que llegó hasta el resumen de compra y no confirmó. Estuvo muy cerca de comprar, así que va al CRM con lo hablado y la objeción pendiente para que un asesor la retome con contexto.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es la norma E.164 de la UIT y por qué un número internacional no puede tener más de 15 dígitos?<small>Pista: busca «ITU-T E.164 numbering plan».</small></li><li>¿Qué es el método BANT para calificar prospectos y qué critican de él los equipos de ventas actuales?<small>Pista: busca «BANT lead qualification».</small></li><li>¿Qué es la biblioteca libphonenumber, quién la mantiene y cómo sabe si un número es válido en un país?<small>Pista: busca «libphonenumber metadata».</small></li><li>¿Qué es la «doble confirmación» (<i>double opt-in</i>) para listas de marketing y por qué algunas leyes la recomiendan?<small>Pista: busca «double opt-in consentimiento marketing».</small></li><li>¿Qué es una matriz de confusión y cómo se usa para ver entre qué áreas se equivoca un clasificador?<small>Pista: busca «confusion matrix multiclass».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://github.com/google/libphonenumber" target="_blank" rel="noopener">libphonenumber <small>la biblioteca de Google para validar y normalizar números de teléfono de todo el mundo</small></a><a class="vid" href="https://developers.facebook.com/docs/whatsapp/cloud-api/guides/sell-products-and-services" target="_blank" rel="noopener">Mensajes de producto de WhatsApp (catálogo) <small>cómo se envían productos del catálogo dentro de la conversación</small></a><a class="vid" href="https://www.itu.int/rec/T-REC-E.164" target="_blank" rel="noopener">ITU-T E.164 <small>la norma internacional de numeración telefónica</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const A={atencion:'Atención',cobranza:'Cobranza',soporte:'Soporte',ventas:'Ventas',retencion:'Retención'};
+  const M=[
+    ['¿Hasta qué hora abre la agencia del centro?','atencion','atencion',.93,'ventas',.04,'«agencia», «hora»'],
+    ['Me llegó la factura con un monto raro','cobranza','cobranza',.88,'atencion',.07,'«factura», «monto»'],
+    ['Se me cae el wifi cada rato','soporte','soporte',.91,'ventas',.05,'«wifi», «se cae»'],
+    ['Quiero cancelar, llevo tres días sin internet','soporte','soporte',.47,'retencion',.45,'falla + intención de baja'],
+    ['¿Tienen fibra en Calle Ejemplo 450?','ventas','ventas',.86,'soporte',.08,'«fibra» + dirección sin cuenta'],
+    ['Dar de baja','retencion','retencion',1,'',0,'regla fija: «dar de baja»',1],
+    ['¿Cuánto debo?','cobranza','cobranza',.95,'atencion',.03,'«debo»'],
+    ['Quiero el plan de 500 pero tengo una factura vencida','cobranza','ventas',.52,'cobranza',.44,'venta + deuda'],
+    ['El técnico no vino','soporte','soporte',.74,'atencion',.18,'«técnico»'],
+    ['¿Qué documentos piden para cambiar el titular?','atencion','atencion',.81,'ventas',.09,'«documentos», «titular»'],
+    ['Me cobraron la reconexión y pagué a tiempo','cobranza','cobranza',.84,'soporte',.07,'«cobraron», «pagué»'],
+    ['¿Tienen algo más barato? Este mes no me alcanza','retencion','ventas',.41,'retencion',.39,'cliente actual que quiere pagar menos'],
+    ['Hola','atencion','atencion',.38,'ventas',.2,'sin señal: solo un saludo'],
+    ['Sigue igual','soporte','soporte',.79,'atencion',.1,'contexto: ticket n.º 5512 abierto'],
+    ['Quiero ponerle TV a mi plan','ventas','ventas',.83,'atencion',.08,'«ponerle TV»'],
+    ['Me voy a mudar, ¿qué hago?','atencion','atencion',.55,'ventas',.25,'«mudar» (traslado del servicio)'],
+    ['Quiero cancelar el servicio','retencion','retencion',1,'',0,'regla fija: «cancelar el servicio»',1],
+    ['El enlace de pago no abre','cobranza','soporte',.48,'cobranza',.46,'«no abre» + «pago»'],
+    ['Necesito la factura con mis datos fiscales','cobranza','cobranza',.62,'atencion',.30,'«factura», «datos fiscales»'],
+    ['Me llegó un mensaje de que me van a cortar','cobranza','soporte',.58,'cobranza',.30,'«cortar» se parece a una falla, pero es un aviso de corte por deuda']
+  ];
+  const ORD=['cobranza','soporte','retencion','ventas','atencion'];
+  const prio=(a,b)=>{ if((a==='soporte'&&b==='retencion')||(a==='retencion'&&b==='soporte'))return 'soporte'; return ORD.indexOf(a)<ORD.indexOf(b)?a:b; };
+  let ver=false;const tu={};
+  function decide(m,u){
+    if(m[7])return {k:'regla',a:m[2]};
+    if(m[3]>=u&&m[3]-m[5]>=.15)return {k:'auto',a:m[2]};
+    if(m[5]>=.35&&m[3]-m[5]<.15)return {k:'dos',a:prio(m[2],m[4])};
+    return {k:'acl',a:null};
+  }
+  const fmt=v=>v.toFixed(2).replace('.',',');
+  function pintar(){
+    const u=+q('#c101-u').value;q('#c101-u-o').textContent=fmt(u);
+    const opts='<option value="">—</option>'+Object.keys(A).map(k=>'<option value="'+k+'">'+A[k]+'</option>').join('');
+    let n={auto:0,regla:0,acl:0,dos:0},mal=0,acierto=0,resp=0;
+    q('#c101-body').innerHTML=M.map((m,i)=>{
+      const d=decide(m,u);n[d.k]++;
+      if(d.a&&d.a!==m[1])mal++;
+      if(tu[i]){resp++;if(tu[i]===m[1])acierto++;}
+      let r='<span class="hint">oculto</span>';
+      if(ver){
+        const et={auto:['e-auto','solo'],regla:['e-regla','regla fija'],acl:['e-acl','aclarar'],dos:['e-dos','entre dos']}[d.k];
+        r='<span class="c101-e '+et[0]+'">'+et[1]+'</span> '+(d.a?'<b class="'+(d.a===m[1]?'':'c101-mal')+'">'+A[d.a]+'</b>':'<i>¿Es sobre '+A[m[2]].toLowerCase()+' o '+A[m[4]].toLowerCase()+'?</i>')+
+          '<span class="c101-why">'+(m[7]?'':A[m[2]]+' '+fmt(m[3])+(m[4]?' · '+A[m[4]]+' '+fmt(m[5]):'')+' · ')+m[6]+(d.k==='dos'?' · prioridad: '+A[d.a]:'')+'</span>';
+        if(tu[i])r+='<span class="c101-why">Sugerida: <b>'+A[m[1]]+'</b> · tú: <b class="'+(tu[i]===m[1]?'c101-bien':'c101-mal')+'">'+A[tu[i]]+'</b></span>';
+      }
+      return '<tr><td>'+(i+1)+'</td><td class="c101-msg">«'+m[0]+'»</td><td><select data-i="'+i+'" aria-label="Área para el mensaje '+(i+1)+'">'+opts.replace('value="'+(tu[i]||'')+'"','value="'+(tu[i]||'')+'" selected')+'</select></td><td>'+r+'</td></tr>';
+    }).join('');
+    q('#c101-bar').innerHTML=[[n.auto,'--good'],[n.regla,'--muted'],[n.acl,'--accent'],[n.dos,'--warm']].map(([v,c])=>'<i style="width:'+(v*5)+'%;background:var('+c+')"></i>').join('');
+    let s='<span>Con umbral '+fmt(u)+': <b>'+n.auto+'</b> enrutados solos · <b>'+n.regla+'</b> por regla fija · <b>'+n.acl+'</b> con pregunta para aclarar · <b>'+n.dos+'</b> entre dos áreas</span>';
+    s+='<span>Enviados a un área equivocada: <b>'+mal+'</b>'+(ver?'':' (toca «Comparar» para ver cuáles)')+'</span>';
+    if(resp)s+='<span>Tus respuestas: <b>'+acierto+' de '+resp+'</b> coinciden con el área sugerida.</span>';
+    if(u<=.55)s+='<span class="warn">Umbral bajo: casi nada se pregunta, pero los mensajes dudosos se van solos y alguno cae en el área equivocada.</span>';
+    else if(u>=.9)s+='<span class="warn">Umbral alto: no se equivoca, pero le pregunta «¿es sobre esto o aquello?» a demasiados clientes.</span>';
+    else s+='<span class="ok">Umbral intermedio: los claros se van solos, los dudosos reciben una pregunta y los de dos áreas siguen la tabla de prioridad.</span>';
+    q('#c101-out').innerHTML=s;
+  }
+  q('#c101-body').addEventListener('change',e=>{const s=e.target.closest('select');if(s){tu[s.dataset.i]=s.value;pintar();}});
+  q('#c101-u').addEventListener('input',pintar);
+  q('#c101-cmp').addEventListener('click',()=>{ver=!ver;q('#c101-cmp').setAttribute('aria-pressed',ver);q('#c101-cmp').textContent=ver?'Ocultar el enrutador':'Comparar con el enrutador';pintar();});
+  q('#c101-rei').addEventListener('click',()=>{for(const k in tu)delete tu[k];pintar();});
+  pintar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  let crm,proc,log,sig,ultimo;
+  function reiniciar(){crm=[{id:'P-0871',tel:'+15550100123',interes:'Plan 200 Mbps (Instagram)',puntaje:'tibio',act:1,cl:''}];proc={};log=['P-0871 existe desde hace 6 días: comentó en Instagram y habló con un asesor.'];sig=872;ultimo=null;}
+  const dig=s=>s.replace(/\D/g,'');
+  const e164=s=>{const d=dig(s);return '+'+(d.length===10?'1'+d:d);};
+  function lead(){
+    const cob=q('#c102-dir').value==='si',urg=q('#c102-urg').value,uso=q('#c102-uso').value,c1=q('#c102-c1').checked;
+    let p=!cob?'frío':urg==='semana'?'caliente':'tibio';
+    const tel=q('#c102-norm').checked?e164(q('#c102-tel').value):q('#c102-tel').value;
+    const r={conversacion:'web:8842',idempotencia:q('#c102-idem').checked?'web:8842:prospecto':null,origen:'widget · página de planes',interes:'Plan 500 Mbps',uso:uso,cobertura:cob,urgencia:urg,puntaje:p,nombre:'Jorge',telefono:c1?tel:'(no se guarda: sin consentimiento)',cola:uso==='negocio'?'ventas_empresas':'ventas_hogar',consentimiento:{contacto:c1?{texto:'Acepto que un asesor me contacte por este plan',fecha:'2026-11-24T10:41Z',canal:'widget'}:false,ofertas:q('#c102-c2').checked}};
+    if(q('#c102-dat').value==='max'){r.cedula='…';r.nacimiento='…';r.ingresos='…';}
+    return r;
+  }
+  function enviar(reint){
+    const r=lead();
+    if(r.idempotencia&&proc[r.idempotencia]){log.unshift((reint?'Reintento':'Envío')+' con clave '+r.idempotencia+': ya procesado, el CRM lo ignora.');ultimo='idem';pintar();return;}
+    if(!q('#c102-c1').checked){log.unshift('Sin consentimiento de contacto: se registra solo el interés, sin teléfono, para estadística.');ultimo='sincons';pintar();return;}
+    crm.forEach(x=>x.cl='');
+    let ex=q('#c102-norm').checked?crm.find(x=>x.tel===r.telefono):null;
+    if(ex){ex.act++;ex.interes='Plan 500 Mbps (antes: 200)';ex.puntaje=r.puntaje;ex.cl='c102-act';log.unshift((reint?'Reintento':'Envío')+': encontró '+ex.id+' por '+r.telefono+' y lo actualizó'+(ex.act>2?' otra vez (actividad repetida: el asesor recibe dos avisos)':'')+'.');ultimo=ex.act>2?'act2':'act';}
+    else{const id='P-0'+(sig++);const dup=crm.some(x=>dig(x.tel).slice(-10)===dig(r.telefono).slice(-10));crm.push({id,tel:r.telefono,interes:'Plan 500 Mbps',puntaje:r.puntaje,act:1,cl:dup?'c102-dup':'c102-nuevo'});log.unshift((reint?'Reintento':'Envío')+': creó '+id+(dup?' — es la misma persona que otro registro: duplicado':'')+'.');ultimo=dup?'dup':'nuevo';}
+    if(r.idempotencia)proc[r.idempotencia]=1;
+    pintar();
+  }
+  function pintar(){
+    const r=lead();
+    q('#c102-json').textContent=JSON.stringify(r,null,1).replace(/\n\s*/g,'\n ').slice(0,2000);
+    q('#c102-crm').innerHTML=crm.map(x=>'<tr class="'+x.cl+'"><td>'+x.id+'</td><td>'+x.tel+'</td><td>'+x.interes+'</td><td>'+x.puntaje+'</td><td>'+x.act+'</td></tr>').join('');
+    q('#c102-log').innerHTML=log.slice(0,4).map(l=>'<span>· '+l+'</span>').join('');
+    const dups=crm.filter(x=>x.cl==='c102-dup').length;
+    let s='<span>Puntaje: <b>'+r.puntaje+'</b> · cola: <b>'+r.cola+'</b> · ofertas futuras: <b>'+(r.consentimiento.ofertas?'sí':'no')+'</b> · registros en el CRM: <b>'+crm.length+'</b></span>';
+    if(q('#c102-dat').value==='max')s+='<span class="warn">Pía pidió cédula, fecha de nacimiento e ingresos: ventas no los necesita para llamar. Más abandono en el chat y más datos personales que proteger.</span>';
+    if(r.puntaje==='frío'&&q('#c102-dir').value==='no')s+='<span>Sin cobertura: el interés se guarda como frío para avisarle cuando llegue la red. No se le promete instalación.</span>';
+    if(ultimo==='dup'||dups)s+='<span class="warn">Duplicado: dos registros para la misma persona. Dos asesores pueden llamarla el mismo día, y el asesor de la semana pasada no se entera.</span>';
+    else if(ultimo==='act2')s+='<span class="warn">Sin clave de idempotencia, el reintento no creó otro registro (la búsqueda lo encontró), pero repitió la actividad y el aviso al asesor.</span>';
+    else if(ultimo==='idem')s+='<span class="ok">La clave de idempotencia hizo inofensivo el reintento: nada cambió en el CRM. Para probar otra combinación, reinicia el CRM.</span>';
+    else if(ultimo==='act')s+='<span class="ok">Sin duplicados: el prospecto de la semana pasada se actualizó con el nuevo interés y su asesor lo ve.</span>';
+    else if(ultimo==='sincons')s+='<span class="warn">Sin consentimiento de contacto no hay prospecto que entregar: solo una estadística de interés.</span>';
+    else if(ultimo==='nuevo')s+='<span class="ok">Prospecto nuevo creado: no había nadie con ese teléfono.</span>';
+    else s+='<span>Elige las respuestas y toca «Enviar al CRM».</span>';
+    q('#c102-out').innerHTML=s;
+  }
+  ['#c102-dir','#c102-uso','#c102-urg','#c102-tel','#c102-dat','#c102-c1','#c102-c2','#c102-norm','#c102-idem'].forEach(x=>q(x).addEventListener('input',()=>{ultimo=null;pintar();}));
+  q('#c102-env').addEventListener('click',()=>enviar(false));
+  q('#c102-ret').addEventListener('click',()=>enviar(true));
+  q('#c102-rei').addEventListener('click',()=>{reiniciar();pintar();});
+  reiniciar();pintar();
+})();
+</script>
+</body>
+</html>

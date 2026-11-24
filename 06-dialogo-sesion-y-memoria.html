@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diálogo, sesión y memoria · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="dialogo-sesion-y-memoria">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 06 DE 17</span><h1>El gestor de diálogo, el contexto multiturno y la sesión</h1><p class="lede">Laura está a punto de pagar, pregunta por un plan más rápido y después escribe «bueno, sigamos». Para que Pía sepa qué significa «sigamos», alguien tiene que recordar dónde quedó cada cosa. Ese alguien es el gestor de diálogo.</p></header>
+<section><div class="prose"><p>Mira esta conversación entre Laura y Pía:</p><ul><li><b>Laura:</b> quiero pagar mi factura</li><li><b>Pía:</b> Te envié un código por SMS para confirmar que eres tú. ¿Me lo escribes?</li><li><b>Laura:</b> 482913</li><li><b>Pía:</b> Gracias, Laura. Tu factura F-2207 es de US$ 25,00. ¿Te envío el enlace para pagarla?</li><li><b>Laura:</b> espera, ¿tienen algún plan más rápido?</li><li><b>Pía:</b> Sí: el de 500 Mbps cuesta US$ 35,00 al mes. ¿Quieres que te cuente más o seguimos con el pago de tu factura?</li><li><b>Laura:</b> sigamos. ¿y la del mes pasado ya está pagada?</li></ul><p>Cada mensaje de Laura, leído solo, es casi imposible de entender. «482913» no dice nada sin saber que se pidió un código. «Sigamos» no dice qué. «La del mes pasado» no dice de qué. Pía entiende porque, detrás, una pieza lleva la cuenta de dónde está la conversación, qué flujos quedaron abiertos y qué datos ya se dijeron. En el capítulo 5 la llamaste orquestación. Este capítulo la abre.</p></div></section>
+<section><h2>El gestor de diálogo: máquina de estados, grafo de nodos o pila de flujos</h2><div class="prose"><p>El <b>gestor de diálogo</b> (<i>dialogue manager</i>) es el componente que, en cada turno, recibe lo que entendió la comprensión, mira el estado de la conversación y decide la siguiente acción: preguntar, consultar un sistema, responder, abrir otro flujo o pasar a una persona. No entiende el lenguaje ni redacta: decide.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en una empleada de ventanilla que está llenando contigo el formulario de un pago. A mitad del trámite le preguntas por un plan nuevo. Ella no rompe el formulario: le pone un clip donde iba, saca el folleto de planes, te responde y, cuando terminas, vuelve al formulario justo en la casilla donde quedó. Si le dices «mejor otro día», guarda el formulario sin firmar. Esa empleada es un buen gestor de diálogo: sabe en qué trámite está, cuáles quedaron a medias y qué hacer con cada uno.</p></div><div class="prose"><p>Hay tres formas de representar el estado de la conversación, y los productos del mercado usan una o varias:</p><ul><li><b>Máquina de estados</b> (<i>finite state machine</i>). Un conjunto fijo de estados con nombre y las transiciones permitidas entre ellos, como la que viste en el capítulo 2 para el pago. Es la más simple de probar: para cada estado sabes qué entradas acepta. Su límite es que todo lo que no está dibujado no existe.</li><li><b>Grafo de nodos</b> (<i>node graph</i>). Los flujos del capítulo 4, con nodos de mensaje, pregunta, condición y acción, que un editor visual permite dibujar y conectar. Es la forma de los editores de flujos de muchas plataformas, como Botpress o las páginas y flujos de Dialogflow CX. Por dentro sigue siendo una máquina de estados, pero más fácil de leer para quien no programa.</li><li><b>Pila de flujos activos</b> (<i>dialogue stack</i>). Varios flujos pueden estar abiertos a la vez, uno encima del otro. El de arriba es el que conversa; cuando termina, se saca de la pila y el de abajo retoma donde quedó. Así funcionan, por ejemplo, la pila de diálogos de Microsoft Bot Framework y la de Rasa. Es la forma natural de manejar interrupciones.</li></ul></div><figure class="fig fig-esquema" id="06-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" style="min-width:740px" role="img" aria-label="Tres formas de representar el estado de la conversación: una máquina de estados del pago con el estado confirmar resaltado, el mismo flujo como grafo de nodos y una pila con el flujo de planes encima del flujo de pago en pausa">
+  <defs>
+    <marker id="d06a-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d06a-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+  </defs>
+  <g class="t t-xs t-b t-m">
+    <text x="14" y="22">MÁQUINA DE ESTADOS</text>
+    <text x="312" y="22">GRAFO DE NODOS</text>
+    <text x="614" y="22">PILA DE FLUJOS ACTIVOS</text>
+  </g>
+  <line x1="298" y1="10" x2="298" y2="350" class="ln" style="stroke:var(--line)"/>
+  <line x1="600" y1="10" x2="600" y2="350" class="ln" style="stroke:var(--line)"/>
+
+  
+  <g class="t t-s" text-anchor="middle">
+    <rect x="50" y="38" width="130" height="30" rx="15" class="caja"/><text x="115" y="57">inicio</text>
+    <rect x="50" y="88" width="130" height="30" rx="15" class="caja"/><text x="115" y="107">esperando_codigo</text>
+    <rect x="50" y="138" width="130" height="30" rx="15" class="caja"/><text x="115" y="157">mostrar_saldo</text>
+    <rect x="50" y="188" width="130" height="30" rx="15" class="c-red" style="stroke-width:2.4"/><text x="115" y="207" class="t-b k-red">confirmar</text>
+    <rect x="50" y="238" width="130" height="30" rx="15" class="caja"/><text x="115" y="257">enviar_enlace</text>
+    <rect x="50" y="288" width="130" height="30" rx="15" class="caja"/><text x="115" y="307">fin</text>
+    <rect x="200" y="88" width="84" height="30" rx="15" class="caja s-warm" style="stroke-width:1.6"/><text x="242" y="107" class="k-warm">persona</text>
+  </g>
+  <g>
+    <line x1="115" y1="68" x2="115" y2="86" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="115" y1="118" x2="115" y2="136" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="115" y1="168" x2="115" y2="186" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="115" y1="218" x2="115" y2="236" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="115" y1="268" x2="115" y2="286" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="180" y1="103" x2="198" y2="103" class="ln s-warm" marker-end="url(#d06a-m)"/>
+  </g>
+  <g class="t t-s t-m">
+    <text x="122" y="81">pide código</text>
+    <text x="122" y="131">código válido</text>
+    <text x="122" y="181">«quiero pagar»</text>
+    <text x="122" y="231">«sí»</text>
+    <text x="200" y="134">3 fallos</text>
+  </g>
+  <text x="14" y="342" class="t t-s t-m">Lo que no está dibujado no existe.</text>
+
+  
+  <g class="t t-s" text-anchor="middle">
+    <rect x="330" y="40" width="150" height="40" rx="3" class="d-sis"/><text x="405" y="64" class="t-b k-sis">Verificar identidad</text>
+    <polygon points="405,100 470,128 405,156 340,128" class="c-red" style="stroke-dasharray:6 3"/><text x="405" y="132" class="t-b k-red">¿válido?</text>
+    <rect x="330" y="178" width="150" height="40" rx="8" class="c-fis" style="stroke-width:2.4"/><text x="405" y="196" class="t-b k-fis">¿Te envío</text><text x="405" y="210" class="t-b k-fis">el enlace?</text>
+    <rect x="330" y="240" width="150" height="36" rx="3" class="d-sis"/><text x="405" y="262" class="t-b k-sis">Crear enlace</text>
+    <rect x="330" y="296" width="150" height="34" rx="17" class="caja" style="stroke:var(--good);stroke-width:2"/><text x="405" y="317" class="t-b k-enl">Pago enviado</text>
+    <rect x="500" y="112" width="88" height="32" rx="16" class="caja s-warm" style="stroke-width:1.8"/><text x="544" y="132" class="t-b k-warm">Persona</text>
+  </g>
+  <g>
+    <line x1="405" y1="80" x2="405" y2="98" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="405" y1="156" x2="405" y2="176" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="405" y1="218" x2="405" y2="238" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="405" y1="276" x2="405" y2="294" class="ln" marker-end="url(#d06a-m)"/>
+    <line x1="470" y1="128" x2="498" y2="128" class="ln s-warm" marker-end="url(#d06a-m)"/>
+  </g>
+  <g class="t t-s t-m"><text x="412" y="171">sí</text><text x="474" y="121">no</text><text x="412" y="233">«sí»</text></g>
+  <text x="312" y="350" class="t t-s t-m">El mismo flujo, dibujado para leerlo.</text>
+
+  
+  <g class="t t-s">
+    <rect x="640" y="80" width="230" height="64" rx="10" class="c-red" style="stroke-width:2.4"/>
+    <text x="654" y="104" class="t-b k-red">consultar_planes</text>
+    <text x="654" y="124">paso: mostrar_opciones</text>
+    <text x="654" y="138" class="t-m">conversa ahora</text>
+    <rect x="640" y="156" width="230" height="64" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+    <text x="654" y="180" class="t-b">pagar_factura</text>
+    <text x="654" y="200">en pausa en: confirmar</text>
+    <text x="654" y="214" class="t-m">factura F-2207 · US$ 25,00</text>
+    <rect x="630" y="70" width="250" height="160" rx="12" class="ln" style="stroke:var(--line);stroke-width:1.4"/>
+  </g>
+  <g class="t t-s">
+    <path d="M760 46V76" class="ln s-red" style="stroke-width:2" marker-end="url(#d06a-r)"/>
+    <text x="768" y="58" class="k-red t-b">apilar</text>
+    <text x="768" y="72" class="t-m">llega una digresión</text>
+    <path d="M700 76V46" class="ln" marker-end="url(#d06a-m)"/>
+    <text x="616" y="58" class="t-b">sacar</text>
+    <text x="616" y="72" class="t-m">al terminar</text>
+    <text x="630" y="262">Al sacar el de arriba, el pago</text>
+    <text x="630" y="278">retoma en «confirmar», con sus datos.</text>
+  </g>
+  <text x="614" y="342" class="t t-s t-m">Varios flujos abiertos, uno conversa.</text>
+</svg></div><figcaption><b>Tres formas de llevar la cuenta de la conversación.</b> A la izquierda, la máquina de estados del pago, con sus estados y transiciones: el estado actual está resaltado. En el centro, el mismo flujo como grafo de nodos, con las formas del capítulo 4. A la derecha, la pila: el flujo de pago quedó abajo, en pausa en el paso «confirmar», y encima está abierto el flujo de planes. Cuando el de planes termina, se saca y el pago retoma en «confirmar».</figcaption></figure><div class="prose"><p>En la práctica se combinan: cada flujo es una máquina de estados o un grafo, y la pila decide cuál de ellos está conversando en cada momento.</p></div></section>
+<section><h2>Políticas de transición: deterministas o basadas en un modelo</h2><div class="prose"><p>Saber dónde está la conversación no basta: hay que decidir a dónde va. La regla que elige la siguiente acción se llama <b>política de transición</b> (<i>transition policy</i>), y hay dos familias.</p><p><b>Deterministas.</b> Una tabla escrita por personas: «si el estado es <code>esperando_codigo</code> y llega un código válido, ir a <code>mostrar_saldo</code>; si llega un código inválido, sumar un intento; al tercer intento, pasar a una persona». La misma entrada produce siempre la misma salida. Se prueba caso por caso y se audita leyendo la tabla.</p><p><b>Basadas en un modelo.</b> Un modelo, entrenado con conversaciones o un LLM con instrucciones, propone la siguiente acción a partir del historial. Es útil cuando las combinaciones son demasiadas para escribirlas: un cliente que mezcla dos pedidos, que vuelve atrás, que responde otra cosa. El riesgo es el de siempre: el modelo puede proponer una acción que no corresponde al estado.</p><div class="tbl"><table><thead><tr><th></th><th>Determinista</th><th>Basada en un modelo</th></tr></thead><tbody><tr><td>Cómo decide</td><td>tabla de estado + entrada → acción</td><td>el modelo propone con el historial</td></tr><tr><td>Lo previsible</td><td>total: mismo caso, misma salida</td><td>parcial: casos parecidos pueden variar</td></tr><tr><td>Lo flexible</td><td>solo lo escrito</td><td>combina pedidos y desvíos no previstos</td></tr><tr><td>Cómo se prueba</td><td>un caso por fila de la tabla</td><td>lotes de conversaciones y métricas</td></tr><tr><td>Dónde conviene</td><td>verificar, cobrar, confirmar</td><td>conversación libre, preguntas de varios temas</td></tr></tbody></table></div><p>La solución madura vuelve a ser híbrida, como en el capítulo 5: el modelo propone, pero solo puede elegir entre las <b>acciones permitidas en el estado actual</b>. En <code>esperando_codigo</code>, la lista es corta: validar el código, reenviarlo, cancelar o pasar a una persona. Si el modelo propone «crear enlace de pago», la propuesta se rechaza, porque esa acción no existe en ese estado. El modelo aporta flexibilidad; la lista de acciones permitidas, el límite.</p></div></section>
+<section><h2>Interrupciones y cambios de tema</h2><div class="prose"><p>Las personas no conversan en línea recta. Laura deja el pago para preguntar por un plan, o recuerda a mitad de un ticket que también quería cambiar su correo. Para el gestor hay cuatro situaciones distintas, y cada una pide una decisión distinta:</p><ul><li><b>Digresión</b> (<i>digression</i>): una pregunta breve en medio de un flujo, después de la cual la persona quiere volver. «¿Tienen un plan más rápido?». Se abre el flujo nuevo encima de la pila y, al cerrarlo, se ofrece retomar.</li><li><b>Cambio de tema</b>: la persona abandona el flujo y empieza otro. «Olvídalo, mejor dime cuándo viene el técnico». El flujo anterior se cierra o queda guardado un tiempo corto, por si vuelve.</li><li><b>Cancelación</b>: «ya no quiero pagar». Se cierra el flujo sin ejecutar nada y se confirma que no quedó nada a medias.</li><li><b>Urgencia</b>: «no tengo internet y trabajo desde casa». Algunas intenciones pasan delante de todo, por política del negocio, o van directo a una persona.</li></ul><p>Una regla práctica evita la mayoría de los enredos: <b>al retomar, se pregunta; no se asume</b>. Después de responder por el plan, Pía no envía el enlace de pago de golpe: pregunta «¿seguimos con el pago de tu factura?». Y antes de retomar un flujo con datos sensibles, revisa si la verificación de identidad sigue vigente.</p></div><figure class="fig fig-flujo" id="06-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" style="min-width:740px" role="img" aria-label="Diagrama de secuencia de una digresión: Laura pide pagar, el gestor apila el flujo de pago; Laura pregunta por un plan, el gestor apila el flujo de planes encima del pago, responde y pregunta si siguen con el pago; Laura dice sigamos, el gestor saca el flujo de planes y el pago retoma en confirmar">
+  <defs>
+    <marker id="d06b-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d06b-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+  </defs>
+  <rect x="20" y="14" width="120" height="50" rx="10" class="caja"/><text x="80" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="80" y="53" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="240" y="14" width="120" height="50" rx="10" class="c-red"/><text x="300" y="36" class="t t-b" text-anchor="middle">Gestor</text><text x="300" y="53" class="t t-s t-m" text-anchor="middle">de diálogo</text>
+  <rect x="460" y="14" width="120" height="50" rx="10" class="caja"/><text x="520" y="36" class="t t-b" text-anchor="middle">Pila</text><text x="520" y="53" class="t t-s t-m" text-anchor="middle">en la sesión</text>
+  <text x="700" y="36" class="t t-xs t-b t-m">LA PILA QUEDA ASÍ</text>
+  <line x1="80" y1="64" x2="80" y2="560" class="vida"/>
+  <line x1="300" y1="64" x2="300" y2="560" class="vida"/>
+  <line x1="520" y1="64" x2="520" y2="560" class="vida"/>
+
+  <g class="t t-s">
+    <line x1="80" y1="100" x2="297" y2="100" class="ln s-fis" style="stroke-width:2" marker-end="url(#d06b-fis)"/>
+    <text x="88" y="93">① «quiero pagar mi factura»</text>
+    <line x1="300" y1="136" x2="517" y2="136" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="308" y="129">② apila pagar_factura</text>
+    <line x1="300" y1="186" x2="83" y2="186" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="90" y="166" class="t-m">tras verificar la identidad:</text>
+    <text x="90" y="179">③ «¿Te envío el enlace por US$ 25,00?»</text>
+
+    <line x1="80" y1="236" x2="297" y2="236" class="ln s-fis" style="stroke-width:2" marker-end="url(#d06b-fis)"/>
+    <text x="88" y="229">④ «¿tienen un plan más rápido?»</text>
+    <line x1="300" y1="272" x2="517" y2="272" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="308" y="265">⑤ apila consultar_planes</text>
+    <line x1="300" y1="314" x2="83" y2="314" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="90" y="307">⑥ «El de 500 Mbps cuesta US$ 35,00 al mes»</text>
+    <line x1="300" y1="356" x2="83" y2="356" class="ln s-red" style="stroke-width:2.6" marker-end="url(#d06b-red)"/>
+    <text x="90" y="349" class="t-b">⑦ «¿Seguimos con el pago de tu factura?»</text>
+
+    <line x1="80" y1="404" x2="297" y2="404" class="ln s-fis" style="stroke-width:2" marker-end="url(#d06b-fis)"/>
+    <text x="88" y="397">«sigamos»</text>
+    <line x1="300" y1="440" x2="517" y2="440" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="308" y="433">⑧ saca consultar_planes</text>
+    <line x1="300" y1="486" x2="83" y2="486" class="ln s-red" style="stroke-width:2" marker-end="url(#d06b-red)"/>
+    <text x="90" y="466" class="t-m">el pago retoma en «confirmar»:</text>
+    <text x="90" y="479">⑨ «Listo. ¿Te envío el enlace por US$ 25,00?»</text>
+  </g>
+
+  
+  <g class="t t-xs t-b">
+    <path d="M616 82v116" class="ln s-red" style="stroke-width:3"/><text x="606" y="140" class="k-red" text-anchor="middle" transform="rotate(-90 606 140)">PAGO</text>
+    <path d="M616 218v148" class="ln" style="stroke:var(--warm);stroke-width:3"/><text x="606" y="300" class="k-warm" text-anchor="middle" transform="rotate(-90 606 300)">DIGRESIÓN</text>
+    <path d="M616 386v112" class="ln s-red" style="stroke-width:3"/><text x="606" y="444" class="k-red" text-anchor="middle" transform="rotate(-90 606 444)">VUELTA</text>
+  </g>
+
+  
+  <g class="t t-s">
+    <rect x="660" y="116" width="200" height="34" rx="8" class="c-red"/><text x="672" y="137" class="t-b k-red">pagar_factura</text>
+
+    <rect x="660" y="236" width="200" height="34" rx="8" class="c-red" style="stroke-width:2"/><text x="672" y="257" class="t-b k-red">consultar_planes</text>
+    <rect x="660" y="274" width="200" height="34" rx="8" class="caja" style="stroke-dasharray:5 4"/><text x="672" y="295">pagar_factura (en pausa)</text>
+
+    <rect x="660" y="420" width="200" height="34" rx="8" class="c-red"/><text x="672" y="441" class="t-b k-red">pagar_factura · confirmar</text>
+  </g>
+  <rect x="20" y="560" width="860" height="32" rx="10" class="caja s-warm" style="stroke-dasharray:5 4"/>
+  <text x="450" y="581" class="t t-s" text-anchor="middle">Si Laura hubiera vuelto una hora después, el pago habría vencido: se pregunta de nuevo y se verifica otra vez.</text>
+</svg></div><figcaption><b>Una digresión en medio del pago.</b> Los participantes son Laura, el gestor de diálogo y la pila de flujos. El tiempo corre hacia abajo. A la derecha de cada paso se dibuja la pila tal como queda: primero solo el pago; luego el flujo de planes encima del pago (⑤); luego otra vez solo el pago (⑧), que retoma en el paso «confirmar». Las fases separan el pago, la digresión y la vuelta. Fíjate en ⑦: el gestor pregunta antes de retomar.</figcaption></figure><div class="lab" id="06-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>El gestor de diálogo a la vista</h3></div><p class="hint">Conversa con Pía tocando las respuestas sugeridas o escribiendo. A la derecha ves la máquina de estados del flujo activo, con el estado actual encendido, y la pila de flujos abiertos. Interrumpe el pago con una pregunta por planes o por una falla y mira cómo se apila el flujo nuevo y cómo vuelve el anterior. Toca «Pasan 20 minutos» para ver qué pasa cuando la sesión vence a mitad del pago. Abajo queda la traza de cada decisión.</p><style>
+[id="06-lab-1"] .c61-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:700px){[id="06-lab-1"] .c61-grid{grid-template-columns:minmax(0,1fr)}}
+[id="06-lab-1"] .c61-chat{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:10px;height:20em;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+[id="06-lab-1"] .c61-m{max-width:88%;padding:6px 10px;border-radius:10px;font:400 .9rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="06-lab-1"] .c61-m.u{align-self:flex-end;background:var(--accent);color:var(--card)}
+[id="06-lab-1"] .c61-m.b{align-self:flex-start;background:var(--card);border:1px solid var(--line);color:var(--ink)}
+[id="06-lab-1"] .c61-m.s{align-self:center;background:none;color:var(--muted);font:600 .74rem var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+[id="06-lab-1"] .c61-f{display:flex;gap:6px;margin-top:8px}
+[id="06-lab-1"] .c61-f input{flex:1;min-width:0;font:400 .95rem var(--f-body);padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+[id="06-lab-1"] .c61-chips{margin-top:6px}
+[id="06-lab-1"] .c61-chips button{font-weight:500;font-size:.8rem;padding:5px 9px}
+[id="06-lab-1"] .c61-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+[id="06-lab-1"] .c61-est{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font:500 .78rem var(--f-mono)}
+[id="06-lab-1"] .c61-est span{padding:3px 8px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:var(--card)}
+[id="06-lab-1"] .c61-est span.on{border-color:var(--c-red);background:var(--c-red-s);color:var(--ink);font-weight:700;box-shadow:0 0 0 1.5px var(--c-red)}
+[id="06-lab-1"] .c61-est i{color:var(--muted);font-style:normal}
+[id="06-lab-1"] .c61-pila{display:grid;gap:5px}
+[id="06-lab-1"] .c61-pila div{border:1.5px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--card);font:400 .82rem var(--f-body)}
+[id="06-lab-1"] .c61-pila div:first-child{border-color:var(--c-red);background:var(--c-red-s)}
+[id="06-lab-1"] .c61-pila div:not(:first-child){border-style:dashed;color:var(--muted)}
+[id="06-lab-1"] .c61-pila b{font:700 .82rem var(--f-mono)}
+[id="06-lab-1"] .c61-vac{color:var(--muted);font:400 .85rem var(--f-body)}
+[id="06-lab-1"] table{width:100%;border-collapse:collapse;font:400 .76rem var(--f-mono)}
+[id="06-lab-1"] th,[id="06-lab-1"] td{border-bottom:1px solid var(--line);padding:3px 5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+[id="06-lab-1"] th{font-family:var(--f-display);font-weight:600;color:var(--muted)}
+</style>
+<div class="c61-grid">
+  <div>
+    <div class="c61-chat" id="c61-chat" aria-live="polite"></div>
+    <form class="c61-f" id="c61-form" autocomplete="off">
+      <label for="c61-in" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Tu mensaje</label>
+      <input id="c61-in" type="text" maxlength="120" placeholder="Escribe como Laura…">
+      <button type="submit" class="primary">Enviar</button>
+    </form>
+    <div class="btns c61-chips" id="c61-chips" role="group" aria-label="Respuestas sugeridas"></div>
+    <div class="btns" style="margin-top:8px">
+      <button type="button" id="c61-reloj">⏱ Pasan 20 minutos</button>
+      <button type="button" id="c61-rei">Reiniciar</button>
+    </div>
+  </div>
+  <div style="display:grid;gap:12px;min-width:0">
+    <div><p class="c61-tit" id="c61-est-t">Máquina de estados del flujo activo</p><div class="c61-est" id="c61-est"></div></div>
+    <div><p class="c61-tit">Pila de flujos (arriba, el que conversa)</p><div class="c61-pila" id="c61-pila"></div></div>
+    <div class="readout texto" id="c61-ses" aria-live="polite"></div>
+  </div>
+</div>
+<div>
+  <p class="c61-tit">Traza de decisiones (las más recientes arriba)</p>
+  <div class="tbl"><table><thead><tr><th>Turno</th><th>Intención</th><th>Estado antes</th><th>Acción</th><th>Estado después</th></tr></thead><tbody id="c61-tz"></tbody></table></div>
+</div></div></section>
+<section><h2>El contexto multiturno: espacios, referencias y correcciones</h2><div class="prose"><p>Una conversación es <b>multiturno</b> (<i>multi-turn</i>) cuando el sentido de un mensaje depende de los anteriores. El <b>contexto</b> (<i>context</i>) es todo lo que el bot necesita recordar de los turnos previos para entender el actual. Tiene tres trabajos.</p><p><b>Llenar espacios</b> (<i>slot filling</i>). El flujo necesita datos: la factura, el servicio, el periodo. El gestor los guarda como <b>variables estructuradas</b> (<i>slots</i>), no como texto suelto. Si Laura ya dijo «la de internet» al principio, el flujo no se lo vuelve a preguntar.</p><p><b>Resolver referencias</b> (<i>reference resolution</i>). Las personas señalan lo ya dicho: «esa», «la otra», «¿y la del mes pasado?», «mándamelo por correo». Para resolver «la del mes pasado», el bot necesita saber que el tema es una factura, de qué cuenta y cuál es «este mes». Resolver esas referencias es lo que más se nota cuando falla: el cliente siente que habla con alguien que no escucha.</p><p><b>Aceptar correcciones</b>. «No, la de TV». «Me equivoqué, el ticket es el 5512». Una corrección cambia un espacio ya lleno y obliga a revisar lo que dependía de él: si cambia el servicio, el diagnóstico que se hizo con el servicio anterior ya no vale.</p><p>Una distinción ordena todo esto: hay datos <b>globales de la sesión</b> (quién es el cliente, si está verificado, el canal, el idioma) y datos <b>locales de un flujo</b> (la factura que se está pagando, la dirección del ticket que se está creando). Cambiar de flujo no debe borrar los globales; cerrar un flujo sí debe limpiar sus locales, para que no contaminen el siguiente.</p><p>Cuando el que entiende es un LLM, el contexto también tiene un costo: todo lo que se le envía en cada turno se paga en tokens. Por eso se decide qué parte del historial se envía: los últimos turnos completos, un <b>resumen progresivo</b> (<i>running summary</i>) de lo anterior y los espacios ya llenos. Enviar todo el historial crudo en cada turno es la forma más cara de recordar, y en conversaciones largas termina por exceder lo que el modelo puede leer.</p></div><div class="lab" id="06-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Qué recuerda el bot y qué deja de entender</h3></div><p class="hint">Laura ya conversó tres turnos con Pía: se verificó, preguntó su deuda de internet y mencionó su ticket. Abajo está el estado que quedó guardado. Desmarca piezas del estado (o cambia cómo se envía el historial al modelo) y mira qué preguntas de seguimiento deja de entender Pía y cuántos tokens cuesta cada turno.</p><style>
+[id="06-lab-2"] .c62-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:700px){[id="06-lab-2"] .c62-grid{grid-template-columns:minmax(0,1fr)}}
+[id="06-lab-2"] .c62-tit{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+[id="06-lab-2"] .c62-chat{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:8px;display:grid;gap:5px}
+[id="06-lab-2"] .c62-m{max-width:90%;padding:5px 9px;border-radius:9px;font:400 .84rem/1.35 var(--f-body)}
+[id="06-lab-2"] .c62-m.u{justify-self:end;background:var(--accent);color:var(--card)}
+[id="06-lab-2"] .c62-m.b{justify-self:start;background:var(--card);border:1px solid var(--line)}
+[id="06-lab-2"] .c62-m.fuera{opacity:.35}
+[id="06-lab-2"] .c62-piezas{display:grid;gap:5px}
+[id="06-lab-2"] .c62-piezas label{display:flex;gap:8px;align-items:center;font:500 .86rem var(--f-display);border:1px solid var(--line);border-radius:7px;padding:5px 8px;background:var(--card)}
+[id="06-lab-2"] .c62-piezas label small{margin-left:auto;font:500 .7rem var(--f-display);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+[id="06-lab-2"] table{width:100%;border-collapse:collapse;font:400 .84rem var(--f-body)}
+[id="06-lab-2"] th,[id="06-lab-2"] td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+[id="06-lab-2"] th{font:600 .78rem var(--f-display);color:var(--muted)}
+[id="06-lab-2"] td.r{font-weight:700;white-space:nowrap}
+[id="06-lab-2"] tr.ok td.r{color:var(--good)} [id="06-lab-2"] tr.ver td.r{color:var(--accent)} [id="06-lab-2"] tr.no td.r{color:var(--warm)}
+[id="06-lab-2"] td small{display:block;color:var(--muted);font-size:.78rem}
+</style>
+<div class="c62-grid">
+  <div>
+    <p class="c62-tit">Lo que ya conversaron</p>
+    <div class="c62-chat" id="c62-chat"></div>
+    <label class="ctl" style="margin-top:10px;display:grid;gap:4px">Cómo se envía el historial al modelo
+      <select id="c62-hist">
+        <option value="completo">Historial completo en cada turno</option>
+        <option value="ultimos">Solo los últimos 2 mensajes</option>
+        <option value="resumen" selected>Resumen progresivo</option>
+        <option value="nada">Nada de historial</option>
+      </select>
+    </label>
+  </div>
+  <div>
+    <p class="c62-tit">Estado guardado en la sesión (espacios)</p>
+    <div class="c62-piezas" id="c62-piezas"></div>
+  </div>
+</div>
+<div class="tbl"><table><thead><tr><th>Laura escribe…</th><th>Pía responde</th><th>Resultado</th></tr></thead><tbody id="c62-tb"></tbody></table></div>
+<div class="readout texto" id="c62-out" aria-live="polite"></div></div></section>
+<section><h2>Sesión y estado: qué se guarda, dónde, cuánto tiempo y cuándo expira</h2><div class="prose"><p>La <b>sesión</b> (<i>session</i>) es el registro de una conversación en curso: el estado del gestor, los espacios, la pila y los contadores. Se guarda fuera del programa del bot, en un almacén rápido, para que cualquier servidor pueda atender el siguiente mensaje de Laura aunque el anterior lo haya atendido otro. Suele ser un <b>almacén clave-valor</b> (<i>key-value store</i>) en memoria, como Redis o Valkey, entre otras opciones del mercado, donde la clave identifica la conversación y el valor es el estado.</p><p>La sesión de Laura, en el momento en que pregunta por el plan, se ve más o menos así:</p><div class="code-copia"><pre><code>clave: sesion:cliente:1001
+{
+  "canal_actual": "whatsapp",
+  "identidad": {"verificada": true, "metodo": "otp_sms",
+                "verificada_en": "2026-11-24T10:14:20Z"},
+  "pila": [
+    {"flujo": "consultar_planes", "paso": "mostrar_opciones"},
+    {"flujo": "pagar_factura", "paso": "confirmar",
+     "espacios": {"factura": "F-2207", "monto": 25.00}}
+  ],
+  "globales": {"servicio": "internet", "idioma": "es"},
+  "intentos_fallidos": 0,
+  "escalamiento": "ninguno",
+  "ultimo_mensaje": "2026-11-24T10:16:02Z"
+}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>La pregunta difícil no es qué guardar, sino <b>por cuánto tiempo</b>. Cada pieza tiene su propio <b>tiempo de vida</b> (<i>TTL, time to live</i>), y al vencer se borra sola:</p><ul><li><b>El estado de un flujo transaccional</b> (un pago, un cambio de datos) vence pronto, por ejemplo a los 15 minutos sin actividad. Si Laura vuelve una hora después y escribe «sí», ese «sí» no puede confirmar un pago que quedó en el aire: se descarta el flujo y, si hace falta, se verifica de nuevo.</li><li><b>La verificación de identidad</b> tiene su propia vigencia, fijada por la regla del capítulo 12, y no se extiende sola por seguir conversando.</li><li><b>El contexto de una consulta general</b> puede durar horas.</li><li><b>La conversación como registro</b> (la transcripción y la traza) no vence con la sesión: pasa al historial, con sus propias reglas de retención.</li></ul></div><figure class="fig fig-esquema" id="06-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" style="min-width:720px" role="img" aria-label="Línea de tiempo desde el último mensaje de Laura: el flujo de pago vence a los 15 minutos, la verificación de identidad a los 30 minutos, el contexto de la consulta a las 24 horas; el historial y la traza no vencen con la sesión; una línea marca el regreso de Laura una hora después">
+  <defs>
+    <marker id="d06c-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+  </defs>
+  <text x="14" y="22" class="t t-xs t-b t-m">PIEZA DE LA SESIÓN</text>
+  <text x="220" y="22" class="t t-xs t-b t-m">TIEMPO DESDE EL ÚLTIMO MENSAJE</text>
+
+  
+  <g class="t t-s t-m" text-anchor="middle">
+    <line x1="220" y1="40" x2="220" y2="262" class="ln" style="stroke:var(--grid)"/><text x="220" y="282">0</text>
+    <line x1="340" y1="40" x2="340" y2="262" class="ln" style="stroke:var(--grid)"/><text x="340" y="282">15 min</text>
+    <line x1="420" y1="40" x2="420" y2="262" class="ln" style="stroke:var(--grid)"/><text x="420" y="282">30 min</text>
+    <line x1="650" y1="40" x2="650" y2="262" class="ln" style="stroke:var(--grid)"/><text x="650" y="282">4 h</text>
+    <line x1="860" y1="40" x2="860" y2="262" class="ln" style="stroke:var(--grid)"/><text x="860" y="282">24 h</text>
+  </g>
+
+  <g class="t t-s">
+    <text x="14" y="66" class="t-b">Flujo de pago</text><text x="14" y="80" class="t-m">estado transaccional</text>
+    <rect x="220" y="56" width="120" height="24" rx="6" class="c-apl"/>
+    <text x="348" y="73" class="k-apl t-b">vence: se descarta</text>
+
+    <text x="14" y="116" class="t-b">Verificación de identidad</text><text x="14" y="130" class="t-m">vigencia por regla</text>
+    <rect x="220" y="106" width="200" height="24" rx="6" class="d-casa"/>
+
+    <text x="14" y="166" class="t-b">Contexto de la consulta</text><text x="14" y="180" class="t-m">tema, espacios, resumen</text>
+    <rect x="220" y="156" width="640" height="24" rx="6" class="c-red"/>
+
+    <text x="14" y="216" class="t-b">Historial y traza</text><text x="14" y="230" class="t-m">no vencen con la sesión</text>
+    <rect x="220" y="206" width="640" height="24" rx="6" class="d-inet"/>
+    <path d="M862 218H890" class="ln" marker-end="url(#d06c-m)"/>
+    <text x="220" y="248" class="k-inet">pasan al historial, con sus propias reglas de retención</text>
+  </g>
+
+  
+  <line x1="500" y1="40" x2="500" y2="262" class="ln s-warm" style="stroke-width:2;stroke-dasharray:6 4"/>
+  <g class="t t-s">
+    <text x="500" y="282" text-anchor="middle" class="k-warm t-b">1 h</text>
+    <text x="508" y="52" class="k-warm t-b">Laura vuelve</text>
+    <text x="508" y="73" class="k-warm">✗ el pago ya no existe</text>
+    <text x="508" y="123" class="k-warm">✗ vencida: verificar de nuevo</text>
+    <text x="508" y="173" class="k-enl t-b">✓ sigue vivo</text>
+    <text x="508" y="223" class="k-enl t-b">✓ queda registrado</text>
+  </g>
+  <text x="14" y="316" class="t t-s t-m">Los tiempos son de ejemplo: cada empresa los fija según el riesgo de cada flujo. La escala se estira al principio.</text>
+</svg></div><figcaption><b>Cada pieza de la sesión vence a su ritmo.</b> El eje horizontal es el tiempo desde el último mensaje de Laura, de cero a 24 horas, en una escala que se estira al principio. Cada barra es una pieza de la sesión y termina cuando vence: el flujo de pago a los 15 minutos, la verificación de identidad a los 30, el contexto de la consulta a las 24 horas. Abajo, el historial y la traza no vencen con la sesión. La línea punteada marca el regreso de Laura una hora después: ve qué queda vivo en ese momento.</figcaption></figure><div class="prose"><p>Dos detalles técnicos más. Si Laura escribe por WhatsApp y por la web a la vez, hay que decidir si son una sesión o dos; si la clave es el cliente verificado y no el canal, son una sola, y la conversación puede seguir de un canal a otro (capítulo 8). Y como los canales a veces entregan el mismo mensaje dos veces, cada cambio de estado debe resistir el duplicado: el mismo mensaje no puede avanzar el flujo dos pasos.</p><p>La web resuelve el mismo problema con las <b>cookies</b> (<i>cookies</i>): pequeños datos que el servidor le pide al navegador guardar, con una fecha de vencimiento. Mira cómo se fija esa vida útil.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Una sesión con fecha de vencimiento</h3></div><p>Vas a pedirle a httpbin.org, un servicio público de pruebas, que te entregue una cookie de sesión como lo haría un widget de chat, una vez sin vencimiento y otra con 15 minutos de vida (<code>Max-Age=900</code>). La opción <code>-c -</code> le dice a curl que muestre las cookies que recibió.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>curl.exe -s -o NUL -c - "https://httpbin.org/response-headers?Set-Cookie=sesion%3Dabc123"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl.exe -s -o NUL -c - "https://httpbin.org/response-headers?Set-Cookie=sesion%3Dabc123%3B%20Max-Age%3D900"</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>curl -s -o /dev/null -c - "https://httpbin.org/response-headers?Set-Cookie=sesion%3Dabc123"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>curl -s -o /dev/null -c - "https://httpbin.org/response-headers?Set-Cookie=sesion%3Dabc123%3B%20Max-Age%3D900"</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>En la última línea de cada salida, busca la columna con un número justo antes de <code>sesion</code>.</span></li><li><span>Compara el número de la primera cookie con el de la segunda.</span></li><li><span>Ejecuta la segunda línea otra vez un minuto después y compara el número.</span></li></ol><p><b>Qué observar:</b> la primera cookie trae un <code>0</code>: es una cookie de sesión, que el navegador borra al cerrarse. La segunda trae un número grande: el momento exacto en que vence, contado en segundos. Si la vuelves a pedir un minuto después, el número crece unos 60: cada pedido renueva el plazo. Un bot hace lo mismo con cada pieza de su sesión, con un TTL distinto para el pago, la verificación y la consulta.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Mira la sesión de un sitio con las herramientas del navegador</h3></div><p>Vas a ver dónde guarda un sitio web el estado de tu visita. Usa cualquier navegador de escritorio (Chrome, Edge o Firefox) y un sitio público que tenga un chat de atención o un carrito de compras; no necesitas iniciar sesión.</p><ol class="steps"><li><span>Abre el sitio y luego las herramientas de desarrollador (<i>DevTools</i>) con F12.</span></li><li><span>Ve a la pestaña «Application» (en Firefox, «Almacenamiento») y abre «Cookies» y «Local Storage».</span></li><li><span>Ordena las cookies por la columna «Expires / Max-Age» y busca cuáles dicen «Session» y cuáles tienen una fecha.</span></li><li><span>Si el sitio tiene un chat, ábrelo, escribe «hola» y vuelve a mirar: busca claves nuevas con palabras como <code>chat</code>, <code>session</code>, <code>conversation</code> o <code>visitor</code>.</span></li></ol><p><b>Qué observar:</b> cada sitio guarda poco en tu navegador y casi siempre un identificador, no la conversación: el estado completo vive en el servidor, como la sesión de Pía, y el navegador solo lleva la clave. Las cookies con fecha son memoria que sobrevive al cierre del navegador; las de sesión, no. Lo que veas depende del sitio y del navegador. Solo mira: no borres ni cambies nada.</p></div></section>
+<section><h2>Memoria de corto y de largo plazo, y lo que nunca se debe recordar</h2><div class="prose"><p>La sesión es la <b>memoria de corto plazo</b> (<i>short-term memory</i>): lo que el bot recuerda mientras dura la conversación. La <b>memoria de largo plazo</b> (<i>long-term memory</i>) es lo que sobrevive entre conversaciones: que Laura prefiere que le escriban por WhatsApp, que la semana pasada reportó una falla, que siempre paga con enlace.</p><p>La memoria de largo plazo se arma con dos fuentes. La primera son los <b>sistemas de la empresa</b>: el CRM, la facturación y la mesa de ayuda ya guardan casi todo lo que importa, y se consultan en vivo. La segunda es un <b>resumen de cada conversación</b> al cerrarla (motivo, resultado, pendientes), que se guarda vinculado al cliente y se recupera la próxima vez. No se guarda la transcripción entera para alimentar al modelo: se guarda lo útil. Cómo se construyen esas capas de memoria por dentro está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p><p>Lo importante aquí es la tercera columna de esta tabla:</p><div class="tbl"><table><thead><tr><th>Se recuerda en la sesión</th><th>Se recuerda entre conversaciones</th><th>No se recuerda nunca</th></tr></thead><tbody><tr><td>el flujo activo y la pila</td><td>preferencias de canal y de horario</td><td>números de tarjeta y códigos de seguridad</td></tr><tr><td>los espacios llenos (factura, servicio)</td><td>resumen de contactos anteriores</td><td>códigos de un solo uso y contraseñas</td></tr><tr><td>la verificación y su hora</td><td>casos abiertos (desde la mesa de ayuda)</td><td>datos de salud o de terceros que el cliente mencione de pasada</td></tr><tr><td>intentos fallidos</td><td>consentimientos dados, con fecha</td><td>opiniones del bot sobre el cliente («parece molesto») como dato permanente</td></tr></tbody></table></div><p>Lo que no se recuerda no se guarda ni en la sesión ni en el resumen, y en el registro de la conversación queda enmascarado (capítulo 12). La razón es doble: lo que no existe no se filtra, y una memoria que el cliente no espera resulta inquietante. Que Pía recuerde que Laura reportó una falla la semana pasada es servicio; que recuerde algo que Laura contó de pasada sobre su salud es una invasión.</p></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que activa la memoria entre conversaciones suele empezar por algo modesto: al abrir una conversación, el bot consulta si el cliente tiene un ticket abierto o un pago reciente y lo menciona en el saludo («Veo que tienes un reporte abierto de ayer. ¿Escribes por eso?»). Ese solo dato, que sale de la mesa de ayuda y no de una memoria propia del bot, ahorra varios turnos en una parte grande de las conversaciones. Lo que no suele funcionar es lo contrario: que el bot «recuerde» detalles personales que nadie le pidió guardar.</p></div></section>
+<section><h2>La traza de cada decisión</h2><div class="prose"><p>Cada vez que el gestor decide, deja una línea en la <b>traza</b> (<i>trace</i>): qué entendió, en qué estado estaba, qué acción eligió, con qué regla y en qué estado quedó. Es la caja negra del bot.</p><div class="code-copia"><pre><code>{"turno":5,"hora":"10:16:02","intencion":"consultar_planes","confianza":0.88,
+ "estado_antes":"pagar_factura/confirmar","accion":"apilar_flujo",
+ "regla":"digresion_permitida","estado_despues":"consultar_planes/mostrar_opciones",
+ "version_flujo":"pago-v14"}
+{"turno":6,"hora":"10:16:40","intencion":"retomar","confianza":0.91,
+ "estado_antes":"consultar_planes/mostrar_opciones","accion":"desapilar_y_preguntar",
+ "regla":"retomar_con_pregunta","estado_despues":"pagar_factura/confirmar",
+ "version_flujo":"pago-v14"}</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><p>La traza sirve para tres cosas. Para <b>auditar</b>: si Laura reclama «el bot me cobró sin preguntarme», la traza muestra si hubo confirmación y en qué turno. Para <b>depurar</b>: si muchas conversaciones terminan en el mismo estado sin salida, la traza dice cuál y con qué intención llegaron. Y para <b>mejorar</b>: las conversaciones fallidas se encuentran buscando patrones en la traza (capítulo 14). Por eso lleva la versión del flujo: sin ella, no sabes si un error viene del flujo de ayer o del de hoy. Y por la misma razón que la memoria, la traza registra decisiones, no datos sensibles: el código de un solo uso aparece como «código válido», nunca con sus dígitos.</p><p>Lo que te llevas de este capítulo: <b>un estado explícito de la conversación, que sobrevive a interrupciones y deja traza de cada decisión.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Qué decide el gestor de diálogo y qué no hace?</summary><p>Decide la siguiente acción con el estado de la conversación y lo que entendió la comprensión: preguntar, consultar, responder, abrir otro flujo o pasar a una persona. No entiende el lenguaje ni redacta.</p></details><details><summary>¿Para qué sirve una pila de flujos activos?</summary><p>Para manejar interrupciones: el flujo nuevo se pone encima, conversa y, al terminar, se saca; el de abajo retoma justo donde quedó.</p></details><details><summary>Un modelo propone «crear enlace de pago» cuando el estado es <code>esperando_codigo</code>. ¿Qué debe pasar?</summary><p>Se rechaza: el modelo solo puede elegir entre las acciones permitidas en el estado actual, y esa no lo es.</p></details><details><summary>¿Por qué el flujo de pago vence a los 15 minutos aunque la conversación siga guardada?</summary><p>Porque un «sí» que llega mucho después no puede confirmar un pago que quedó en el aire. El flujo transaccional se descarta y, si hace falta, se verifica de nuevo la identidad.</p></details><details><summary>¿Qué diferencia hay entre datos globales de la sesión y datos locales de un flujo?</summary><p>Los globales (cliente, verificación, canal, idioma) sobreviven a los cambios de flujo; los locales (la factura que se paga, la dirección del ticket) se limpian al cerrar el flujo para no contaminar el siguiente.</p></details><details><summary>¿Por qué la traza guarda la versión del flujo y no guarda los dígitos del código de un solo uso?</summary><p>La versión permite saber si un error viene del flujo de ayer o del de hoy. Los dígitos no se guardan porque la traza registra decisiones, no datos sensibles: basta con «código válido».</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es Redis y por qué un almacén en memoria responde más rápido que una base de datos en disco?<small>Pista: busca «Redis in-memory data store latency».</small></li><li>¿Qué es el tiempo Unix (<i>epoch</i>) y por qué las computadoras cuentan el tiempo en segundos desde 1970?<small>Pista: busca «Unix time 1 de enero de 1970».</small></li><li>¿Qué es una correferencia en lingüística computacional y por qué «ella» o «esa» son difíciles para una máquina?<small>Pista: busca «coreference resolution NLP».</small></li><li>¿Qué dice la norma GDPR sobre la minimización de datos y la limitación del plazo de conservación?<small>Pista: busca «GDPR artículo 5 minimización de datos».</small></li><li>¿Qué es un autómata de pila y en qué se diferencia de un autómata finito?<small>Pista: busca «pushdown automaton».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-concept-dialog" target="_blank" rel="noopener">Managing dialogs and the dialog stack, de Microsoft Bot Framework <small>cómo funciona una pila de diálogos en un marco real</small></a><a class="vid" href="https://redis.io/docs/latest/commands/expire/" target="_blank" rel="noopener">Redis: EXPIRE <small>el comando que pone tiempo de vida a una clave, la base de las sesiones que vencen</small></a><a class="vid" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies" target="_blank" rel="noopener">Using HTTP cookies, de MDN <small>cookies de sesión y permanentes, con <code>Max-Age</code> y <code>Expires</code></small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const ESTADOS={pagar_factura:['esperando_codigo','confirmar','enlace_enviado'],consultar_planes:['mostrar_opciones'],reportar_falla:['ofrecer_ticket','ticket_creado']};
+  const TTL_FLUJO=15,TTL_ID=30;
+  let S;
+  function nuevo(){S={pila:[],min:0,verif:null,turno:0,traza:[],intentos:0,fin:false};}
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  function intencion(t){
+    const n=norm(t);
+    if(/persona|humano|asesor|agente/.test(n))return 'hablar_con_persona';
+    if(/^\D*\d{6}\D*$/.test(n))return 'dar_codigo';
+    if(/cancel|olvida|ya no quiero/.test(n))return 'cancelar';
+    if(/plan|velocidad|mbps|rapid/.test(n))return 'consultar_planes';
+    if(/falla|no tengo internet|sin internet|no funciona|lento|no navega/.test(n))return 'reportar_falla';
+    if(/pag|debo|deuda|factura|saldo/.test(n))return 'pagar_factura';
+    if(/^(si|dale|ok|claro|sigamos|seguimos|sigue|continu|listo|bueno|de una|perfecto)/.test(n))return 'afirmar';
+    if(/^no\b|no gracias|^nada/.test(n))return 'negar';
+    return 'no_entendido';
+  }
+  const top=()=>S.pila[0];
+  const est=()=>top()?top().f+'/'+top().e:'(sin flujo)';
+  const hh=m=>{const h=10+Math.floor((15+m)/60),mm=(15+m)%60;return h+':'+String(mm).padStart(2,'0');};
+  function msg(cl,t){const d=document.createElement('div');d.className='c61-m '+cl;d.textContent=t;q('#c61-chat').appendChild(d);q('#c61-chat').scrollTop=1e6;}
+  function traza(i,antes,acc){S.traza.unshift([S.turno,i,antes,acc,est()]);}
+  function verificado(){return S.verif!==null&&S.min-S.verif<=TTL_ID;}
+  function apilar(f){
+    S.pila.unshift({f,e:ESTADOS[f][0],act:S.min,ret:false});
+    if(f==='pagar_factura'){
+      if(verificado()){top().e='confirmar';return 'Tu factura F-2207 es de US$ 25,00 y vence el 5 de diciembre. ¿Te envío el enlace para pagarla?';}
+      return 'Para cuidar tus datos te envié un código por SMS. ¿Me lo escribes? (Para la prueba, cualquier número de 6 dígitos sirve.)';
+    }
+    if(f==='consultar_planes'){
+      const hay=S.pila.length>1;
+      return 'Tenemos 200 Mbps por US$ 25,00 y 500 Mbps por US$ 35,00 al mes.'+(hay?' ¿Seguimos con '+nombre(S.pila[1].f)+'?':' ¿Te ayudo con algo más?');
+    }
+    if(f==='reportar_falla')return 'Revisé tu zona y no hay averías. ¿Abro un ticket para que te contacte un técnico?';
+  }
+  const nombre=f=>({pagar_factura:'el pago de tu factura',consultar_planes:'los planes',reportar_falla:'tu reporte de falla'}[f]);
+  function sacar(){
+    S.pila.shift();
+    if(top()){top().ret=true;top().act=S.min;return ' ¿Seguimos con '+nombre(top().f)+'?';}
+    return '';
+  }
+  function retomar(){
+    const t=top();t.ret=false;t.act=S.min;
+    if(t.f==='pagar_factura'){
+      if(t.e==='confirmar'&&!verificado()){t.e='esperando_codigo';return 'Antes de seguir, tu verificación venció. Te envié un código nuevo por SMS: ¿me lo escribes?';}
+      if(t.e==='confirmar')return 'Listo. Tu factura F-2207 es de US$ 25,00. ¿Te envío el enlace para pagarla?';
+      return 'Seguimos: ¿me escribes el código que te llegó por SMS?';
+    }
+    if(t.f==='reportar_falla')return 'Seguimos con tu reporte: ¿abro el ticket para que te contacte un técnico?';
+    return '¿En qué te ayudo?';
+  }
+  function vencer(){
+    const notas=[];
+    S.pila=S.pila.filter(x=>{if(x.f==='pagar_factura'&&S.min-x.act>TTL_FLUJO){S.traza.unshift([S.turno,'(reloj)','pagar_factura/'+x.e,'expira el flujo (TTL '+TTL_FLUJO+' min)',S.pila.length>1?'…':'(sin flujo)']);notas.push('el flujo de pago venció y se descartó');return false;}return true;});
+    if(S.verif!==null&&S.min-S.verif>TTL_ID){S.verif=null;S.traza.unshift([S.turno,'(reloj)','—','vence la verificación (TTL '+TTL_ID+' min)','—']);notas.push('la verificación de identidad venció');}
+    return notas;
+  }
+  function responder(t){
+    if(S.fin){msg('s','La conversación está con una persona. Toca «Reiniciar».');return;}
+    S.turno++;msg('u',t);
+    const i=intencion(t),antes=est();let r,acc;
+    const tp=top();
+    if(tp)tp.act=S.min;
+    if(i==='hablar_con_persona'){S.pila=[];S.fin=true;acc='traspaso con el contexto';r='Te paso con una persona del equipo. Le dejo el resumen para que no repitas nada.';}
+    else if(i==='cancelar'){if(tp){acc='cierra '+tp.f+' sin ejecutar';r='Listo, cancelé '+nombre(tp.f)+'; no quedó nada a medias.'+sacar();}else{acc='nada que cancelar';r='No hay nada en curso. ¿En qué te ayudo?';}}
+    else if(tp&&tp.ret&&(i==='afirmar')){acc='retoma '+tp.f+' preguntando';r=retomar();}
+    else if(tp&&tp.ret&&i==='negar'){acc='cierra '+tp.f+' (no quiso retomar)';S.pila.shift();r='De acuerdo, lo dejamos ahí. Si quieres retomarlo, escríbeme.'+(top()?' ¿Seguimos con '+nombre(top().f)+'?':'');if(top())top().ret=true;}
+    else if(['consultar_planes','reportar_falla','pagar_factura'].includes(i)&&(!tp||tp.f!==i)){
+      acc=tp?'apila '+i+' (digresión; '+tp.f+' queda en pausa)':'abre '+i;r=apilar(i);
+    }
+    else if(!tp&&i==='afirmar'){acc='«sí» sin nada pendiente: no ejecuta nada';r='No tengo nada pendiente que confirmar. Si era un pago, venció por seguridad y no se cobró nada. ¿Empezamos de nuevo? Escribe «pagar».';}
+    else if(!tp){acc='sin flujo: ofrece opciones';r='Puedo ayudarte a pagar tu factura, contarte los planes o reportar una falla. ¿Qué necesitas?';}
+    else if(tp.f==='pagar_factura'&&tp.e==='esperando_codigo'){
+      if(i==='dar_codigo'){S.verif=S.min;S.intentos=0;tp.e='confirmar';acc='valida el código (se guarda «código válido», no los dígitos)';r='Gracias, Laura. Tu factura F-2207 es de US$ 25,00 y vence el 5 de diciembre. ¿Te envío el enlace para pagarla?';}
+      else{S.intentos++;if(S.intentos>=3){S.pila=[];S.fin=true;acc='3 fallos: traspaso';r='No logramos verificarte. Te paso con una persona del equipo.';}else{acc='entrada inválida en este estado ('+S.intentos+'/3)';r=i==='negar'?'Te lo reenvié. Son 6 dígitos y llegan por SMS al número de tu cuenta.':'En este paso necesito el código de 6 dígitos que te llegó por SMS.';}}
+    }
+    else if(tp.f==='pagar_factura'&&tp.e==='confirmar'){
+      if(i==='afirmar'){tp.e='enlace_enviado';acc='crear_enlace_pago(1001, F-2207)';r='Aquí está tu enlace seguro: pagos.ejemplo.com/l/F-2207. El monto lo pone la factura.'+sacar();}
+      else if(i==='negar'){acc='cierra pagar_factura sin cobrar';r='De acuerdo, no envío nada. Cuando quieras pagar, escríbeme.'+sacar();}
+      else{acc='entrada no esperada: repite la pregunta';r='¿Te envío el enlace por US$ 25,00? Responde sí o no.';}
+    }
+    else if(tp.f==='consultar_planes'){
+      if(i==='afirmar'){S.pila.shift();if(top()){acc='cierra consultar_planes y retoma '+top().f+' preguntando';r=retomar();}else{acc='cierra consultar_planes';r='Perfecto. ¿Te ayudo con algo más?';}}
+      else if(i==='negar'){acc='cierra consultar_planes';r='De acuerdo.'+(S.pila.length>1?'':' ¿Te ayudo con algo más?')+sacar();}
+      else{acc='repite opciones';r='Tenemos 200 Mbps por US$ 25,00 y 500 Mbps por US$ 35,00 al mes.';}
+    }
+    else if(tp.f==='reportar_falla'){
+      if(i==='afirmar'){tp.e='ticket_creado';acc='crear_ticket → n.º 5512';r='Listo: abrí el ticket n.º 5512 y un técnico te contactará en las próximas 24 horas.'+sacar();}
+      else if(i==='negar'){acc='cierra reportar_falla';r='De acuerdo, no abro el ticket.'+sacar();}
+      else{acc='repite la pregunta';r='¿Abro el ticket? Responde sí o no.';}
+    }
+    else{acc='no entendió: respaldo';r='No te entendí. En este paso puedes responder sí o no.';}
+    traza(i,antes,acc);msg('b',r);dibujar();
+  }
+  function chips(){
+    const t=top();let c;
+    if(S.fin)c=[];
+    else if(!t)c=['quiero pagar mi factura','¿tienen planes más rápidos?','no tengo internet'];
+    else if(t.ret)c=['sí, sigamos','no, déjalo','quiero hablar con una persona'];
+    else if(t.f==='pagar_factura'&&t.e==='esperando_codigo')c=['482913','no me llegó nada','¿tienen planes más rápidos?','quiero hablar con una persona'];
+    else if(t.f==='pagar_factura')c=['sí','no','¿tienen planes más rápidos?','no tengo internet'];
+    else if(t.f==='consultar_planes')c=['sigamos','no, gracias'];
+    else c=['sí','no','cancelar'];
+    q('#c61-chips').innerHTML=c.map(x=>'<button type="button">'+x+'</button>').join('');
+  }
+  function dibujar(){
+    const t=top();
+    q('#c61-est-t').textContent='Máquina de estados del flujo activo'+(t?': '+t.f:'');
+    q('#c61-est').innerHTML=t?ESTADOS[t.f].map(e=>'<span class="'+(e===t.e?'on':'')+'">'+e+'</span>').join('<i>→</i>'):'<span class="c61-vac">Ningún flujo abierto.</span>';
+    q('#c61-pila').innerHTML=S.pila.length?S.pila.map((x,k)=>'<div><b>'+x.f+'</b> · '+(k===0?(x.ret?'esperando si retoma':'paso: '+x.e):'en pausa en: '+x.e)+'</div>').join(''):'<div class="c61-vac" style="border:0;background:none">Pila vacía.</div>';
+    const ver=S.verif===null?'no verificada':'verificada a las '+hh(S.verif)+' (vence a las '+hh(S.verif+TTL_ID)+')';
+    const pago=S.pila.find(x=>x.f==='pagar_factura');
+    q('#c61-ses').innerHTML='<span>Reloj de la sesión: '+hh(S.min)+'</span><span>Identidad: '+ver+'</span>'+(pago?'<span>Flujo de pago: vence a las '+hh(pago.act+TTL_FLUJO)+' si no hay actividad</span>':'')+(S.fin?'<span class="warn">Conversación traspasada a una persona.</span>':'');
+    q('#c61-tz').innerHTML=S.traza.slice(0,8).map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');
+    chips();
+  }
+  function iniciar(){nuevo();q('#c61-chat').innerHTML='';msg('b','Hola, soy Pía, la asistente virtual de Servicios Ejemplo. Puedo ayudarte con tu factura, los planes o una falla.');dibujar();}
+  q('#c61-form').addEventListener('submit',e=>{e.preventDefault();const v=q('#c61-in').value.trim();if(v){q('#c61-in').value='';responder(v);}});
+  q('#c61-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)responder(b.textContent);});
+  q('#c61-reloj').addEventListener('click',()=>{S.min+=20;msg('s','Pasan 20 minutos sin mensajes · '+hh(S.min));const n=vencer();if(n.length)msg('s','La sesión registra: '+n.join(' y '));dibujar();});
+  q('#c61-rei').addEventListener('click',iniciar);
+  if(window.__c61test){window.__c61test({responder:t=>responder(t),S:()=>S,reloj:()=>q('#c61-reloj').click(),iniciar});}
+  iniciar();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const PZ=[
+    ['identidad','Identidad verificada · cuenta 1001','global'],
+    ['tema','Último tema: factura (consultar_deuda)','global'],
+    ['factura','Factura mencionada: F-2207 · US$ 25,00','local'],
+    ['periodo','Periodo: noviembre','local'],
+    ['servicio','Servicio: internet','global'],
+    ['ticket','Ticket abierto: n.º 5512','global']
+  ];
+  const CHAT=[
+    ['u','hola, ¿cuánto debo de internet?',1],
+    ['b','(tras verificar) Tu factura de noviembre, F-2207, es de US$ 25,00 y vence el 5 de diciembre.',1],
+    ['u','ok. ¿y el técnico del ticket 5512 cuándo viene?',2],
+    ['b','El técnico del ticket 5512 está agendado para el jueves entre 8 y 12.',2]
+  ];
+  // qué piezas se pueden recuperar de cada forma de historial (la identidad nunca)
+  const HIST={completo:{tema:1,factura:1,periodo:1,servicio:1,ticket:1},ultimos:{ticket:1},resumen:{tema:1,factura:1,servicio:1,ticket:1},nada:{}};
+  const TOK={completo:4*70,ultimos:2*70,resumen:60,nada:0};
+  const PREG=[
+    {t:'¿y la del mes pasado?',nec:['tema','periodo'],id:true,ok:'Tu factura de octubre, F-2106, por US$ 25,00, ya está pagada.',no:'¿La del mes pasado de qué? ¿Factura, ticket o plan?'},
+    {t:'págala',nec:['factura'],id:true,ok:'¿Te envío el enlace para pagar F-2207 por US$ 25,00?',no:'¿Qué quieres pagar? No sé de qué factura me hablas.'},
+    {t:'no, la de TV',nec:['tema','servicio'],id:true,ok:'Corrijo el servicio: en TV no tienes deuda pendiente.',no:'No entendí qué quieres cambiar a TV.'},
+    {t:'¿cuánto era?',nec:['factura'],id:true,ok:'Era de US$ 25,00, la factura F-2207.',no:'¿Cuánto era qué? ¿Me das más detalles?'},
+    {t:'¿y lo del técnico?',nec:['ticket'],id:true,ok:'Sigue agendado para el jueves entre 8 y 12 (ticket 5512).',no:'¿Tienes un ticket abierto? Dame el número, por favor.'},
+    {t:'mándame la factura al correo',nec:['factura'],id:true,ok:'Listo: envié F-2207 al correo registrado en tu cuenta.',no:'¿Qué factura quieres que te envíe?'}
+  ];
+  q('#c62-piezas').innerHTML=PZ.map(p=>'<label><input type="checkbox" data-p="'+p[0]+'" checked> '+p[1]+'<small>'+p[2]+'</small></label>').join('');
+  const n=x=>String(x).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  function calc(){
+    const on={};document.querySelectorAll('[id="06-lab-2"] input[type=checkbox]').forEach(c=>on[c.dataset.p]=c.checked);
+    const h=q('#c62-hist').value;const H=HIST[h];
+    q('#c62-chat').innerHTML=CHAT.map(m=>{const vis=h==='completo'||(h==='ultimos'&&m[2]===2);return '<div class="c62-m '+m[0]+(vis?'':' fuera')+'">'+m[1]+'</div>';}).join('')+(h==='resumen'?'<div class="c62-m b" style="font-style:italic;border-style:dashed">Resumen enviado: «Laura consultó su deuda de internet (F-2207) y preguntó por el ticket 5512».</div>':'');
+    let ok=0,ver=0,mal=0;
+    q('#c62-tb').innerHTML=PREG.map(p=>{
+      const falta=p.nec.filter(k=>!on[k]&&!H[k]);
+      let cls,res,txt,det;
+      if(falta.length){cls='no';res='✗ no entiende';txt=p.no;det='le falta: '+falta.map(k=>PZ.find(z=>z[0]===k)[1].split(':')[0].toLowerCase()).join(', ');mal++;}
+      else if(p.id&&!on.identidad){cls='ver';res='↻ pide verificar';txt='Antes de mostrarte datos de tu cuenta, te envío un código por SMS.';det='entiende, pero sin identidad en la sesión no muestra nada';ver++;}
+      else{cls='ok';res='✓ entiende';txt=p.ok;det=p.nec.map(k=>on[k]?k+' (espacio)':k+' (historial)').join(', ');ok++;}
+      return '<tr class="'+cls+'"><td>«'+p.t+'»</td><td>'+txt+'<small>'+det+'</small></td><td class="r">'+res+'</td></tr>';
+    }).join('');
+    const nesp=Object.values(on).filter(x=>x).length;
+    const tok=450+TOK[h]+nesp*15;
+    let s='<span class="big">Pía entiende '+ok+' de 6 preguntas'+(ver?' y en '+ver+' pide verificar primero':'')+'</span>';
+    s+='<span>Cada turno le envía al modelo unos '+n(tok)+' tokens (450 de instrucciones, '+TOK[h]+' de historial y '+nesp*15+' de espacios). En 10.000 turnos, a US$ 3 por millón de tokens de entrada: US$ '+(tok*10000*3/1e6).toFixed(2).replace('.',',')+'.</span>';
+    if(mal)s+='<span class="warn">'+mal+' pregunta'+(mal>1?'s quedan':' queda')+' sin entender: el dato que la referencia necesita no está ni en los espacios ni en el historial enviado.</span>';
+    if(!on.identidad)s+='<span>La identidad nunca se deduce del historial: que el texto diga «tras verificar» no prueba nada. Solo la sesión sabe si la verificación sigue vigente.</span>';
+    if(h==='completo'&&nesp===6)s+='<span>Con historial completo y todos los espacios, el modelo recibe lo mismo dos veces. En conversaciones largas el historial crece en cada turno: los espacios y un resumen dan casi lo mismo por menos.</span>';
+    if(h==='nada'&&!mal)s+='<span class="ok">Sin historial y solo con espacios, Pía entiende todo: los espacios bien llenos son la memoria más barata.</span>';
+    q('#c62-out').innerHTML=s;
+  }
+  document.querySelectorAll('[id="06-lab-2"] input,[id="06-lab-2"] select').forEach(x=>x.addEventListener('change',calc));
+  calc();
+})();
+</script>
+</body>
+</html>

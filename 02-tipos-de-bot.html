@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KX76XF8R');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reglas, NLU, LLM y agentes · Cómo construir chatbots empresariales · Cómo construir chatbots empresariales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Diseñar, construir y operar el chatbot de una empresa de punta a punta: diseño conversacional, tipos de bot y patrón híbrido, canales como WhatsApp y la web, traspaso a humano, pagos seguros en el chat, costo por conversación, métricas, gobierno y el proyecto de implementación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX76XF8R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap" data-page="tipos-de-bot">
+<header class="topbar"><a class="brand" href="index.html">Chatbots <b>empresariales</b></a><span class="eyebrow">Curso visual e interactivo · Datos e inteligencia artificial</span><a class="al-sitio" href="https://aaramirez.github.io/">← Todos los cursos</a></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">CAPÍTULO 02 DE 17</span><h1>Cuatro formas de entender: reglas, NLU, LLM y agentes</h1><p class="lede">Un menú de botones, un clasificador de intenciones, un modelo de lenguaje y un agente que usa herramientas entienden al cliente de formas muy distintas. Ninguna es la mejor en todo: cada una gana algo y arriesga algo.</p></header>
+<section><div class="prose"><p>Laura escribe a Pía, la asistente virtual de Servicios Ejemplo: «ayer pagué y sigo sin internet, ¿qué pasa?». Para responder bien, el bot tiene que hacer dos cosas antes de hablar: <b>entender</b> qué quiere ella y <b>decidir</b> qué hacer con eso. En el capítulo 1 viste que esa tarea la hace la capa de comprensión, junto con la orquestación. Este capítulo abre esas capas y muestra las cuatro técnicas con las que se construyen.</p><p>Las cuatro son <b>reglas</b>, <b>NLU clásico</b>, <b>LLM generativo</b> y <b>agentes</b>. No son una escalera en la que lo nuevo reemplaza a lo viejo. Son herramientas con perfiles distintos de <b>previsibilidad</b> (qué tan seguro estás de lo que el bot hará), <b>flexibilidad</b> (cuánta variedad de lenguaje aguanta), <b>costo</b> y <b>riesgo</b>. Un bot maduro las mezcla, y saber cuál poner en cada tramo de la conversación es una de las decisiones más importantes del diseño.</p></div><div class="analogia"><b>Imagínalo así</b><p>Piensa en cuatro maneras de atender una ventanilla. La primera es un formulario impreso con casillas: rápido y sin sorpresas, pero si tu caso no tiene casilla, no hay nada que hacer. La segunda es un empleado nuevo con una lista de trámites: escucha lo que dices, lo ubica en uno de los trámites de su lista y sigue el procedimiento. La tercera es un empleado muy conversador que sabe un poco de todo: te entiende aunque te expliques mal, pero a veces responde con seguridad algo que no es cierto. La cuarta es un gestor al que le das el problema completo y él va a tres oficinas, junta los papeles y vuelve con la solución, si le diste permiso para ir a esas oficinas.</p></div></section>
+<section><h2>Bots de reglas: menús, palabras clave y máquinas de estado</h2><div class="prose"><p>El bot de <b>reglas</b> (<i>rule-based bot</i>) es el más antiguo y el más predecible. Cada cosa que puede hacer está escrita de antemano por una persona: si el cliente toca el botón «Pagar», el bot pide la verificación; si escribe una palabra que contiene «factura», muestra el saldo. No hay nada que aprender ni que adivinar.</p><p>Hay tres formas de escribir esas reglas, de la más simple a la más robusta:</p><ul><li><b>Menús y botones.</b> El bot ofrece opciones y el cliente elige una. Es lo que hace el <b>IVR</b> (<i>Interactive Voice Response</i>, respuesta de voz interactiva) del teléfono con su «marque 1 para facturación». En el chat, los botones evitan casi todos los malentendidos.</li><li><b>Palabras clave</b> (<i>keywords</i>). El bot busca palabras o patrones en el texto, a menudo con <b>expresiones regulares</b> (<i>regular expressions</i>, <i>regex</i>, patrones de texto como <code>pag(ar|o)</code>, que reconoce «pagar» y «pago»). Es barato y rápido, pero frágil: «no quiero pagar, quiero reclamar» contiene «pagar».</li><li><b>Máquinas de estado</b> (<i>state machines</i>). La conversación tiene <b>estados</b> con nombre (esperando el código, código verificado, esperando la confirmación) y <b>transiciones</b> que dicen qué entrada lleva de un estado a otro. Lo que el bot acepta depende del estado: «sí» significa algo distinto si estás confirmando un pago o si te preguntó si el equipo tiene luces.</li></ul></div><figure class="fig fig-esquema" id="02-diagrama-1"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" style="min-width:720px" role="img" aria-label="Máquina de estados del tramo de pago de Pía: menú, esperando código, mostrar saldo, confirmar y enlace enviado, con transiciones por botón o dato válido; las entradas no previstas suman intentos y al segundo intento la conversación pasa a una persona">
+  <defs>
+    <marker id="d02a-ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-apl"/></marker>
+    <marker id="d02a-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="fl-muted"/></marker>
+    <marker id="d02a-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <text x="14" y="20" class="t t-xs t-b t-m">EL CAMINO FELIZ: CADA FLECHA ES UNA ENTRADA PREVISTA</text>
+
+  <g class="t">
+    <rect x="10" y="62" width="140" height="62" rx="10" class="c-apl"/>
+    <text x="80" y="86" class="t-b k-apl" text-anchor="middle">MENÚ</text>
+    <text x="80" y="104" class="t-s" text-anchor="middle">4 botones</text>
+
+    <rect x="190" y="62" width="140" height="62" rx="10" class="c-apl"/>
+    <text x="260" y="86" class="t-b k-apl" text-anchor="middle">PEDIR CÓDIGO</text>
+    <text x="260" y="104" class="t-s" text-anchor="middle">SMS de 6 dígitos</text>
+
+    <rect x="370" y="62" width="140" height="62" rx="10" class="c-apl"/>
+    <text x="440" y="86" class="t-b k-apl" text-anchor="middle">MOSTRAR SALDO</text>
+    <text x="440" y="104" class="t-s" text-anchor="middle">F-2207 · US$ 25,00</text>
+
+    <rect x="550" y="62" width="140" height="62" rx="10" class="c-apl"/>
+    <text x="620" y="86" class="t-b k-apl" text-anchor="middle">CONFIRMAR</text>
+    <text x="620" y="104" class="t-s" text-anchor="middle">«¿Te envío el enlace?»</text>
+
+    <rect x="730" y="62" width="160" height="62" rx="10" class="d-sis" style="stroke-width:2.4"/>
+    <text x="810" y="86" class="t-b k-sis" text-anchor="middle">ENLACE ENVIADO</text>
+    <text x="810" y="104" class="t-s" text-anchor="middle">fin: acción registrada</text>
+  </g>
+
+  <g class="t t-s">
+    <line x1="150" y1="93" x2="187" y2="93" class="ln s-apl" style="stroke-width:2" marker-end="url(#d02a-ap)"/>
+    <text x="170" y="50" text-anchor="middle" class="t-b">[Pagar]</text>
+    <line x1="330" y1="93" x2="367" y2="93" class="ln s-apl" style="stroke-width:2" marker-end="url(#d02a-ap)"/>
+    <text x="350" y="44" text-anchor="middle" class="t-b">código</text><text x="350" y="56" text-anchor="middle" class="t-b">válido</text>
+    <line x1="510" y1="93" x2="547" y2="93" class="ln s-apl" style="stroke-width:2" marker-end="url(#d02a-ap)"/>
+    <text x="530" y="50" text-anchor="middle" class="t-b">[Pagar ahora]</text>
+    <line x1="690" y1="93" x2="727" y2="93" class="ln s-apl" style="stroke-width:2" marker-end="url(#d02a-ap)"/>
+    <text x="710" y="50" text-anchor="middle" class="t-b">[Sí]</text>
+  </g>
+
+  
+  <g>
+    <line x1="80" y1="124" x2="80" y2="158" class="ln ln-d"/>
+    <line x1="260" y1="124" x2="260" y2="158" class="ln ln-d"/>
+    <line x1="440" y1="124" x2="440" y2="158" class="ln ln-d"/>
+    <line x1="620" y1="124" x2="620" y2="158" class="ln ln-d"/>
+    <line x1="80" y1="158" x2="620" y2="158" class="ln ln-d"/>
+    <line x1="350" y1="158" x2="350" y2="185" class="ln" marker-end="url(#d02a-m)"/>
+  </g>
+  <text x="634" y="152" class="t t-s t-m">cualquier otra entrada</text>
+
+  <rect x="200" y="188" width="300" height="52" rx="10" class="caja"/>
+  <text x="350" y="209" class="t t-b" text-anchor="middle">Entrada no prevista: intento 1</text>
+  <text x="350" y="228" class="t t-s t-m" text-anchor="middle">repite las opciones del mismo estado</text>
+  <path d="M500 214 H560 V140 H520" class="ln" marker-end="url(#d02a-m)"/>
+  <text x="566" y="196" class="t t-s t-m">vuelve al</text><text x="566" y="209" class="t t-s t-m">mismo estado</text>
+
+  <line x1="350" y1="240" x2="350" y2="266" class="ln s-warm" style="stroke-width:2" marker-end="url(#d02a-w)"/>
+  <text x="358" y="258" class="t t-s">intento 2</text>
+  <rect x="200" y="270" width="300" height="52" rx="10" class="caja s-warm" style="stroke-width:2"/>
+  <text x="350" y="291" class="t t-b k-warm" text-anchor="middle">PERSONA</text>
+  <text x="350" y="310" class="t t-s" text-anchor="middle">traspaso con el estado y lo que se escribió</text>
+
+  <rect x="620" y="250" width="270" height="72" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="755" y="274" class="t t-s t-b" text-anchor="middle">En cualquier estado</text>
+  <text x="755" y="292" class="t t-s" text-anchor="middle">el botón [Persona] lleva</text>
+  <text x="755" y="308" class="t t-s" text-anchor="middle">directo al traspaso</text>
+</svg></div><figcaption><b>El tramo de pago de Pía como máquina de estados.</b> Cada caja es un estado y cada flecha, una transición con la entrada que la dispara (un botón o un dato válido). El camino feliz va de izquierda a derecha: menú, código, saldo, confirmación y enlace. Abajo, en naranja, la salida de respaldo: cualquier entrada que no corresponde al estado suma un intento, y al segundo intento fallido la conversación pasa a una persona. Nada aquí depende de que el bot «entienda»: depende de que la entrada sea una de las previstas.</figcaption></figure><div class="prose"><p>La máquina de estados es la forma correcta de escribir los procesos cortos que no admiten error: verificar identidad, confirmar un pago, aceptar unos términos. Ahí no quieres creatividad; quieres que el mismo paso produzca siempre el mismo resultado y que puedas probarlo y auditarlo. Por eso, aunque el resto del bot use modelos de lenguaje, esos tramos casi siempre quedan con reglas.</p><p>La debilidad también es clara: el bot de reglas solo entiende lo que alguien previó. Cuando el cliente escribe libremente, las palabras clave aciertan por casualidad o fallan por casualidad. Pruébalo tú mismo en la terminal.</p></div><div class="practica"><div class="practica-title"><span class="tag">En la terminal</span><h3>Una regla de palabras clave que se equivoca</h3></div><p>Vas a usar el buscador de patrones que trae tu sistema para simular la regla «si el mensaje contiene pagar o pago, ir al flujo de pago». No necesitas instalar nada.</p><div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><p class="cmd-nota">Windows (PowerShell)</p><div class="cmd-l"><code>"quiero pagar mi factura" -match "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>"no quiero pagar, quiero reclamar un cobro" -match "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>"cuanto debo?" -match "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>echo "quiero pagar mi factura" | grep -Eio "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>echo "no quiero pagar, quiero reclamar un cobro" | grep -Eio "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>echo "cuanto debo?" | grep -Eio "pag(ar|o)"</code><button type="button" class="copiar">Copiar</button></div></div></div><ol class="steps"><li><span>Ejecuta las tres líneas. En Windows verás <code>True</code> o <code>False</code>; en macOS y Linux, la palabra encontrada o nada.</span></li><li><span>Anota cuál de los tres mensajes iría al flujo de pago con esta regla.</span></li><li><span>Inventa dos mensajes más que confundan a la regla: uno que debería ir a pago y no entra, y otro que entra sin deber.</span></li></ol><p><b>Qué observar:</b> la regla manda el reclamo al flujo de pago porque contiene «pagar», y deja fuera «cuánto debo», que es casi el mismo pedido. Con reglas de palabras clave, cada arreglo crea otro caso raro; por eso las reglas se reservan para entradas controladas, como botones, y el lenguaje libre se deja a un clasificador.</p></div></section>
+<section><h2>NLU clásico: intenciones, entidades, ejemplos y umbral</h2><div class="prose"><p>El <b>NLU</b> (<i>Natural Language Understanding</i>, comprensión del lenguaje natural) clásico resuelve justo ese problema. En lugar de buscar palabras exactas, usa un modelo de aprendizaje automático entrenado para dos tareas:</p><ol class="steps"><li><span><b>Clasificar la intención</b> (<i>intent classification</i>). El modelo asigna el mensaje a una de las <b>intenciones</b> (<i>intents</i>) de un catálogo cerrado: <code>consultar_deuda</code>, <code>pagar_factura</code>, <code>reportar_falla</code>. Junto con la etiqueta, entrega una <b>confianza</b> (<i>confidence</i>), un número entre 0 y 1 que dice qué tan seguro está.</span></li><li><span><b>Extraer entidades</b> (<i>entity extraction</i>). Encuentra en el texto los datos que la intención necesita: una fecha, un monto, un número de ticket, un mes. A esos datos que el flujo necesita completar se les llama <b>espacios</b> (<i>slots</i>).</span></li></ol><p>El modelo aprende de <b>ejemplos de entrenamiento</b> (<i>training phrases</i> o <i>utterances</i>): decenas de frases reales por intención, escritas de muchas maneras, con faltas de ortografía y con las palabras de la región. Por eso «kuanto devo», «cuánto me toca pagar» y «¿cuál es mi saldo?» terminan en la misma intención aunque no compartan ninguna palabra con la regla del ejemplo anterior. Por dentro, los motores actuales convierten cada frase en un <b>embedding</b> (<i>embedding</i>, una lista de números que representa su significado) y comparan esas listas; los detalles están en el curso <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p></div><figure class="fig fig-flujo" id="02-diagrama-2"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" style="min-width:720px" role="img" aria-label="Recorrido de un mensaje por el NLU: se normaliza, el clasificador devuelve la intención consultar_deuda con confianza 0,91 y el extractor la entidad periodo igual a mes pasado; el umbral de 0,70 decide si sigue el gestor de diálogo o el respaldo">
+  <defs>
+    <marker id="d02b-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-tra"/></marker>
+    <marker id="d02b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d02b-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-warm"/></marker>
+  </defs>
+  <text x="14" y="20" class="t t-xs t-b t-m">ENTRA TEXTO</text>
+  <text x="450" y="20" class="t t-xs t-b k-tra" text-anchor="middle">COMPRENSIÓN (NLU)</text>
+  <text x="886" y="20" class="t t-xs t-b t-m" text-anchor="end">SALE UN DATO</text>
+
+  <rect x="10" y="140" width="150" height="70" rx="12" class="c-fis"/>
+  <text x="85" y="163" class="t t-s t-b k-fis" text-anchor="middle">Laura escribe</text>
+  <text x="85" y="182" class="t t-s" text-anchor="middle">«¿Cuánto debo del</text>
+  <text x="85" y="198" class="t t-s" text-anchor="middle">mes pasado?»</text>
+
+  <line x1="160" y1="175" x2="192" y2="175" class="ln s-tra" style="stroke-width:2" marker-end="url(#d02b-t)"/>
+  <rect x="195" y="140" width="130" height="70" rx="10" class="c-tra"/>
+  <text x="260" y="163" class="t t-s t-b k-tra" text-anchor="middle">Normalizar</text>
+  <text x="260" y="182" class="t t-s t-mono" text-anchor="middle">cuanto debo del</text>
+  <text x="260" y="198" class="t t-s t-mono" text-anchor="middle">mes pasado</text>
+
+  <path d="M325 160 C345 160 345 90 365 90" class="ln s-tra" style="stroke-width:2" marker-end="url(#d02b-t)"/>
+  <path d="M325 190 C345 190 345 262 365 262" class="ln s-tra" style="stroke-width:2" marker-end="url(#d02b-t)"/>
+
+  <rect x="368" y="40" width="200" height="104" rx="10" class="c-tra"/>
+  <text x="380" y="60" class="t t-s t-b k-tra">Clasificador de intención</text>
+  <text x="380" y="80" class="t t-s t-mono">consultar_deuda  0,91</text>
+  <text x="380" y="98" class="t t-s t-mono t-m">pagar_factura    0,05</text>
+  <text x="380" y="116" class="t t-s t-mono t-m">reclamo_cobro    0,02</text>
+  <text x="380" y="134" class="t t-xs t-m">entrenado con ejemplos</text>
+
+  <rect x="368" y="214" width="200" height="96" rx="10" class="c-tra"/>
+  <text x="380" y="234" class="t t-s t-b k-tra">Extractor de entidades</text>
+  <text x="380" y="256" class="t t-s t-mono">periodo = mes pasado</text>
+  <text x="380" y="276" class="t t-s t-m">cuenta: falta (no vino</text>
+  <text x="380" y="292" class="t t-s t-m">en el mensaje)</text>
+
+  <path d="M568 92 C590 92 590 160 612 160" class="ln s-tra" style="stroke-width:2" marker-end="url(#d02b-t)"/>
+  <path d="M568 262 C590 262 590 190 612 190" class="ln s-tra" style="stroke-width:2" marker-end="url(#d02b-t)"/>
+
+  <polygon points="680,128 744,175 680,222 616,175" class="caja" style="stroke:var(--c-tra);stroke-width:1.8"/>
+  <text x="680" y="171" class="t t-s t-b" text-anchor="middle">¿confianza</text>
+  <text x="680" y="186" class="t t-s t-b" text-anchor="middle">≥ 0,70?</text>
+
+  <path d="M744 175 H770 V90 H782" class="ln s-red" style="stroke-width:2" marker-end="url(#d02b-r)"/>
+  <text x="752" y="132" class="t t-s t-b">sí</text>
+  <rect x="785" y="48" width="105" height="92" rx="10" class="c-red"/>
+  <text x="837" y="68" class="t t-s t-b k-red" text-anchor="middle">Gestor de</text>
+  <text x="837" y="83" class="t t-s t-b k-red" text-anchor="middle">diálogo</text>
+  <text x="837" y="103" class="t t-s" text-anchor="middle">falta la cuenta:</text>
+  <text x="837" y="118" class="t t-s" text-anchor="middle">verificar</text>
+  <text x="837" y="133" class="t t-s" text-anchor="middle">identidad</text>
+
+  <path d="M680 222 V262 H782" class="ln s-warm" style="stroke-width:2" marker-end="url(#d02b-w)"/>
+  <text x="690" y="252" class="t t-s t-b">no</text>
+  <rect x="785" y="218" width="105" height="92" rx="10" class="caja s-warm" style="stroke-width:2"/>
+  <text x="837" y="240" class="t t-s t-b k-warm" text-anchor="middle">Respaldo</text>
+  <text x="837" y="260" class="t t-s" text-anchor="middle">«¿Es sobre tu</text>
+  <text x="837" y="275" class="t t-s" text-anchor="middle">deuda o sobre</text>
+  <text x="837" y="290" class="t t-s" text-anchor="middle">un pago?»</text>
+
+  <rect x="195" y="324" width="560" height="28" rx="8" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="475" y="343" class="t t-s t-mono" text-anchor="middle">{"intencion": "consultar_deuda", "confianza": 0.91, "periodo": "mes pasado"}</text>
+</svg></div><figcaption><b>Qué hace el NLU con un mensaje.</b> El mensaje entra por la izquierda, se normaliza (minúsculas, sin tildes) y pasa a dos modelos en paralelo: el clasificador, que devuelve la intención con su confianza y las dos alternativas siguientes, y el extractor, que encuentra la entidad «periodo = mes pasado». A la derecha, el umbral decide: si la confianza supera 0,70, el gestor de diálogo sigue con la intención; si no, entra el respaldo («¿te refieres a tu deuda o a un pago?»). La salida del NLU nunca es texto para el cliente: es un dato estructurado que otra pieza usa para decidir.</figcaption></figure><div class="prose"><p>La pieza que más se discute en un equipo de NLU es el <b>umbral de confianza</b> (<i>confidence threshold</i>). Si el modelo dice «consultar_deuda, 0,62», ¿el bot actúa o pregunta? Con un umbral alto, el bot casi nunca se equivoca, pero responde «no entendí» muchas veces. Con uno bajo, responde casi siempre, pero algunas respuestas son a la pregunta equivocada, y eso es peor: el cliente pidió reclamar un cobro y recibió un enlace de pago. No hay un valor correcto universal; se elige con datos de prueba y según el costo de cada error.</p></div><div class="lab" id="02-lab-1"><div class="lab-title"><span class="tag">Laboratorio</span><h3>Clasificador de intenciones en vivo</h3></div><p class="hint">Escribe un mensaje como cliente o toca uno de los ejemplos: verás las tres intenciones más probables con su confianza, las entidades que encontró y qué haría el bot. Después mueve el umbral y mira la tabla de 20 mensajes de prueba: cuántos se aceptan bien, cuántos se aceptan mal (el error caro) y cuántos caen en «no entendí».</p><style>
+[id="02-lab-1"] .c21-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:720px){[id="02-lab-1"] .c21-grid{grid-template-columns:minmax(0,1fr)}}
+[id="02-lab-1"] .c21-f{display:flex;gap:6px}
+[id="02-lab-1"] .c21-f input{flex:1;min-width:0;font:400 .95rem var(--f-body);padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+[id="02-lab-1"] .c21-chips button{font-weight:500;font-size:.8rem;padding:5px 9px}
+[id="02-lab-1"] .c21-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+[id="02-lab-1"] .c21-bar{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 3.2em;gap:8px;align-items:center;font:500 .84rem var(--f-mono);margin-bottom:6px}
+[id="02-lab-1"] .c21-bar span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[id="02-lab-1"] .c21-track{position:relative;height:16px;background:var(--paper);border:1px solid var(--line);border-radius:5px}
+[id="02-lab-1"] .c21-track i{display:block;height:100%;border-radius:4px;background:var(--c-tra);transition:width .3s}
+[id="02-lab-1"] .c21-track i.bajo{background:var(--muted)}
+[id="02-lab-1"] .c21-track b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--warm)}
+[id="02-lab-1"] .c21-ent{display:flex;flex-wrap:wrap;gap:6px;min-height:1.6em}
+[id="02-lab-1"] .c21-ent span{font:500 .8rem var(--f-mono);padding:2px 8px;border-radius:12px;border:1px solid var(--c-enl);background:var(--c-enl-s);color:var(--ink)}
+[id="02-lab-1"] .c21-dec{border:1px solid var(--line);border-left:5px solid var(--cc,var(--line));background:var(--card);border-radius:8px;padding:8px 10px;font:400 .9rem/1.4 var(--f-body)}
+[id="02-lab-1"] table{width:100%;border-collapse:collapse;font:400 .82rem var(--f-body)}
+[id="02-lab-1"] th,[id="02-lab-1"] td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
+[id="02-lab-1"] td.n{font-family:var(--f-mono);overflow-wrap:anywhere}
+[id="02-lab-1"] tr.ok td:last-child{color:var(--good);font-weight:600}
+[id="02-lab-1"] tr.mal td:last-child{color:var(--warm);font-weight:700}
+[id="02-lab-1"] tr.no td:last-child{color:var(--muted);font-weight:600}
+[id="02-lab-1"] .c21-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+[id="02-lab-1"] .c21-kpis div{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card)}
+[id="02-lab-1"] .c21-kpis small{display:block;font:600 .7rem var(--f-display);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+[id="02-lab-1"] .c21-kpis b{font:700 1.4rem var(--f-display)}
+@media (prefers-reduced-motion: reduce){[id="02-lab-1"] .c21-track i{transition:none}}
+</style>
+<div class="c21-grid">
+  <div style="display:grid;gap:8px;min-width:0">
+    <form class="c21-f" id="c21-form" autocomplete="off">
+      <label for="c21-in" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Mensaje del cliente</label>
+      <input id="c21-in" type="text" maxlength="140" placeholder="Escribe como cliente…" value="cuánto debo del mes pasado?">
+      <button type="submit" class="primary">Clasificar</button>
+    </form>
+    <div class="btns c21-chips" id="c21-chips" role="group" aria-label="Mensajes de ejemplo"></div>
+    <label class="ctl">Umbral de confianza <output id="c21-u-o"></output>
+      <input id="c21-u" type="range" min="0.20" max="0.95" step="0.05" value="0.60"></label>
+  </div>
+  <div style="min-width:0;display:grid;gap:8px" aria-live="polite">
+    <div><p class="c21-tit">Intenciones más probables</p><div id="c21-top"></div></div>
+    <div><p class="c21-tit">Entidades encontradas</p><div class="c21-ent" id="c21-ent"></div></div>
+    <div class="c21-dec" id="c21-dec"></div>
+  </div>
+</div>
+<p class="c21-tit" style="margin-top:6px">Los 20 mensajes de prueba con este umbral</p>
+<div class="c21-kpis" id="c21-kpis"></div>
+<div class="tbl"><table><thead><tr><th>Mensaje</th><th>Intención real</th><th>El bot</th><th>Resultado</th></tr></thead><tbody id="c21-tb"></tbody></table></div>
+<div class="readout texto" id="c21-out" aria-live="polite"></div>
+<p class="hint" style="margin:0">El clasificador del laboratorio es una versión pequeña y simplificada: cuenta palabras parecidas a las de unos 75 ejemplos de entrenamiento y convierte los puntajes en confianzas que suman 1. Un motor real usa más ejemplos y un modelo de significado, pero se comporta igual frente al umbral.</p></div><div class="prose"><p>Hay un tercer caso que el umbral solo no resuelve: la <b>ambigüedad</b>. Si el modelo duda entre dos intenciones con confianzas parecidas, lo honesto es preguntar cuál de las dos. Muchos motores marcan ese caso cuando la diferencia entre la primera y la segunda intención es pequeña. En el laboratorio, «me llegó la factura muy alta» queda entre la deuda y el reclamo.</p><p>Y hay errores que ningún umbral atrapa. En la tabla, «no quiero pagar, quiero reclamar» va a <code>pagar_factura</code> con mucha confianza: el clasificador también tropieza con la negación, igual que la regla de palabras clave, solo que con más aplomo. Esos errores se corrigen agregando ejemplos de entrenamiento con negaciones al catálogo, y por eso los equipos revisan cada semana una muestra de mensajes aceptados con confianza alta, no solo los que cayeron en «no entendí».</p><p>Los motores de NLU del mercado, como Rasa (de código abierto), Dialogflow de Google, Amazon Lex o el servicio de comprensión de lenguaje de Microsoft Azure, funcionan con estas mismas piezas: catálogo de intenciones, ejemplos, entidades, umbral y una consola para revisar los mensajes mal clasificados.</p></div></section>
+<section><h2>El catálogo de intenciones: granularidad, solapamientos y «fuera de alcance»</h2><div class="prose"><p>Un clasificador es tan bueno como su catálogo. Diseñarlo es un trabajo de producto, no solo técnico, y tiene tres decisiones difíciles.</p><p><b>La granularidad</b> (<i>granularity</i>, qué tan finas son las intenciones). Si separas <code>consultar_saldo_internet</code> de <code>consultar_saldo_tv</code>, obligas al modelo a distinguir algo que el cliente casi nunca dice. Las intenciones demasiado finas se confunden entre sí y bajan la precisión de todo el bot. La regla práctica: una intención distinta solo cuando el bot va a <b>hacer algo distinto</b>. Si lo que cambia es un dato (internet o TV), es una entidad, no una intención.</p><p><b>Los solapamientos</b> (<i>overlaps</i>). «Me cobraron de más» puede ser <code>consultar_deuda</code> o <code>reclamo_cobro</code>. Si los ejemplos de las dos intenciones se parecen, el modelo duda entre ellas para siempre. La herramienta para verlo es la <b>matriz de confusión</b> (<i>confusion matrix</i>), una tabla que cruza la intención real con la que predijo el modelo: los números fuera de la diagonal muestran qué pares se confunden, y ahí se refuerzan los ejemplos o se fusionan intenciones.</p><p><b>La intención «fuera de alcance»</b> (<i>out of scope</i>). Un catálogo cerrado no sabe decir «esto no es mío»: si solo conoce diez intenciones, todo mensaje cae en alguna de las diez. Por eso se entrena una intención más, <code>fuera_de_alcance</code>, con ejemplos de lo que el bot no atiende: «¿venden pizza?», «cuéntame un chiste», «¿quién ganó el partido?». Así el bot puede responder con honestidad que eso no lo puede resolver, en vez de mandar al cliente a un flujo que no tiene nada que ver.</p><div class="tbl"><table><thead><tr><th>Intención de Pía</th><th>Ejemplos de entrenamiento</th><th>Entidades</th><th>Qué hace el bot</th></tr></thead><tbody><tr><td><code>consultar_deuda</code></td><td>«cuánto debo», «mi saldo», «cuándo vence»</td><td>periodo</td><td>verifica y consulta la facturación</td></tr><tr><td><code>pagar_factura</code></td><td>«quiero pagar», «mándame el link»</td><td>factura</td><td>verifica y crea el enlace de pago</td></tr><tr><td><code>reclamo_cobro</code></td><td>«me cobraron de más», «cobro indebido»</td><td>monto, periodo</td><td>pasa a una persona con el caso</td></tr><tr><td><code>reportar_falla</code></td><td>«no tengo internet», «va lento»</td><td>servicio</td><td>revisa averías y abre ticket</td></tr><tr><td><code>estado_ticket</code></td><td>«y mi ticket», «cuándo viene el técnico»</td><td>n.º de ticket</td><td>consulta la mesa de ayuda</td></tr><tr><td><code>fuera_de_alcance</code></td><td>«venden pizza», «cuéntame un chiste»</td><td>—</td><td>dice qué sí puede hacer</td></tr></tbody></table></div></div></section>
+<section><h2>LLM generativo: lenguaje libre, con más riesgo y más costo</h2><div class="prose"><p>Un <b>LLM</b> (<i>Large Language Model</i>, modelo de lenguaje grande) no clasifica dentro de una lista: <b>genera</b> texto nuevo, palabra por palabra, a partir de unas <b>instrucciones</b> (<i>prompt</i>, el texto con las órdenes y el contexto que se le da al modelo) y del historial de la conversación. Qué es un modelo de lenguaje y cómo se usa está en el curso <a href="https://aaramirez.github.io/ia-generativa/temario.html" target="_blank" rel="noopener">IA generativa</a>; aquí importa lo que cambia en un bot.</p><p>Lo que gana el bot con un LLM:</p><ul><li><b>Entiende lenguaje sin catálogo.</b> Mensajes largos, con dos pedidos a la vez, con ironía o con faltas de ortografía. No hace falta escribir ejemplos de entrenamiento para cada intención.</li><li><b>Redacta.</b> Puede explicar un recargo con palabras simples, resumir una conversación para el agente humano o adaptar el tono a un cliente molesto.</li><li><b>Responde preguntas abiertas sobre la base de conocimiento.</b> Con <b>RAG</b> (<i>Retrieval-Augmented Generation</i>, generación aumentada con recuperación), el sistema busca primero los artículos oficiales que hablan del tema y el modelo responde a partir de ellos. Cómo se escribe ese contenido es el capítulo 7.</li></ul><p>Lo que arriesga:</p><ul><li><b>Alucinaciones</b> (<i>hallucinations</i>): respuestas fluidas y seguras que no son ciertas. Un LLM sin fuente puede inventar una política, como le pasó a Air Canada, o un monto.</li><li><b>Variabilidad.</b> La misma pregunta puede recibir dos redacciones distintas. Para un texto legal o una confirmación de pago, eso es un problema.</li><li><b>Costo y latencia</b> (<i>latency</i>, el tiempo de espera). Cada turno se cobra por <b>tokens</b> (<i>tokens</i>, los pedazos de palabra que el modelo lee y escribe) y tarda uno o varios segundos, frente a milisegundos y fracciones de centavo de un clasificador.</li><li><b>Superficie de ataque.</b> Un modelo que obedece instrucciones escritas en lenguaje natural puede recibir instrucciones maliciosas del propio cliente. Los límites del bot ante esos intentos están en el capítulo 12.</li></ul></div><div class="caso"><b>Un caso real</b><p>Un operador de servicios de la región que reemplaza su bot de menús por un LLM que responde todo suele ver dos cosas en el primer mes. Las preguntas abiertas («¿qué pasa si me mudo?») empiezan a resolverse, y los clientes lo notan. Pero aparecen respuestas que nadie aprobó: un plazo de instalación que no existe, una promoción mezclada con otra. La corrección típica no es volver a los menús, sino dejar al modelo entender y redactar, y sacar de sus manos los datos que comprometen a la empresa: montos, plazos y promociones salen de los sistemas y de reglas.</p></div></section>
+<section><h2>LLM frente a NLU: no es una decisión binaria</h2><div class="prose"><p>Plantear «¿migramos a LLM o nos quedamos con NLU?» es la pregunta equivocada. La correcta es: <b>¿qué técnica conviene en cada tarea del bot?</b> Y la respuesta cambia según cuatro preguntas:</p><ul><li><b>¿El conjunto de pedidos es cerrado o abierto?</b> «Ver mi saldo» es cerrado; «¿qué pasa con mi servicio si me mudo a otra ciudad?» es abierto.</li><li><b>¿El texto de la respuesta debe ser exacto?</b> Una confirmación de pago o un aviso legal debe decir siempre lo mismo; una explicación puede variar.</li><li><b>¿Cuánto volumen tiene?</b> Pagar un LLM grande por cada «hola» y cada «gracias» cuesta mucho a fin de mes.</li><li><b>¿Hace falta razonar o sintetizar?</b> Comparar planes con la situación del cliente o resumir un caso exige un modelo generativo.</li></ul><p>Además, la frontera se volvió borrosa: hoy se usa un LLM <b>como clasificador</b>. Se le da el catálogo de intenciones en las instrucciones y se le pide que responda solo con una etiqueta de la lista, en una <b>salida estructurada</b> (<i>structured output</i>, una respuesta en un formato fijo como JSON que el programa puede validar). Así se gana su comprensión del lenguaje sin dejarle redactar lo que ve el cliente. El precio: es más lento y caro que un clasificador entrenado, y su «confianza» no está calibrada como la del NLU. Muchos equipos usan un clasificador pequeño para el tráfico frecuente y un LLM solo para lo que el clasificador no reconoce.</p></div><div class="practica"><div class="practica-title"><span class="tag">En el navegador</span><h3>Un LLM como clasificador del catálogo de Pía</h3></div><p>Abre cualquier asistente de IA gratuito (cualquiera sirve) y pega este pedido. Luego compara sus respuestas con las del clasificador del laboratorio 1.</p><div class="code-copia"><pre><code>Eres el clasificador de intenciones del chatbot
+de una empresa de internet y TV.
+Responde SOLO con un JSON por línea, así:
+{"mensaje": ..., "intencion": ..., "confianza": ...}
+Intenciones válidas:
+consultar_deuda, pagar_factura, reclamo_cobro,
+reportar_falla, estado_ticket, recomendar_plan,
+horario_agencias, hablar_con_persona, saludo,
+fuera_de_alcance.
+Mensajes:
+1. kuanto devo este mes
+2. me llego la factura muy alta
+3. ayer pague y sigo sin internet
+4. quiero dar de baja el servicio
+5. venden pizza?
+6. el tecnico no vino</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div><ol class="steps"><li><span>Revisa si todas las intenciones que devolvió están en la lista. Busca cuál puso en «quiero dar de baja el servicio», que no tiene intención en el catálogo.</span></li><li><span>Pega el mismo pedido una segunda vez en una conversación nueva y compara: ¿cambió alguna etiqueta o alguna confianza?</span></li><li><span>Escribe los mismos mensajes en el laboratorio 1 y compara.</span></li></ol><p><b>Qué observar:</b> el modelo entiende muy bien los mensajes con faltas y con dos pedidos a la vez. Pero puede inventar una intención que no está en la lista (por ejemplo <code>cancelar_servicio</code>) o cambiar sus confianzas entre una vez y otra. Por eso, en producción, su respuesta se valida contra el catálogo: si la etiqueta no existe, se trata como «fuera de alcance». Esa validación es una regla, no un modelo.</p></div></section>
+<section><h2>Agentes conversacionales: tareas de varios pasos</h2><div class="prose"><p>Vuelve al mensaje de Laura: «ayer pagué y sigo sin internet». Ningún flujo único lo resuelve. Hay que verificar quién es, ver si el pago llegó, ver el estado del servicio y, según lo que se encuentre, reconectar, abrir un ticket o explicar que el pago todavía no se aplicó. Cada paso <b>depende del resultado del anterior</b>.</p><p>Un <b>agente conversacional</b> (<i>conversational agent</i>) es un LLM que, además de redactar, puede usar <b>herramientas</b> (<i>tools</i>): funciones del sistema que alguien le dejó disponibles, como <code>verificar_identidad</code>, <code>consultar_pagos</code> o <code>estado_servicio</code>. El modelo no ejecuta nada por sí mismo: propone qué herramienta llamar y con qué datos, en un formato que el programa valida. A eso se le llama <b>llamada a funciones</b> (<i>function calling</i>), y su mecanismo está en <a href="https://aaramirez.github.io/aplicaciones-con-ia/temario.html" target="_blank" rel="noopener">Aplicaciones con IA</a>.</p><p>El agente trabaja en un ciclo de tres tiempos que se repite: <b>pensar</b> qué falta, <b>actuar</b> con una herramienta y <b>observar</b> el resultado. El ciclo termina cuando tiene la respuesta, cuando necesita al cliente o cuando llega a un límite.</p></div><figure class="fig fig-flujo" id="02-diagrama-3"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" style="min-width:720px" role="img" aria-label="Diagrama de secuencia del agente que resuelve ayer pagué y sigo sin internet: verifica identidad, consulta pagos en facturación, consulta el estado del servicio en la red, pide la reconexión que permite una regla y responde a Laura; cuatro vueltas de un máximo de seis">
+  <defs>
+    <marker id="d02c-fis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-fis"/></marker>
+    <marker id="d02c-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-red"/></marker>
+    <marker id="d02c-id" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-casa"/></marker>
+    <marker id="d02c-sis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="k-sis"/></marker>
+  </defs>
+  <rect x="10" y="14" width="120" height="52" rx="10" class="c-fis"/><text x="70" y="36" class="t t-b" text-anchor="middle">Laura</text><text x="70" y="54" class="t t-s t-m" text-anchor="middle">en WhatsApp</text>
+  <rect x="170" y="14" width="120" height="52" rx="10" class="c-red"/><text x="230" y="36" class="t t-b" text-anchor="middle">Agente</text><text x="230" y="54" class="t t-s t-m" text-anchor="middle">LLM + herramientas</text>
+  <rect x="340" y="14" width="120" height="52" rx="10" class="d-casa"/><text x="400" y="36" class="t t-b" text-anchor="middle">Identidad</text><text x="400" y="54" class="t t-s t-m" text-anchor="middle">verificación</text>
+  <rect x="500" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="560" y="36" class="t t-b" text-anchor="middle">Facturación</text><text x="560" y="54" class="t t-s t-m" text-anchor="middle">pagos y facturas</text>
+  <rect x="660" y="14" width="120" height="52" rx="10" class="d-sis"/><text x="720" y="36" class="t t-b" text-anchor="middle">Red</text><text x="720" y="54" class="t t-s t-m" text-anchor="middle">estado del servicio</text>
+  <line x1="70" y1="66" x2="70" y2="520" class="vida"/>
+  <line x1="230" y1="66" x2="230" y2="520" class="vida"/>
+  <line x1="400" y1="66" x2="400" y2="520" class="vida"/>
+  <line x1="560" y1="66" x2="560" y2="520" class="vida"/>
+  <line x1="720" y1="66" x2="720" y2="520" class="vida"/>
+
+  <g class="t t-s">
+    <line x1="70" y1="102" x2="227" y2="102" class="ln s-fis" style="stroke-width:2" marker-end="url(#d02c-fis)"/>
+    <text x="78" y="95">① «Ayer pagué y sigo sin internet»</text>
+
+    <line x1="230" y1="150" x2="397" y2="150" class="ln" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d02c-id)"/>
+    <text x="238" y="143">② verificar_identidad(número)</text>
+    <line x1="400" y1="186" x2="233" y2="186" class="ln ln-d" style="stroke:var(--d-casa);stroke-width:2" marker-end="url(#d02c-id)"/>
+    <text x="238" y="179">③ verificada: cuenta 1001 (código SMS)</text>
+
+    <line x1="230" y1="234" x2="557" y2="234" class="ln s-red" style="stroke-width:2" marker-end="url(#d02c-red)"/>
+    <text x="238" y="227">④ consultar_pagos(1001)</text>
+    <line x1="560" y1="270" x2="233" y2="270" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d02c-sis)"/>
+    <text x="238" y="263">⑤ US$ 25,00 aplicado ayer 18:40 a F-2207</text>
+
+    <line x1="230" y1="318" x2="717" y2="318" class="ln s-red" style="stroke-width:2" marker-end="url(#d02c-red)"/>
+    <text x="238" y="311">⑥ estado_servicio(1001)</text>
+    <line x1="720" y1="354" x2="233" y2="354" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d02c-sis)"/>
+    <text x="238" y="347">⑦ suspendido por mora · reconexión pendiente</text>
+
+    <line x1="230" y1="402" x2="717" y2="402" class="ln s-red" style="stroke-width:2.6" marker-end="url(#d02c-red)"/>
+    <text x="238" y="395" class="t-b">⑧ reconectar(1001): acción; la regla «factura pagada» la permite</text>
+    <line x1="720" y1="438" x2="233" y2="438" class="ln ln-d" style="stroke:var(--d-sis);stroke-width:2" marker-end="url(#d02c-sis)"/>
+    <text x="238" y="431">⑨ orden de reconexión aceptada</text>
+
+    <line x1="230" y1="486" x2="73" y2="486" class="ln s-fis" style="stroke-width:2" marker-end="url(#d02c-fis)"/>
+    <text x="80" y="479">⑩ «Tu pago quedó aplicado; en unos 5 min vuelves a tener servicio»</text>
+  </g>
+
+  <g class="t t-xs t-b">
+    <path d="M800 136 v62" class="ln s-red" style="stroke-width:3"/><text x="810" y="164" class="k-red">VUELTA 1</text><text x="810" y="178" class="t-m">identidad</text>
+    <path d="M800 220 v62" class="ln s-red" style="stroke-width:3"/><text x="810" y="248" class="k-red">VUELTA 2</text><text x="810" y="262" class="t-m">pagos</text>
+    <path d="M800 304 v62" class="ln s-red" style="stroke-width:3"/><text x="810" y="332" class="k-red">VUELTA 3</text><text x="810" y="346" class="t-m">servicio</text>
+    <path d="M800 388 v62" class="ln s-red" style="stroke-width:3"/><text x="810" y="416" class="k-red">VUELTA 4</text><text x="810" y="430" class="t-m">acción</text>
+    <text x="810" y="490" class="t-m">4 DE 6</text><text x="810" y="504" class="t-m">vueltas</text>
+  </g>
+  <rect x="10" y="532" width="770" height="56" rx="10" class="caja" style="stroke-dasharray:5 4"/>
+  <text x="395" y="555" class="t t-s" text-anchor="middle">Cada vuelta: pensar qué falta → llamar a una herramienta → observar el resultado.</text>
+  <text x="395" y="574" class="t t-s t-m" text-anchor="middle">Las flechas punteadas son lo que el agente observa; todo queda en la traza de la conversación.</text>
+</svg></div><figcaption><b>El agente resuelve «ayer pagué y sigo sin internet».</b> Arriba, los participantes: Laura, el agente y tres sistemas de Servicios Ejemplo (identidad, facturación y red). El tiempo corre hacia abajo. Cada vuelta del ciclo es una llamada a una herramienta (②, ④, ⑥, ⑧) seguida de su resultado. La reconexión (⑧) es una acción, por eso el agente la pide solo después de comprobar que la factura F-2207 quedó pagada, y la regla del sistema, no el modelo, decide si se permite. A la derecha, la cuenta de vueltas contra el límite de seis.</figcaption></figure><div class="prose"><p>Un agente bien construido tiene límites escritos, no solo buenas intenciones:</p><ul><li><b>Lista cerrada de herramientas</b>, con permisos mínimos: el agente de atención puede consultar pagos, pero no puede crear descuentos.</li><li><b>Límite de pasos</b> (<i>max steps</i>): si en seis vueltas no resolvió, deja de intentar y pasa a una persona. Sin límite, un agente confundido gira y gasta.</li><li><b>Confirmación antes de lo irreversible</b>: un pago, una baja o un cambio de plan esperan el «sí» explícito del cliente.</li><li><b>Traza</b> de cada paso: qué pensó, qué herramienta llamó y qué recibió, para auditar y depurar después.</li></ul></div></section>
+<section><h2>Cuándo usar cada uno, y el anticipo del patrón híbrido</h2><div class="prose"><p>Con las cuatro técnicas a la vista, la elección deja de ser una cuestión de moda. Cada una tiene un territorio donde gana:</p><div class="tbl"><table><thead><tr><th></th><th>Reglas</th><th>NLU clásico</th><th>LLM generativo</th><th>Agente</th></tr></thead><tbody><tr><td>Entiende</td><td>solo lo previsto</td><td>variantes de pedidos conocidos</td><td>lenguaje libre</td><td>lenguaje libre y tareas compuestas</td></tr><tr><td>Previsible y auditable</td><td>totalmente</td><td>mucho: salida cerrada</td><td>poco: texto nuevo cada vez</td><td>poco, salvo con límites y traza</td></tr><tr><td>Costo por mensaje</td><td>casi nulo</td><td>muy bajo</td><td>medio</td><td>alto: varias llamadas por pedido</td></tr><tr><td>Latencia</td><td>milisegundos</td><td>milisegundos</td><td>uno a varios segundos</td><td>varios segundos</td></tr><tr><td>Mantener</td><td>escribir cada rama</td><td>curar ejemplos y reentrenar</td><td>cuidar instrucciones y fuentes</td><td>cuidar herramientas, permisos y pruebas</td></tr><tr><td>Donde gana</td><td>verificar, confirmar, cobrar</td><td>pedidos frecuentes y cerrados</td><td>explicar, resumir, preguntas abiertas</td><td>tareas de varios pasos con sistemas</td></tr></tbody></table></div></div><figure class="fig fig-comparacion" id="02-diagrama-4"><div class="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" style="min-width:720px" role="img" aria-label="Comparación de reglas, NLU, LLM y agente en cinco criterios con puntos de uno a tres, y abajo la conversación de pago de Pía dividida en seis tramos, cada uno resuelto por la técnica que mejor le conviene">
+  <text x="14" y="22" class="t t-xs t-b t-m">CRITERIO (MÁS PUNTOS, MEJOR)</text>
+  <g class="t t-b" text-anchor="middle">
+    <rect x="250" y="34" width="140" height="30" rx="8" class="c-apl"/><text x="320" y="54" class="k-apl">Reglas</text>
+    <rect x="410" y="34" width="140" height="30" rx="8" class="c-tra"/><text x="480" y="54" class="k-tra">NLU clásico</text>
+    <rect x="570" y="34" width="140" height="30" rx="8" class="c-enl"/><text x="640" y="54" class="k-enl">LLM generativo</text>
+    <rect x="730" y="34" width="140" height="30" rx="8" class="c-red"/><text x="800" y="54" class="k-red">Agente</text>
+  </g>
+  <g class="t">
+    <text x="14" y="94">Previsible y auditable</text>
+    <text x="14" y="130">Entiende lenguaje libre</text>
+    <text x="14" y="166">Barato por mensaje</text>
+    <text x="14" y="202">Responde rápido</text>
+    <text x="14" y="238">Resuelve tareas de varios pasos</text>
+  </g>
+  <g>
+    <line x1="10" y1="108" x2="890" y2="108" class="ln" style="stroke:var(--line)"/>
+    <line x1="10" y1="144" x2="890" y2="144" class="ln" style="stroke:var(--line)"/>
+    <line x1="10" y1="180" x2="890" y2="180" class="ln" style="stroke:var(--line)"/>
+    <line x1="10" y1="216" x2="890" y2="216" class="ln" style="stroke:var(--line)"/>
+  </g>
+  
+  <g>
+    
+    <circle cx="300" cy="90" r="7" class="k-apl"/><circle cx="320" cy="90" r="7" class="k-apl"/><circle cx="340" cy="90" r="7" class="k-apl"/>
+    <circle cx="460" cy="90" r="7" class="k-tra"/><circle cx="480" cy="90" r="7" class="k-tra"/><circle cx="500" cy="90" r="7" class="caja"/>
+    <circle cx="620" cy="90" r="7" class="k-enl"/><circle cx="640" cy="90" r="7" class="caja"/><circle cx="660" cy="90" r="7" class="caja"/>
+    <circle cx="780" cy="90" r="7" class="k-red"/><circle cx="800" cy="90" r="7" class="caja"/><circle cx="820" cy="90" r="7" class="caja"/>
+    
+    <circle cx="300" cy="126" r="7" class="k-apl"/><circle cx="320" cy="126" r="7" class="caja"/><circle cx="340" cy="126" r="7" class="caja"/>
+    <circle cx="460" cy="126" r="7" class="k-tra"/><circle cx="480" cy="126" r="7" class="k-tra"/><circle cx="500" cy="126" r="7" class="caja"/>
+    <circle cx="620" cy="126" r="7" class="k-enl"/><circle cx="640" cy="126" r="7" class="k-enl"/><circle cx="660" cy="126" r="7" class="k-enl"/>
+    <circle cx="780" cy="126" r="7" class="k-red"/><circle cx="800" cy="126" r="7" class="k-red"/><circle cx="820" cy="126" r="7" class="k-red"/>
+    
+    <circle cx="300" cy="162" r="7" class="k-apl"/><circle cx="320" cy="162" r="7" class="k-apl"/><circle cx="340" cy="162" r="7" class="k-apl"/>
+    <circle cx="460" cy="162" r="7" class="k-tra"/><circle cx="480" cy="162" r="7" class="k-tra"/><circle cx="500" cy="162" r="7" class="k-tra"/>
+    <circle cx="620" cy="162" r="7" class="k-enl"/><circle cx="640" cy="162" r="7" class="k-enl"/><circle cx="660" cy="162" r="7" class="caja"/>
+    <circle cx="780" cy="162" r="7" class="k-red"/><circle cx="800" cy="162" r="7" class="caja"/><circle cx="820" cy="162" r="7" class="caja"/>
+    
+    <circle cx="300" cy="198" r="7" class="k-apl"/><circle cx="320" cy="198" r="7" class="k-apl"/><circle cx="340" cy="198" r="7" class="k-apl"/>
+    <circle cx="460" cy="198" r="7" class="k-tra"/><circle cx="480" cy="198" r="7" class="k-tra"/><circle cx="500" cy="198" r="7" class="k-tra"/>
+    <circle cx="620" cy="198" r="7" class="k-enl"/><circle cx="640" cy="198" r="7" class="k-enl"/><circle cx="660" cy="198" r="7" class="caja"/>
+    <circle cx="780" cy="198" r="7" class="k-red"/><circle cx="800" cy="198" r="7" class="caja"/><circle cx="820" cy="198" r="7" class="caja"/>
+    
+    <circle cx="300" cy="234" r="7" class="k-apl"/><circle cx="320" cy="234" r="7" class="caja"/><circle cx="340" cy="234" r="7" class="caja"/>
+    <circle cx="460" cy="234" r="7" class="k-tra"/><circle cx="480" cy="234" r="7" class="caja"/><circle cx="500" cy="234" r="7" class="caja"/>
+    <circle cx="620" cy="234" r="7" class="k-enl"/><circle cx="640" cy="234" r="7" class="caja"/><circle cx="660" cy="234" r="7" class="caja"/>
+    <circle cx="780" cy="234" r="7" class="k-red"/><circle cx="800" cy="234" r="7" class="k-red"/><circle cx="820" cy="234" r="7" class="k-red"/>
+  </g>
+
+  <text x="14" y="284" class="t t-xs t-b t-m">LA CONVERSACIÓN DE PAGO DE PÍA, TRAMO POR TRAMO (ANTICIPO DEL PATRÓN HÍBRIDO)</text>
+  <g class="t t-s" text-anchor="middle">
+    <rect x="15" y="296" width="140" height="84" rx="9" class="c-enl"/>
+    <text x="85" y="316" class="t-b k-enl">LLM entiende</text><text x="85" y="336">«hola, quería ver</text><text x="85" y="352">lo de mi cuenta…»</text>
+    <rect x="161" y="296" width="140" height="84" rx="9" class="c-tra"/>
+    <text x="231" y="316" class="t-b k-tra">NLU reconoce</text><text x="231" y="336">consultar_deuda</text><text x="231" y="352">(0,91)</text>
+    <rect x="307" y="296" width="140" height="84" rx="9" class="c-apl"/>
+    <text x="377" y="316" class="t-b k-apl">Reglas verifican</text><text x="377" y="336">código por SMS,</text><text x="377" y="352">máx. 3 intentos</text>
+    <rect x="453" y="296" width="140" height="84" rx="9" class="d-sis"/>
+    <text x="523" y="316" class="t-b k-sis">El sistema pone</text><text x="523" y="336">F-2207 · US$ 25,00</text><text x="523" y="352">desde facturación</text>
+    <rect x="599" y="296" width="140" height="84" rx="9" class="c-enl"/>
+    <text x="669" y="316" class="t-b k-enl">LLM explica</text><text x="669" y="336">«¿por qué subió?»</text><text x="669" y="352">con la fuente citada</text>
+    <rect x="745" y="296" width="140" height="84" rx="9" class="c-apl"/>
+    <text x="815" y="316" class="t-b k-apl">Reglas confirman</text><text x="815" y="336">«¿te envío el</text><text x="815" y="352">enlace?» [Sí] [No]</text>
+  </g>
+  <text x="450" y="408" class="t t-s t-m" text-anchor="middle">El tiempo corre de izquierda a derecha. Ninguna técnica sola cubre el recorrido completo.</text>
+</svg></div><figcaption><b>Cada técnica en su tramo.</b> Arriba, una comparación de las cuatro técnicas en cinco criterios: cuantos más puntos, mejor en ese criterio. Abajo, la conversación de pago de Pía dividida en tramos, cada uno con el color de la técnica que lo resuelve: el LLM entiende el saludo libre, el NLU reconoce la intención frecuente, las reglas verifican y confirman, el sistema pone el monto y el LLM explica el recargo con la fuente oficial. Ninguna técnica cubre todo el recorrido.</figcaption></figure><div class="prose"><p>El laboratorio siguiente pone las cuatro técnicas frente a los mismos pedidos. Fíjate en que ninguna gana en todos: el bot de reglas es imbatible en el pago simple y se pierde en la pregunta abierta; el agente resuelve el caso enredado, pero cuesta veinte veces más que el NLU en el caso simple.</p></div><div class="lab" id="02-lab-2"><div class="lab-title"><span class="tag">Laboratorio</span><h3>El mismo pedido con cuatro técnicas</h3></div><p class="hint">Elige uno de los tres pedidos de clientes y una técnica. Verás la conversación paso a paso, qué hizo el bot por dentro, si resolvió y qué riesgo corrió. La tabla de abajo compara las cuatro técnicas para ese pedido: turnos, resultado, riesgo, tiempo de espera y costo de mil conversaciones.</p><style>
+[id="02-lab-2"] .c22-tit{font:700 .72rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+[id="02-lab-2"] .c22-tec button{border-left:5px solid var(--cc)}
+[id="02-lab-2"] .c22-chat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px;min-height:220px}
+[id="02-lab-2"] .c22-m{max-width:90%;padding:7px 10px;border-radius:12px;font:400 .9rem/1.4 var(--f-body);overflow-wrap:anywhere}
+[id="02-lab-2"] .c22-m small{display:block;font:600 .66rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+[id="02-lab-2"] .c22-c{align-self:flex-end;background:var(--accent);color:var(--card);border-bottom-right-radius:3px}
+[id="02-lab-2"] .c22-b{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--cc);color:var(--ink);border-bottom-left-radius:3px}
+[id="02-lab-2"] .c22-h{align-self:flex-start;background:var(--warm-soft);border:1px solid var(--warm);color:var(--ink)}
+[id="02-lab-2"] .c22-s{align-self:stretch;font:500 .78rem/1.35 var(--f-mono);color:var(--muted);border-left:2px dashed var(--cc);padding:2px 0 2px 8px}
+[id="02-lab-2"] table{width:100%;min-width:620px;border-collapse:collapse;font:400 .84rem var(--f-body)}
+[id="02-lab-2"] th,[id="02-lab-2"] td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+[id="02-lab-2"] td:first-child{border-left:5px solid var(--cc);font-weight:700}
+[id="02-lab-2"] tr.sel td{background:var(--accent-soft)}
+[id="02-lab-2"] .r-ok{color:var(--good);font-weight:700}
+[id="02-lab-2"] .r-med{color:var(--accent);font-weight:700}
+[id="02-lab-2"] .r-mal{color:var(--warm);font-weight:700}
+[id="02-lab-2"] td.n{font-family:var(--f-mono);white-space:nowrap}
+</style>
+<p class="c22-tit">Pedido de la clienta</p>
+<div class="btns" id="c22-req" role="group" aria-label="Pedido"></div>
+<p class="c22-tit">Técnica del bot</p>
+<div class="btns c22-tec" id="c22-tec" role="group" aria-label="Técnica"></div>
+<div class="c22-chat" id="c22-chat" aria-live="polite" aria-label="Conversación"></div>
+<div class="readout texto" id="c22-out" aria-live="polite"></div>
+<p class="c22-tit">Las cuatro técnicas con este pedido</p>
+<div class="tbl"><table><thead><tr><th>Técnica</th><th>Resultado</th><th>Turnos</th><th>Riesgo</th><th>Espera</th><th>Costo de mil</th></tr></thead><tbody id="c22-tb"></tbody></table></div>
+<p class="hint" style="margin:0">Costos y tiempos de espera de ejemplo, para comparar órdenes de magnitud: dependen del proveedor, del modelo y del largo de cada conversación. El capítulo 13 enseña a calcularlos.</p></div><div class="prose"><p>Si combinas lo que viste, aparece la idea que el capítulo 5 desarrolla a fondo: el <b>patrón híbrido</b>. Las reglas dan el esqueleto del proceso (los pasos que no se pueden saltar y las acciones que comprometen a la empresa); el NLU o un LLM pequeño reconocen los pedidos frecuentes; el LLM grande entiende y redacta dentro de cada paso; y las capacidades de agente se dan con cuentagotas, para tareas concretas y con herramientas acotadas. La pregunta deja de ser «¿qué tipo de bot somos?» y pasa a ser «¿qué técnica va en este tramo?».</p></div><div class="ml"><b>En la práctica</b><p><b>Erica, de Bank of America.</b> El asistente del banco, lanzado en 2018 y con decenas de millones de usuarios según la propia empresa, nació con un catálogo cerrado de tareas bancarias y una comprensión del lenguaje acotada a ese dominio, y fue sumando capacidades por etapas. Su diseño privilegió respuestas previsibles sobre la conversación libre: en un banco, un saldo mal dicho cuesta más que un «no entiendo». La lección no es «no uses LLM», sino que el paradigma se elige por el riesgo del tramo.</p></div><div class="prose"><p>Lo que te llevas de este capítulo: <b>elegir el paradigma por tramo de la conversación, no por moda: reglas donde no se puede fallar y lenguaje libre donde aporta.</b></p></div><div class="quiz"><h3>Pruébate</h3><details><summary>¿Por qué la regla «si contiene pagar, ir al flujo de pago» manda mal el mensaje «no quiero pagar, quiero reclamar»?</summary><p>Porque las reglas de palabras clave buscan texto, no significado: el mensaje contiene «pagar» aunque el pedido sea un reclamo. Por eso las reglas sirven para entradas controladas, como botones.</p></details><details><summary>¿Qué devuelve un NLU clásico y qué no devuelve nunca?</summary><p>Devuelve un dato estructurado: una intención del catálogo con su confianza y las entidades encontradas. Nunca devuelve texto redactado para el cliente; la respuesta la arma otra pieza.</p></details><details><summary>Si subes el umbral de confianza de 0,60 a 0,90, ¿qué pasa con los errores y con los «no entendí»?</summary><p>Bajan las respuestas a la intención equivocada, pero suben los mensajes que caen en «no entendí». Se cambia un error caro (actuar mal) por uno más barato (preguntar de nuevo).</p></details><details><summary>¿Cuándo conviene crear una intención nueva y cuándo una entidad?</summary><p>Una intención nueva solo cuando el bot va a hacer algo distinto. Si solo cambia un dato del pedido (internet o TV, este mes o el pasado), es una entidad.</p></details><details><summary>¿Por qué un agente necesita un límite de pasos y confirmación antes de las acciones irreversibles?</summary><p>Sin límite, un agente confundido puede girar sin fin y gastar en cada vuelta. Sin confirmación, podría encadenar un pago o una baja que el cliente no pidió exactamente.</p></details><details><summary>¿Qué gana y qué pierde un equipo al usar un LLM como clasificador de intenciones?</summary><p>Gana comprensión de lenguaje libre sin escribir ejemplos para todo. Pierde velocidad y costo bajo, y su confianza no está calibrada; además puede inventar etiquetas, por lo que su salida se valida contra el catálogo.</p></details></div><div class="investiga"><h3>Para investigar</h3><p class="hint">Estas preguntas no se responden en el capítulo: búscalas por tu cuenta.</p><ol><li>¿Qué es la función <i>softmax</i> y por qué muchos clasificadores la usan para convertir puntajes en confianzas que suman 1?<small>Pista: busca «softmax clasificación probabilidades».</small></li><li>¿Qué son la precisión (<i>precision</i>), la exhaustividad (<i>recall</i>) y el puntaje F1, y por qué un solo porcentaje de aciertos puede engañar con intenciones poco frecuentes?<small>Pista: busca «precision recall F1 clases desbalanceadas».</small></li><li>¿Qué es la calibración de un modelo y por qué una confianza de 0,9 no siempre significa que acierta 9 de cada 10 veces?<small>Pista: busca «calibración de modelos diagrama de confiabilidad».</small></li><li>¿Cómo se mide qué tan parecidos son dos embeddings y por qué se usa tanto la similitud coseno?<small>Pista: busca «similitud coseno embeddings».</small></li><li>¿Qué es la temperatura en un modelo de lenguaje y cómo cambia la variedad de sus respuestas?<small>Pista: busca «temperatura muestreo LLM».</small></li></ol></div><div class="vids"><span>Para saber más</span><a class="vid" href="https://github.com/RasaHQ/rasa" target="_blank" rel="noopener">Rasa Open Source <small>el motor de NLU y diálogo de código abierto, con intenciones, entidades y políticas</small></a><a class="vid" href="https://newsroom.bankofamerica.com/content/newsroom/press-releases/2024/07/bofa-s-erica-surpasses-2-billion-interactions--helping-42-millio.html" target="_blank" rel="noopener">BofA's Erica surpasses 2 billion interactions <small>las cifras de Erica contadas por el propio banco (evidencia de nivel B o C)</small></a><a class="vid" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct: Synergizing Reasoning and Acting in Language Models <small>el artículo que popularizó el ciclo pensar, actuar y observar</small></a></div></section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Capítulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Curso abierto de aaramirez.github.io.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/chatbots-empresariales" target="_blank" rel="noopener">github.com/aaramirez/chatbots-empresariales</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const ENT={
+    consultar_deuda:['cuanto debo','cual es mi saldo','cuanto me toca pagar','cuando vence mi factura','quiero saber mi deuda','cuanto es la factura de este mes','tengo deuda pendiente','monto de mi factura','me dices mi saldo'],
+    pagar_factura:['quiero pagar','mandame el link de pago','como pago la factura','enlace para pagar','pagar con tarjeta','donde pago','quiero hacer el pago','link para pagar'],
+    reclamo_cobro:['me cobraron de mas','cobro indebido','la factura viene muy alta','me cobraron algo que no pedi','quiero reclamar un cobro','me cobraron doble','no reconozco este cargo','factura incorrecta'],
+    reportar_falla:['no tengo internet','el internet esta lento','se cae la conexion','no funciona el servicio','sin señal de tv','no navega','el modem tiene luz roja','se fue el internet','wifi lento'],
+    estado_ticket:['como va mi ticket','cuando viene el tecnico','estado de mi reporte','el tecnico no vino','numero de ticket','que paso con mi caso','tengo un reporte abierto'],
+    recomendar_plan:['que plan me conviene','quiero mas velocidad','planes de internet','cuanto cuesta el plan de 600','quiero cambiar de plan','tienen planes con tv','plan para trabajar desde casa','plan para jugar'],
+    horario_agencias:['a que hora abren','horario de atencion','donde quedan las oficinas','agencia mas cercana','abren los sabados','direccion de la oficina'],
+    hablar_con_persona:['quiero hablar con una persona','pasame con un asesor','quiero un humano','agente por favor','hablar con alguien real','pasame con alguien'],
+    saludo:['hola','buenas tardes','buenos dias','que tal','hola pia','buenas noches'],
+    fuera_de_alcance:['venden pizza','cuentame un chiste','quien gano el partido','que hora es en japon','receta de arepas','cual es la capital de francia','me prestas plata']
+  };
+  const NOMBRES=Object.keys(ENT);
+  const ACCION={consultar_deuda:'verifica y consulta la facturación',pagar_factura:'verifica y crea el enlace de pago',reclamo_cobro:'pasa a una persona con el caso',reportar_falla:'revisa averías y abre un ticket',estado_ticket:'consulta la mesa de ayuda',recomendar_plan:'muestra planes y recomienda',horario_agencias:'responde con el artículo de horarios',hablar_con_persona:'pasa a una persona de inmediato',saludo:'se presenta y ofrece opciones',fuera_de_alcance:'dice que eso no lo atiende y qué sí puede hacer'};
+  const PRUEBA=[
+    ['cuánto debo?','consultar_deuda'],['kuanto devo este mes','consultar_deuda'],['mi saldo porfa','consultar_deuda'],
+    ['no quiero pagar, quiero reclamar','reclamo_cobro'],['quiero pagar con tarjeta','pagar_factura'],
+    ['me cobraron doble este mes','reclamo_cobro'],['me llegó la factura muy alta','reclamo_cobro'],['no reconozco un cargo de 10 dólares','reclamo_cobro'],
+    ['no tengo internet desde ayer','reportar_falla'],['va lentísimo el wifi','reportar_falla'],['ayer pagué y sigo sin internet','reportar_falla'],
+    ['el técnico nunca vino','estado_ticket'],['qué pasó con el ticket 5512','estado_ticket'],
+    ['qué plan me sirve para jugar en línea','recomendar_plan'],['abren el sábado?','horario_agencias'],
+    ['pásame con alguien','hablar_con_persona'],['el internet está caro, quiero algo más barato','recomendar_plan'],
+    ['venden pizza?','fuera_de_alcance'],['quiero dar de baja el servicio','fuera_de_alcance'],['necesito una copia del contrato','fuera_de_alcance']
+  ];
+  const EJ=['cuánto debo del mes pasado?','me llegó la factura muy alta','ayer pagué y sigo sin internet','qué pasó con el ticket 5512','venden pizza?','quiero dar de baja el servicio','pásame con alguien'];
+  const STOP=new Set('el la los las de del un una y o a en mi me te tu que por para con es se lo le al este esta mas muy porfa favor yo desde va'.split(' '));
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9ñ ]/g,' ');
+  const raiz=w=>w.replace(/k/g,'c').replace(/v/g,'b').replace(/z/g,'s').replace(/h/g,'').replace(/isimo$/,'o').slice(0,5);
+  const toks=t=>norm(t).split(/\s+/).filter(w=>w&&!STOP.has(w)).map(raiz);
+  const MODELO={};
+  NOMBRES.forEach(k=>{const m={};let n=0;ENT[k].forEach(f=>toks(f).forEach(w=>{m[w]=(m[w]||0)+1;n++;}));MODELO[k]={m,n};});
+  const VOCAB=new Set();NOMBRES.forEach(k=>Object.keys(MODELO[k].m).forEach(w=>VOCAB.add(w)));
+  function clasificar(t){
+    const ws=toks(t);const con=ws.filter(w=>VOCAB.has(w));
+    const punt=NOMBRES.map(k=>{let s=0;con.forEach(w=>{s+=(MODELO[k].m[w]||0)/Math.sqrt(MODELO[k].n);});return s;});
+    const k=con.length?K:0.5;
+    const ex=punt.map(s=>Math.exp(k*s));const z=ex.reduce((a,b)=>a+b,0);
+    return NOMBRES.map((n,i)=>({n,p:ex[i]/z})).sort((a,b)=>b.p-a.p);
+  }
+  let K=4;
+  function entidades(t){
+    const n=norm(t),out=[];let m;
+    if(m=n.match(/ticket\s*(?:n\s*)?(\d{3,6})/))out.push('ticket = '+m[1]);
+    if(m=n.match(/cuenta\s*(\d{3,6})/))out.push('cuenta = '+m[1]);
+    if((m=n.match(/(\d+(?:[.,]\d+)?)\s*(?:dolares|usd)/))||(m=n.match(/usd\s*(\d+(?:[.,]\d+)?)/)))out.push('monto = '+m[1]);
+    if(/mes pasado|anterior/.test(n))out.push('periodo = mes pasado');else if(/este mes|del mes/.test(n))out.push('periodo = este mes');
+    if(m=n.match(/\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/))out.push('periodo = '+m[1]);
+    if(m=n.match(/\b(ayer|hoy|lunes|martes|miercoles|jueves|viernes|sabado|domingo)\b/))out.push('fecha = '+m[1].replace('miercoles','miércoles').replace('sabado','sábado'));
+    if(/\b(tv|television|cable)\b/.test(n))out.push('servicio = TV');else if(/internet|wifi|modem|navega/.test(n))out.push('servicio = internet');
+    if(m=n.match(/\b(100|300|600)\b/))out.push('plan = '+m[1]+' Mbps');
+    return out;
+  }
+  const f2=v=>v.toFixed(2).replace('.',',');
+  function decidir(r,u){
+    const [a,b]=r;
+    if(a.p<u)return {tipo:'no',txt:'Confianza '+f2(a.p)+', por debajo del umbral '+f2(u)+'. Respaldo: «No estoy segura de haber entendido. ¿Es sobre tu factura, una falla, un ticket o un plan?»',col:'--muted'};
+    if(a.p-b.p<0.15)return {tipo:'amb',txt:'Ambiguo: '+a.n+' ('+f2(a.p)+') y '+b.n+' ('+f2(b.p)+') están cerca. El bot pregunta cuál de los dos quieres.',col:'--warm'};
+    return {tipo:'si',txt:'Acepta '+a.n+' ('+f2(a.p)+') y '+ACCION[a.n]+'.',col:a.n==='fuera_de_alcance'?'--c-red':'--good'};
+  }
+  function mostrar(){
+    const t=q('#c21-in').value.trim();const u=+q('#c21-u').value;
+    if(!t){q('#c21-top').innerHTML='';q('#c21-ent').innerHTML='';q('#c21-dec').textContent='Escribe un mensaje.';return;}
+    const r=clasificar(t);
+    q('#c21-top').innerHTML=r.slice(0,3).map(x=>'<div class="c21-bar"><span title="'+x.n+'">'+x.n+'</span><span class="c21-track"><i class="'+(x.p<u?'bajo':'')+'" style="width:'+(x.p*100)+'%"></i><b style="left:'+(u*100)+'%"></b></span><span>'+f2(x.p)+'</span></div>').join('');
+    const e=entidades(t);
+    q('#c21-ent').innerHTML=e.length?e.map(x=>'<span>'+x+'</span>').join(''):'<small style="color:var(--muted)">ninguna</small>';
+    const d=decidir(r,u);const box=q('#c21-dec');box.style.setProperty('--cc','var('+d.col+')');box.textContent=d.txt;
+  }
+  function lote(){
+    const u=+q('#c21-u').value;let bien=0,mal=0,no=0;
+    q('#c21-tb').innerHTML=PRUEBA.map(([t,real])=>{
+      const r=clasificar(t);const d=decidir(r,u);let cls,res,bot;
+      if(d.tipo==='no'){no++;cls='no';res='«no entendí»';bot='— ('+f2(r[0].p)+')';}
+      else if(d.tipo==='amb'){no++;cls='no';res='pregunta cuál';bot=r[0].n+' o '+r[1].n;}
+      else{bot=r[0].n+' ('+f2(r[0].p)+')';if(r[0].n===real){bien++;cls='ok';res='bien';}else{mal++;cls='mal';res='mal: actúa sobre otro pedido';}}
+      return '<tr class="'+cls+'"><td>'+t+'</td><td class="n">'+real+'</td><td class="n">'+bot+'</td><td>'+res+'</td></tr>';
+    }).join('');
+    q('#c21-kpis').innerHTML='<div><small>Aceptados bien</small><b style="color:var(--good)">'+bien+'</b></div><div><small>Aceptados mal</small><b style="color:var(--warm)">'+mal+'</b></div><div><small>«No entendí» o pregunta</small><b style="color:var(--muted)">'+no+'</b></div>';
+    q('#c21-out').innerHTML='<span>Umbral '+f2(u)+': de 20 mensajes, '+bien+' van a la intención correcta, <b>'+mal+' a una intención equivocada</b> y '+no+' terminan en «no entendí» o en una pregunta para aclarar.</span>'+
+      (mal?'<span class="warn">'+(mal===1?'Un mensaje se acepta':mal+' mensajes se aceptan')+' con confianza alta en la intención equivocada. El umbral no lo atrapa: «no quiero pagar, quiero reclamar» engaña al modelo por la negación. Eso se corrige con ejemplos de entrenamiento, no moviendo el umbral.</span>':'')+
+      (no>=9?'<span class="warn">Umbral alto: casi no se equivoca, pero '+no+' de 20 clientes oyen «no entendí» o una pregunta. Eso también es un fracaso.</span>':
+       !mal?'<span class="ok">Sin errores caros con este umbral.</span>':'<span>Con este umbral, el respaldo atrapa los mensajes dudosos y pregunta en los ambiguos.</span>');
+  }
+  q('#c21-chips').innerHTML=EJ.map(t=>'<button type="button">'+t+'</button>').join('');
+  q('#c21-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b){q('#c21-in').value=b.textContent;mostrar();}});
+  q('#c21-form').addEventListener('submit',e=>{e.preventDefault();mostrar();});
+  q('#c21-in').addEventListener('input',mostrar);
+  q('#c21-u').addEventListener('input',()=>{q('#c21-u-o').textContent=f2(+q('#c21-u').value);mostrar();lote();});
+  q('#c21-u-o').textContent=f2(+q('#c21-u').value);
+  if(window.__c21test){window.__c21test(clasificar,PRUEBA,v=>{K=v;});return;}
+  mostrar();lote();
+})();
+</script>
+<script>
+(function(){
+  const q=s=>document.querySelector(s);
+  const TEC=[['reglas','Reglas','--c-apl'],['nlu','NLU clásico','--c-tra'],['llm','LLM generativo','--c-enl'],['agente','Agente','--c-red']];
+  const COSTO={reglas:'US$ 0,50',nlu:'US$ 1,50',llm:'US$ 12',agente:'US$ 35'};
+  const REQ={
+    pago:{t:'Quiero pagar lo que debo',d:{
+      reglas:{c:[['b','Hola, soy Pía, asistente virtual. Elige una opción: [Mi factura] [Pagar] [Falla] [Persona]'],['c','Quiero pagar lo que debo'],['s','palabra clave «pagar» → estado PAGO_PEDIR_CODIGO'],['b','Te envié un código por SMS. Escríbelo aquí.'],['c','482913'],['s','código válido → VERIFICADO · facturación: F-2207, US$ 25,00'],['b','Tu factura F-2207 es de US$ 25,00. [Pagar ahora] [Otra cosa]'],['c','[Pagar ahora]'],['s','pasarela: crea enlace por el monto de F-2207'],['b','Aquí está tu enlace seguro: pagos.ejemplo.com/f/F-2207']],
+        r:['ok','resuelto'],turnos:3,riesgo:'bajo: cada paso está escrito y probado',espera:'0,1 s por turno'},
+      nlu:{c:[['c','Quiero pagar lo que debo'],['s','intención pagar_factura (0,96) · sin entidades'],['s','regla: pagar pide identidad → código por SMS'],['b','Te envié un código por SMS para confirmar que eres tú.'],['c','482913'],['s','verificada · facturación: F-2207, US$ 25,00'],['b','Laura, tu factura F-2207 es de US$ 25,00. ¿Te envío el enlace? [Sí] [No]'],['c','Sí'],['s','pasarela: crea enlace por el monto de F-2207'],['b','Aquí está tu enlace seguro: pagos.ejemplo.com/f/F-2207']],
+        r:['ok','resuelto'],turnos:3,riesgo:'bajo: la intención es frecuente y cerrada',espera:'0,2 s por turno'},
+      llm:{c:[['c','Quiero pagar lo que debo'],['s','instrucciones + artículo «Formas de pago» (sin herramientas)'],['b','¡Claro! Puedes pagar en el portal de clientes, en una agencia o por transferencia. Si quieres, dime tu número de cuenta y te ayudo.'],['c','1001, ¿cuánto es?'],['s','no tiene acceso a la facturación'],['b','No puedo ver tu saldo desde aquí, pero lo encuentras en tu factura o en el portal.']],
+        r:['med','a medias'],turnos:2,riesgo:'medio: si la clienta insiste, un modelo sin datos puede inventar un monto',espera:'2,5 s por turno'},
+      agente:{c:[['c','Quiero pagar lo que debo'],['s','pensar: hace falta identidad → verificar_identidad(número)'],['b','Te envié un código por SMS para confirmar que eres tú.'],['c','482913'],['s','observar: verificada · pensar: consultar_deuda(1001) → F-2207, US$ 25,00'],['b','Laura, tu factura F-2207 es de US$ 25,00. ¿Confirmas que te envío el enlace?'],['c','Sí'],['s','actuar: crear_enlace(F-2207) · 4 llamadas al modelo en total'],['b','Aquí está tu enlace seguro: pagos.ejemplo.com/f/F-2207']],
+        r:['ok','resuelto'],turnos:3,riesgo:'medio: correcto, pero con más piezas que pueden fallar que una regla',espera:'3 a 6 s por turno'}
+    }},
+    enredo:{t:'Ayer pagué y sigo sin internet',d:{
+      reglas:{c:[['c','Ayer pagué y sigo sin internet'],['s','palabra clave «pagu» → menú de pago'],['b','¿Quieres pagar tu factura? [Pagar ahora] [Otra cosa]'],['c','¡No! Ya pagué, no tengo internet'],['s','entrada no prevista en el estado PAGO (intento 1)'],['b','No entendí. Elige una opción: [Pagar ahora] [Otra cosa]'],['c','persona'],['s','palabra clave «persona» → traspaso'],['h','Te paso con una persona del equipo.']],
+        r:['mal','no resuelve: pasa a una persona'],turnos:3,riesgo:'bajo, pero la clienta se frustra',espera:'0,1 s por turno'},
+      nlu:{c:[['c','Ayer pagué y sigo sin internet'],['s','intención reportar_falla (0,73) · entidad fecha = ayer'],['b','Lamento la falla. Te envié un código por SMS para confirmar que eres tú.'],['c','482913'],['s','monitoreo: sin avería en la zona → flujo de falla individual'],['b','No hay averías en tu zona. Abrí el ticket n.º 5512; un técnico te visitará en 24 horas.'],['s','el pago de ayer nunca se miró: el servicio estaba suspendido por mora']],
+        r:['med','a medias: ticket innecesario'],turnos:2,riesgo:'medio: un técnico irá a una casa sin falla',espera:'0,2 s por turno'},
+      llm:{c:[['c','Ayer pagué y sigo sin internet'],['s','instrucciones + artículos de la base de conocimiento (sin herramientas)'],['b','¡Lamento mucho la molestia! Los pagos pueden tardar hasta 48 horas en reflejarse. Mientras tanto, reinicia tu módem; si sigue igual, te recomiendo llamar al 0800-000-0000.'],['s','el plazo de 48 horas no está en ninguna fuente: lo redactó el modelo']],
+        r:['mal','no resuelve e inventa un plazo'],turnos:1,riesgo:'alto: la empresa responde por lo que su bot promete',espera:'2,5 s'},
+      agente:{c:[['c','Ayer pagué y sigo sin internet'],['s','pensar: identidad → verificar_identidad'],['b','Te envié un código por SMS para confirmar que eres tú.'],['c','482913'],['s','consultar_pagos(1001) → US$ 25,00 aplicado ayer 18:40 a F-2207'],['s','estado_servicio(1001) → suspendido por mora, reconexión pendiente'],['s','regla del sistema: factura pagada → reconexión permitida · reconectar(1001) → ok'],['b','Laura, tu pago de ayer quedó aplicado, pero la reconexión no se había hecho. Ya la pedí: en unos 5 minutos vuelves a tener servicio. Si no, escríbeme y abro un ticket.']],
+        r:['ok','resuelto'],turnos:2,riesgo:'medio: ejecuta una acción; la permite una regla y queda traza',espera:'6 a 9 s'}
+    }},
+    abierta:{t:'¿Qué diferencia hay entre el plan de 300 y el de 600 si trabajo en casa y mis hijos juegan en línea?',d:{
+      reglas:{c:[['c','¿Qué diferencia hay entre el plan de 300 y el de 600 si trabajo en casa y mis hijos juegan en línea?'],['s','palabra clave «plan» → menú de planes'],['b','Nuestros planes: [100 Mbps] [300 Mbps] [600 Mbps]. Toca uno para ver el detalle.'],['c','¿Pero cuál me conviene?'],['s','entrada no prevista (intento 1)'],['b','No entendí. Toca uno de los planes.']],
+        r:['med','a medias: informa, no responde'],turnos:2,riesgo:'bajo',espera:'0,1 s por turno'},
+      nlu:{c:[['c','¿Qué diferencia hay entre el plan de 300 y el de 600 si trabajo en casa y mis hijos juegan en línea?'],['s','intención recomendar_plan (0,95) · entidades plan = 300, plan = 600'],['s','plantilla «comparar dos planes» con datos del catálogo'],['b','Plan 300 Mbps: hasta 300 de bajada y 30 de subida. Plan 600 Mbps: hasta 600 de bajada y 60 de subida. Precios en www.ejemplo.com/planes.'],['s','«trabajo en casa» y «juegan en línea» no son entidades del catálogo: se ignoran']],
+        r:['med','a medias: compara, no aconseja'],turnos:1,riesgo:'bajo',espera:'0,2 s'},
+      llm:{c:[['c','¿Qué diferencia hay entre el plan de 300 y el de 600 si trabajo en casa y mis hijos juegan en línea?'],['s','recupera «Catálogo de planes» (vigente) y «Velocidad recomendada por uso»'],['b','Con videollamadas de trabajo y dos personas jugando a la vez, lo que más pesa es la subida y que no se trabe cuando todos usan la red. El de 600 Mbps duplica la subida (60 frente a 30 Mbps), así que es el más holgado; el de 300 alcanza si no coinciden los horarios. Es una recomendación: si quieres, te paso con ventas. Fuente: «Catálogo de planes».']],
+        r:['ok','resuelto'],turnos:1,riesgo:'medio: las cifras deben salir del catálogo citado, no de memoria',espera:'3 s'},
+      agente:{c:[['c','¿Qué diferencia hay entre el plan de 300 y el de 600 si trabajo en casa y mis hijos juegan en línea?'],['s','pensar: ¿hace falta el consumo? → verificar_identidad, consultar_consumo(1001)'],['b','Para recomendarte con tu consumo real, te envié un código por SMS.'],['c','482913'],['s','consumo: 180 GB al mes, picos de 20:00 a 22:00 · catálogo vigente'],['b','Tu uso se concentra de 20:00 a 22:00, cuando todos están conectados. El de 600 Mbps duplica la subida y te da margen en esa hora. Es una recomendación; si quieres, te paso con ventas.']],
+        r:['ok','resuelto, con más pasos'],turnos:2,riesgo:'medio: para esta pregunta no hacía falta pedir identidad ni datos',espera:'6 a 9 s'}
+    }}
+  };
+  let req='pago',tec='reglas';
+  const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function pintar(){
+    const R=REQ[req],D=R.d[tec],col=TEC.find(x=>x[0]===tec)[2];
+    q('#c22-req').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===req));
+    q('#c22-tec').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===tec));
+    const chat=q('#c22-chat');chat.style.setProperty('--cc','var('+col+')');
+    chat.innerHTML=D.c.map(([w,t])=>w==='c'?'<div class="c22-m c22-c"><small>Laura</small>'+esc(t)+'</div>':w==='b'?'<div class="c22-m c22-b"><small>Pía · '+TEC.find(x=>x[0]===tec)[1]+'</small>'+esc(t)+'</div>':w==='h'?'<div class="c22-m c22-h"><small>Sistema</small>'+esc(t)+'</div>':'<div class="c22-s">'+esc(t)+'</div>').join('');
+    q('#c22-tb').innerHTML=TEC.map(([k,n,c])=>{const x=R.d[k];return '<tr class="'+(k===tec?'sel':'')+'" style="--cc:var('+c+')"><td>'+n+'</td><td class="r-'+x.r[0]+'">'+x.r[1]+'</td><td class="n">'+x.turnos+'</td><td>'+x.riesgo+'</td><td class="n">'+x.espera+'</td><td class="n">'+COSTO[k]+'</td></tr>';}).join('');
+    const mejor=TEC.filter(([k])=>R.d[k].r[0]==='ok').map(x=>x[1]);
+    q('#c22-out').innerHTML='<span><b>'+TEC.find(x=>x[0]===tec)[1]+'</b> con «'+esc(R.t)+'»: <b class="'+(D.r[0]==='ok'?'ok':'warn')+'">'+D.r[1]+'</b>. Riesgo '+D.riesgo+'.</span>'+
+      '<span>Resuelven este pedido: '+(mejor.length?mejor.join(', '):'ninguna')+'. '+(req==='pago'?'Cuando el pedido es frecuente y cerrado, la opción más barata que resuelve es la buena: el agente cuesta unas 20 veces más que el NLU por el mismo resultado.':req==='enredo'?'Solo el agente cruza los tres sistemas que hacen falta; el NLU sigue un flujo correcto para otro problema y el LLM sin datos tapa el hueco con un plazo inventado.':'La pregunta abierta es territorio del LLM con fuente: las reglas y el NLU informan, pero no razonan sobre la situación de la clienta.')+'</span>';
+  }
+  q('#c22-req').innerHTML=Object.entries(REQ).map(([k,v])=>'<button type="button" data-k="'+k+'">'+(k==='abierta'?'¿Plan de 300 o de 600?':v.t)+'</button>').join('');
+  q('#c22-tec').innerHTML=TEC.map(([k,n,c])=>'<button type="button" data-k="'+k+'" style="--cc:var('+c+')">'+n+'</button>').join('');
+  q('#c22-req').addEventListener('click',e=>{const b=e.target.closest('button');if(b){req=b.dataset.k;pintar();}});
+  q('#c22-tec').addEventListener('click',e=>{const b=e.target.closest('button');if(b){tec=b.dataset.k;pintar();}});
+  pintar();
+})();
+</script>
+</body>
+</html>
